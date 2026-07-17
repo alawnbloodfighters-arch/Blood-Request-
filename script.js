@@ -1,73 +1,70 @@
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyd6gU-u1kb-7sHNGfhRtJ_61BD6OEbjYtVYjjmcIs-D4Dn02Y5SxJZT0uno9g1XPcI/exec";
 
-body{
-background:#f3f3f3;
-padding:20px;
-}
+document.addEventListener("DOMContentLoaded", () => {
 
-.container{
-max-width:500px;
-margin:auto;
-}
+  const form = document.getElementById("bloodRequestForm");
 
-.header{
-background:#c62828;
-color:#fff;
-padding:20px;
-text-align:center;
-border-radius:12px 12px 0 0;
-}
+  form.addEventListener("submit", async (e) => {
 
-.card{
-background:#fff;
-padding:20px;
-border-radius:0 0 12px 12px;
-box-shadow:0 4px 12px rgba(0,0,0,.15);
-}
+    e.preventDefault();
 
-label{
-display:block;
-margin-top:15px;
-margin-bottom:6px;
-font-weight:bold;
-color:#333;
-}
+    const mobile = document.getElementById("mobile").value.trim();
 
-input,
-select,
-textarea{
-width:100%;
-padding:12px;
-border:1px solid #ccc;
-border-radius:8px;
-font-size:16px;
-outline:none;
-}
+    if (!/^01\d{9}$/.test(mobile)) {
+      alert("সঠিক ১১ সংখ্যার মোবাইল নম্বর লিখুন");
+      return;
+    }
 
-input:focus,
-select:focus,
-textarea:focus{
-border-color:#c62828;
-}
+    // 24 Hour → 12 Hour (AM/PM)
+    const time24 = document.getElementById("time").value;
+    let time12 = "";
 
-button{
-width:100%;
-margin-top:20px;
-padding:14px;
-background:#d32f2f;
-color:#fff;
-border:none;
-border-radius:8px;
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
-}
+    if (time24) {
+      let [hour, minute] = time24.split(":");
+      hour = parseInt(hour);
 
-button:hover{
-background:#b71c1c;
-}
+      const ampm = hour >= 12 ? "PM" : "AM";
+      hour = hour % 12;
+      if (hour === 0) hour = 12;
+
+      time12 = `${hour}:${minute} ${ampm}`;
+    }
+
+    const data = {
+      problem: document.getElementById("problem").value.trim(),
+      bloodGroup: document.getElementById("bloodGroup").value,
+      hemoglobin: document.getElementById("hemoglobin").value,
+      date: document.getElementById("date").value,
+      time: time12,
+      hospital: document.getElementById("hospital").value.trim(),
+      mobile: mobile,
+      note: document.getElementById("note").value.trim()
+    };
+
+    try {
+
+      const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert("✅ ব্লাড রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে।");
+        form.reset();
+      } else {
+        alert("❌ " + result.error);
+      }
+
+    } catch (err) {
+      console.error(err);
+      alert("❌ সার্ভারের সাথে সংযোগ করা যায়নি।");
+    }
+
+  });
+
+});
