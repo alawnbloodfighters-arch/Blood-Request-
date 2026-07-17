@@ -1,100 +1,179 @@
 <!DOCTYPE html>
 <html lang="bn">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ব্লাড রিকুয়েস্ট</title>
 
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>সদস্য নিবন্ধন | আল-আওন ব্লাড ফাইটার্স</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <div class="header">
-      <h1>🩸 আল-আওন ব্লাড ফাইটার্স</h1>
-      <p>ব্লাড রিকুয়েস্ট ফর্ম</p>
-    </div>
+<div class="header">
 
-    <div class="card">
+<img src="logo.png" class="logo" alt="Logo">
 
-      <form id="bloodRequestForm">
+<h2>আল-আওন ব্লাড ফাইটার্স</h2>
 
-        <label>🩺 রোগের সমস্যা</label>
-        <input
-          type="text"
-          id="problem"
-          placeholder="রোগের সমস্যা লিখুন"
-          required>
+<p>সদস্য নিবন্ধন ফরম</p>
 
-        <label>🩸 রক্তের গ্রুপ</label>
-        <select id="bloodGroup" required>
-          <option value="">নির্বাচন করুন</option>
-          <option>A+</option>
-          <option>A-</option>
-          <option>B+</option>
-          <option>B-</option>
-          <option>AB+</option>
-          <option>AB-</option>
-          <option>O+</option>
-          <option>O-</option>
-        </select>
+</div>
 
-        <label>🧪 হিমোগ্লোবিন</label>
-        <input
-          type="number"
-          id="hemoglobin"
-          step="0.1"
-          placeholder="যেমন 8.5"
-          required>
+<div class="card">
 
-        <label>📅 রক্তদানের তারিখ</label>
-        <input
-          type="date"
-          id="date"
-          required>
+<form id="memberForm">
 
-        <label>🕒 রক্তদানের সময়</label>
-        <input
-          type="time"
-          id="time"
-          required>
+<label>👤 পূর্ণ নাম</label>
 
-        <label>🏥 হাসপাতালের নাম</label>
-        <input
-          type="text"
-          id="hospital"
-          placeholder="হাসপাতালের নাম"
-          required>
+<input
+type="text"
+id="name"
+placeholder="আপনার পূর্ণ নাম লিখুন"
+required>
 
-        <label>📱 যোগাযোগ নম্বর</label>
-        <input
-          type="tel"
-          id="mobile"
-          maxlength="11"
-          placeholder="01XXXXXXXXX"
-          required>
+<label>⚧️ লিঙ্গ</label>
 
-        <label>📝 অতিরিক্ত তথ্য</label>
-        <textarea
-          id="note"
-          rows="4"
-          placeholder="প্রয়োজন হলে লিখুন"></textarea>
+<select id="gender" required>
 
-        <button type="submit">
-          🔴 রিকুয়েস্ট পাঠান
-        </button>
+<option value="">নির্বাচন করুন</option>
 
-      </form>
+<option>পুরুষ</option>
 
-    </div>
+<option>মহিলা</option>
 
-  </div>
+</select>
 
-  <script src="script.js"></script>
+<label>🎂 জন্ম তারিখ</label>
+
+<div class="dob">
+
+<select id="day" required>
+
+<option value="">দিন</option>
+
+</select>
+
+<select id="month" required>
+
+<option value="">মাস</option>
+
+<option>জানুয়ারি</option>
+<option>ফেব্রুয়ারি</option>
+<option>মার্চ</option>
+<option>এপ্রিল</option>
+<option>মে</option>
+<option>জুন</option>
+<option>জুলাই</option>
+<option>আগস্ট</option>
+<option>সেপ্টেম্বর</option>
+<option>অক্টোবর</option>
+<option>নভেম্বর</option>
+<option>ডিসেম্বর</option>
+
+</select>
+
+<select id="year" required>
+
+<option value="">বছর</option>
+
+</select>
+
+</div>
+<label>🩸 রক্তের গ্রুপ</label>
+
+<select id="bloodGroup" required>
+
+<option value="">নির্বাচন করুন</option>
+
+<option>A+</option>
+<option>A-</option>
+<option>B+</option>
+<option>B-</option>
+<option>AB+</option>
+<option>AB-</option>
+<option>O+</option>
+<option>O-</option>
+
+</select>
+
+<label>⚖️ ওজন (কেজি)</label>
+
+<select id="weight" required>
+
+<option value="">নির্বাচন করুন</option>
+
+<option>35+</option>
+<option>40+</option>
+<option>45+</option>
+<option>50+</option>
+<option>55+</option>
+<option>60+</option>
+<option>65+</option>
+<option>70+</option>
+<option>75+</option>
+<option>80+</option>
+<option>85+</option>
+<option>90+</option>
+<option>95+</option>
+<option>100+</option>
+<option>105+</option>
+<option>110+</option>
+<option>115+</option>
+<option>120+</option>
+
+</select>
+
+<label>🩸 সর্বশেষ রক্তদানের তারিখ</label>
+
+<input
+type="date"
+id="lastDonate">
+
+<label>📍 জেলা</label>
+
+<select id="district" required>
+
+<option value="">জেলা নির্বাচন করুন</option>
+
+<option>ফেনী</option>
+<option>কুমিল্লা</option>
+<option>নোয়াখালী</option>
+<option>চট্টগ্রাম</option>
+<option>ঢাকা</option>
+
+</select>
+<label>📍 উপজেলা</label>
+
+<select id="upazila" required>
+<option value="">আগে জেলা নির্বাচন করুন</option>
+</select>
+
+<label>📱 মোবাইল নম্বর</label>
+
+<input
+type="tel"
+id="mobile"
+maxlength="11"
+placeholder="01XXXXXXXXX"
+required>
+
+<button type="submit">
+✅ সদস্য নিবন্ধন করুন
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
 
 </body>
-
 </html>
