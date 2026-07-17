@@ -1,70 +1,234 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyd6gU-u1kb-7sHNGfhRtJ_61BD6OEbjYtVYjjmcIs-D4Dn02Y5SxJZT0uno9g1XPcI/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxRU2xbkSfNKqfx5125ONsf-nR6RhCs0VGlXjwf50xjKb7h4gh6e_MRQx0bcl5u7KTbkg/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const form = document.getElementById("bloodRequestForm");
+const day = document.getElementById("day");
+const year = document.getElementById("year");
+const district = document.getElementById("district");
+const upazila = document.getElementById("upazila");
+const form = document.getElementById("memberForm");
 
-  form.addEventListener("submit", async (e) => {
+// দিন
+for(let i=1;i<=31;i++){
+const option=document.createElement("option");
+option.value=i;
+option.textContent=i;
+day.appendChild(option);
+}
 
-    e.preventDefault();
+// বছর
+for(let i=1980;i<=2030;i++){
+const option=document.createElement("option");
+option.value=i;
+option.textContent=i;
+year.appendChild(option);
+}
 
-    const mobile = document.getElementById("mobile").value.trim();
+// উপজেলা তালিকা
+const upazilas = {
 
-    if (!/^01\d{9}$/.test(mobile)) {
-      alert("সঠিক ১১ সংখ্যার মোবাইল নম্বর লিখুন");
-      return;
-    }
+"ফেনী":[
+"ফেনী সদর",
+"ছাগলনাইয়া",
+"দাগনভূঞা",
+"পরশুরাম",
+"ফুলগাজী",
+"সোনাগাজী"
+],
 
-    // 24 Hour → 12 Hour (AM/PM)
-    const time24 = document.getElementById("time").value;
-    let time12 = "";
+"কুমিল্লা":[
+"চৌদ্দগ্রাম",
+"নাঙ্গলকোট",
+"বরুড়া",
+"ব্রাহ্মণপাড়া",
+"বুড়িচং",
+"চান্দিনা",
+"আদর্শ সদর",
+"দাউদকান্দি",
+"দেবিদ্বার",
+"হোমনা",
+"কুমিল্লা সদর",
+"লাকসাম",
+"লালমাই",
+"মনোহরগঞ্জ",
+"মেঘনা",
+"মুরাদনগর",
+"সদর দক্ষিণ",
+"তিতাস"
+],
 
-    if (time24) {
-      let [hour, minute] = time24.split(":");
-      hour = parseInt(hour);
+"নোয়াখালী":[
+"সুধারাম",
+"বেগমগঞ্জ",
+"চাটখিল",
+"কোম্পানীগঞ্জ",
+"হাতিয়া",
+"কবিরহাট",
+"সেনবাগ",
+"সোনাইমুড়ী",
+"সুবর্ণচর"
+],
 
-      const ampm = hour >= 12 ? "PM" : "AM";
-      hour = hour % 12;
-      if (hour === 0) hour = 12;
+"চট্টগ্রাম":[
+"আনোয়ারা",
+"বাঁশখালী",
+"বোয়ালখালী",
+"চন্দনাইশ",
+"ফটিকছড়ি",
+"হাটহাজারী",
+"লোহাগাড়া",
+"মিরসরাই",
+"পটিয়া",
+"রাঙ্গুনিয়া",
+"রাউজান",
+"সন্দ্বীপ",
+"সাতকানিয়া",
+"সীতাকুণ্ড",
+"চট্টগ্রাম সদর",
+"কর্ণফুলী"
+],
 
-      time12 = `${hour}:${minute} ${ampm}`;
-    }
+"ঢাকা":[
+"আদাবর",
+"বাড্ডা",
+"বিমানবন্দর",
+"ক্যান্টনমেন্ট",
+"চকবাজার",
+"দারুস সালাম",
+"ডেমরা",
+"ধানমন্ডি",
+"গেন্ডারিয়া",
+"গুলশান",
+"হাজারীবাগ",
+"যাত্রাবাড়ী",
+"কদমতলী",
+"কাফরুল",
+"কামরাঙ্গীরচর",
+"খিলগাঁও",
+"খিলক্ষেত",
+"কোতোয়ালি",
+"লালবাগ",
+"মিরপুর",
+"মোহাম্মদপুর",
+"মতিঝিল",
+"নিউমার্কেট",
+"পল্লবী",
+"পল্টন",
+"রমনা",
+"রামপুরা",
+"সবুজবাগ",
+"শাহ আলী",
+"শাহবাগ",
+"শ্যামপুর",
+"শেরেবাংলা নগর",
+"সূত্রাপুর",
+"তেজগাঁও",
+"তেজগাঁও শিল্পাঞ্চল",
+"তুরাগ",
+"উত্তরা পূর্ব",
+"উত্তরা পশ্চিম",
+"উত্তরখান",
+"দক্ষিণখান",
+"ভাটারা",
+"ওয়ারী"
+]
 
-    const data = {
-      problem: document.getElementById("problem").value.trim(),
-      bloodGroup: document.getElementById("bloodGroup").value,
-      hemoglobin: document.getElementById("hemoglobin").value,
-      date: document.getElementById("date").value,
-      time: time12,
-      hospital: document.getElementById("hospital").value.trim(),
-      mobile: mobile,
-      note: document.getElementById("note").value.trim()
-    };
+};
 
-    try {
+district.addEventListener("change",()=>{
 
-      const response = await fetch(SCRIPT_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify(data)
-      });
+upazila.innerHTML='<option value="">উপজেলা নির্বাচন করুন</option>';
 
-      const result = await response.json();
+if(upazilas[district.value]){
 
-      if (result.success) {
-        alert("✅ ব্লাড রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে।");
-        form.reset();
-      } else {
-        alert("❌ " + result.error);
-      }
+upazilas[district.value].forEach(item=>{
 
-    } catch (err) {
-      console.error(err);
-      alert("❌ সার্ভারের সাথে সংযোগ করা যায়নি।");
-    }
+const option=document.createElement("option");
+option.value=item;
+option.textContent=item;
 
-  });
+upazila.appendChild(option);
+
+});
+
+}
+
+});
+  // ফর্ম সাবমিট
+form.addEventListener("submit", async function(e){
+
+e.preventDefault();
+
+const mobile=document.getElementById("mobile").value.trim();
+
+if(!/^01\d{9}$/.test(mobile)){
+alert("সঠিক ১১ সংখ্যার মোবাইল নম্বর লিখুন");
+return;
+}
+
+const data={
+
+name:document.getElementById("name").value.trim(),
+
+gender:document.getElementById("gender").value,
+
+dob:
+document.getElementById("day").value+" "+
+document.getElementById("month").value+" "+
+document.getElementById("year").value,
+
+bloodGroup:document.getElementById("bloodGroup").value,
+
+weight:document.getElementById("weight").value,
+
+lastDonate:document.getElementById("lastDonate").value,
+
+district:district.value,
+
+upazila:upazila.value,
+
+mobile:mobile
+
+};
+
+try{
+
+const response=await fetch(SCRIPT_URL,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify(data)
+
+});
+
+const result=await response.json();
+
+if(result.success){
+
+  alert("✅ সদস্য নিবন্ধন সফল হয়েছে");
+
+form.reset();
+
+upazila.innerHTML='<option value="">উপজেলা নির্বাচন করুন</option>';
+
+}else{
+
+alert("❌ "+result.error);
+
+}
+
+}catch(error){
+
+console.error(error);
+
+alert("❌ সার্ভারের সাথে সংযোগ করা যায়নি");
+
+}
+
+});
 
 });
