@@ -6,12 +6,12 @@ font-family:Arial,sans-serif;
 }
 
 body{
-background:#f3f3f3;
+background:#f3f5f7;
 padding:20px;
 }
 
 .container{
-max-width:500px;
+max-width:520px;
 margin:auto;
 }
 
@@ -20,19 +20,39 @@ background:#c62828;
 color:#fff;
 padding:20px;
 text-align:center;
-border-radius:12px 12px 0 0;
+border-radius:15px 15px 0 0;
+}
+
+.logo{
+width:90px;
+height:90px;
+border-radius:50%;
+background:#fff;
+padding:5px;
+margin:0 auto 10px;
+display:block;
+object-fit:contain;
+}
+
+.header h1{
+font-size:26px;
+margin-bottom:5px;
+}
+
+.header p{
+font-size:16px;
 }
 
 .card{
 background:#fff;
 padding:20px;
-border-radius:0 0 12px 12px;
-box-shadow:0 4px 12px rgba(0,0,0,.15);
+border-radius:0 0 15px 15px;
+box-shadow:0 5px 15px rgba(0,0,0,.15);
 }
 
 label{
 display:block;
-margin-top:15px;
+margin-top:16px;
 margin-bottom:6px;
 font-weight:bold;
 color:#333;
@@ -43,31 +63,65 @@ select,
 textarea{
 width:100%;
 padding:12px;
+font-size:16px;
 border:1px solid #ccc;
 border-radius:8px;
-font-size:16px;
 outline:none;
+background:#fff;
+transition:.3s;
 }
 
 input:focus,
 select:focus,
 textarea:focus{
 border-color:#c62828;
+box-shadow:0 0 5px rgba(198,40,40,.3);
+}
+
+textarea{
+resize:vertical;
+min-height:100px;
 }
 
 button{
 width:100%;
-margin-top:20px;
-padding:14px;
-background:#d32f2f;
-color:#fff;
+padding:15px;
+margin-top:25px;
 border:none;
 border-radius:8px;
+background:#d32f2f;
+color:#fff;
 font-size:18px;
 font-weight:bold;
 cursor:pointer;
+transition:.3s;
 }
 
 button:hover{
 background:#b71c1c;
+}
+
+button:active{
+transform:scale(.98);
+}
+
+@media(max-width:600px){
+
+body{
+padding:10px;
+}
+
+.header h1{
+font-size:22px;
+}
+
+.logo{
+width:75px;
+height:75px;
+}
+
+.card{
+padding:15px;
+}
+
 }
