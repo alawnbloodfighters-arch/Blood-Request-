@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyd6gU-u1kb-7sHNGfhRtJ_61BD6OEbjYtVYjjmcIs-D4Dn02Y5SxJZT0uno9g1XPcI/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwL2I-lWCL1TeYrBE6e5dM_UGKMNdcnCYpXaAbOExvcbEIKHdcCZcRLNwW-FeXwKszY/exec";
 
 document.getElementById("bloodRequestForm").addEventListener("submit", async (e) => {
 
