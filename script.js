@@ -1,209 +1,113 @@
-// ==========================================
-// 🩸 Al-Awn Blood Fighters
-// Blood Request Form - Final Script
-// ==========================================
-
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzFVagelgQ7pHeIUHP4yHvYkgHB5w4KFrH5a8GE7NnS0gMCk4nGDfOqaLasKRJNNEQ9CQ/exec";
 
 document.addEventListener("DOMContentLoaded", function () {
 
   const form = document.getElementById("bloodRequestForm");
 
-  // ==========================================
-  // Form Submit
-  // ==========================================
-
   form.addEventListener("submit", async function (e) {
 
     e.preventDefault();
 
-    // ========================================
-    // Mobile Number
-    // ========================================
+    // =========================
+    // মোবাইল নম্বর যাচাই
+    // =========================
 
-    const mobile = document
-      .getElementById("mobile")
-      .value
-      .trim();
+    const mobile = document.getElementById("mobile").value.trim();
 
     if (!/^01\d{9}$/.test(mobile)) {
-
       alert("❌ সঠিক ১১ সংখ্যার মোবাইল নম্বর লিখুন");
-
       return;
     }
 
+    // =========================
+    // বেলা ও সময়
+    // =========================
 
-    // ========================================
-    // Get Form Values
-    // ========================================
+    const timePeriod = document.getElementById("timePeriod").value;
+    const timeValue = document.getElementById("timeValue").value;
 
-    const problem = document
-      .getElementById("problem")
-      .value
-      .trim();
-
-    const bloodGroup = document
-      .getElementById("bloodGroup")
-      .value;
-
-    const hemoglobin = document
-      .getElementById("hemoglobin")
-      .value;
-
-    const date = document
-      .getElementById("date")
-      .value;
-
-    const bela = document
-      .getElementById("bela")
-      .value;
-
-    const time = document
-      .getElementById("time")
-      .value;
-
-    const hospital = document
-      .getElementById("hospital")
-      .value
-      .trim();
-
-    const note = document
-      .getElementById("note")
-      .value
-      .trim();
-
-
-    // ========================================
-    // Check Time
-    // ========================================
-
-    if (!bela) {
-
-      alert("❌ অনুগ্রহ করে বেলা নির্বাচন করুন");
-
+    if (!timePeriod) {
+      alert("❌ বেলা নির্বাচন করুন");
       return;
     }
 
-
-    if (!time) {
-
-      alert("❌ অনুগ্রহ করে সময় নির্বাচন করুন");
-
+    if (!timeValue) {
+      alert("❌ সময় নির্বাচন করুন");
       return;
     }
 
-
-    // ========================================
-    // Data
-    // ========================================
+    // =========================
+    // সব তথ্য সংগ্রহ
+    // =========================
 
     const data = {
 
-      problem: problem,
+      problem: document.getElementById("problem").value.trim(),
 
-      bloodGroup: bloodGroup,
+      bloodGroup: document.getElementById("bloodGroup").value,
 
-      hemoglobin: hemoglobin,
+      hemoglobin: document.getElementById("hemoglobin").value,
 
-      date: date,
+      date: document.getElementById("date").value,
 
-      bela: bela,
+      timePeriod: timePeriod,
 
-      time: time,
+      timeValue: timeValue,
 
-      hospital: hospital,
+      hospital: document.getElementById("hospital").value.trim(),
 
       mobile: mobile,
 
-      note: note
+      note: document.getElementById("note").value.trim()
 
     };
 
-
-    // ========================================
-    // Disable Button
-    // ========================================
-
-    const button = form.querySelector("button[type='submit']");
-
-    const oldButtonText = button.innerHTML;
-
-    button.disabled = true;
-
-    button.innerHTML = "⏳ পাঠানো হচ্ছে...";
-
-
-    // ========================================
-    // Send Data to Google Sheet
-    // ========================================
+    // =========================
+    // ডাটা পাঠানো
+    // =========================
 
     try {
+
+      alert("⏳ রিকুয়েস্ট পাঠানো হচ্ছে...");
 
       const response = await fetch(SCRIPT_URL, {
 
         method: "POST",
 
         headers: {
-
-          "Content-Type": "application/json"
-
+          "Content-Type": "text/plain;charset=utf-8"
         },
 
         body: JSON.stringify(data)
 
       });
 
-
       const result = await response.json();
 
-
-      // ======================================
-      // Success
-      // ======================================
+      console.log("Server Response:", result);
 
       if (result.success) {
 
-        alert("✅ ব্লাড রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে");
+        alert("✅ ব্লাড রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে");
 
         form.reset();
 
-      }
+      } else {
 
-
-      // ======================================
-      // Error
-      // ======================================
-
-      else {
-
-        alert(
-          "❌ রিকুয়েস্ট পাঠানো যায়নি\n\n" +
-          (result.error || "অজানা সমস্যা")
-        );
+        alert("❌ " + (result.error || "রিকুয়েস্ট পাঠানো যায়নি"));
 
       }
-
 
     } catch (error) {
 
       console.error("Error:", error);
 
       alert(
-        "❌ সার্ভারের সাথে সংযোগ করা যায়নি।\n\n" +
-        "ইন্টারনেট সংযোগ এবং Apps Script Deployment পরীক্ষা করুন।"
+        "❌ সার্ভারের সাথে সংযোগ করা যায়নি।\n\n" +
+        "ইন্টারনেট এবং Apps Script Deployment পরীক্ষা করুন।"
       );
 
     }
-
-
-    // ========================================
-    // Enable Button Again
-    // ========================================
-
-    button.disabled = false;
-
-    button.innerHTML = oldButtonText;
 
   });
 
