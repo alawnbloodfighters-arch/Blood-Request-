@@ -1,128 +1,286 @@
-/* =========================================
-   BASIC
-========================================= */
+/* ================================
+   Basic
+================================ */
 
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  font-family: "Noto Sans Bengali", "Arial", sans-serif;
-  background: #f5f5f5;
+  margin: 0;
+  padding: 0;
+
+  font-family:
+    "Noto Sans Bengali",
+    "SolaimanLipi",
+    Arial,
+    sans-serif;
+
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(220, 20, 60, 0.10) 0,
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 90% 30%,
+      rgba(220, 20, 60, 0.08) 0,
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #fff5f5,
+      #f8f9fa,
+      #fff1f1
+    );
+
   color: #222;
-  padding: 20px 10px;
+
+  min-height: 100vh;
 }
 
 
-/* =========================================
-   MAIN CONTAINER
-========================================= */
+/* ================================
+   Blood Theme Background Pattern
+================================ */
+
+body::before {
+  content: "🩸";
+  position: fixed;
+
+  top: 8%;
+  left: 3%;
+
+  font-size: 70px;
+  opacity: 0.035;
+
+  transform: rotate(-15deg);
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+body::after {
+  content: "🩸";
+  position: fixed;
+
+  bottom: 8%;
+  right: 3%;
+
+  font-size: 90px;
+  opacity: 0.035;
+
+  transform: rotate(15deg);
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+
+/* ================================
+   Main Container
+================================ */
 
 .container {
   width: 100%;
-  max-width: 650px;
-  margin: 0 auto;
+  max-width: 720px;
+
+  margin: 25px auto;
+  padding: 0 12px;
 }
 
 
-/* =========================================
-   HEADER
-========================================= */
+/* ================================
+   Header
+================================ */
 
 .header {
   text-align: center;
-  background: #ffffff;
-  padding: 20px 15px;
-  border-radius: 18px 18px 0 0;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #fff7f7
+    );
+
+  border-radius: 25px 25px 0 0;
+
+  padding: 28px 18px 25px;
+
+  box-shadow:
+    0 8px 30px rgba(120, 0, 0, 0.10);
+
+  border-top: 5px solid #c9141b;
 }
+
+
+/* Logo */
 
 .logo {
-  width: 90px;
-  height: 90px;
+  width: 95px;
+  height: 95px;
+
   object-fit: contain;
+
   display: block;
-  margin: 0 auto 10px;
+
+  margin: 0 auto 12px;
+
+  border-radius: 50%;
 }
+
+
+/* Header Title */
 
 .header h1 {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 5px;
+  margin: 5px 0 5px;
+
+  font-size: 30px;
+  font-weight: 800;
+
+  color: #222;
+
+  line-height: 1.4;
 }
+
+
+/* Header Subtitle */
 
 .header p {
-  font-size: 18px;
-  color: #666;
+  margin: 5px 0 0;
+
+  font-size: 20px;
+
+  color: #777;
+
+  font-weight: 500;
 }
 
 
-/* =========================================
-   CARD
-========================================= */
+/* ================================
+   Card
+================================ */
 
 .card {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 0 0 18px 18px;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.97);
+
+  padding: 30px 28px 35px;
+
+  border-radius: 0 0 25px 25px;
+
+  box-shadow:
+    0 12px 35px rgba(80, 0, 0, 0.12);
+
+  border-left: 1px solid rgba(200, 0, 0, 0.05);
+  border-right: 1px solid rgba(200, 0, 0, 0.05);
 }
 
 
-/* =========================================
-   FORM
-========================================= */
+/* ================================
+   Form
+================================ */
 
 form {
   width: 100%;
 }
 
+
+/* ================================
+   Labels
+================================ */
+
 label {
   display: block;
-  font-size: 18px;
-  font-weight: 700;
-  margin: 18px 0 8px;
+
+  margin-top: 22px;
+  margin-bottom: 9px;
+
+  font-size: 22px;
+
+  font-weight: 800;
+
+  color: #292929;
+}
+
+label:first-child {
+  margin-top: 0;
 }
 
 
-/* =========================================
-   INPUT / SELECT / TEXTAREA
-========================================= */
+/* ================================
+   Input / Select / Textarea
+================================ */
 
 input,
 select,
 textarea {
+
   width: 100%;
-  font-family: inherit;
-  font-size: 17px;
-  color: #222;
+
+  border: 1.5px solid #d1d1d1;
+
+  border-radius: 15px;
+
   background: #ffffff;
-  border: 1px solid #cccccc;
-  border-radius: 12px;
-  padding: 14px 16px;
+
+  color: #222;
+
+  font-family:
+    "Noto Sans Bengali",
+    "SolaimanLipi",
+    Arial,
+    sans-serif;
+
+  font-size: 19px;
+
   outline: none;
-  transition: 0.2s;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+
 }
 
-input,
-select {
-  height: 58px;
+
+/* Input */
+
+input {
+  height: 62px;
+
+  padding: 0 18px;
 }
+
+
+/* Select */
+
+select {
+  height: 62px;
+
+  padding: 0 18px;
+
+  cursor: pointer;
+
+  appearance: auto;
+}
+
+
+/* Textarea */
 
 textarea {
-  min-height: 120px;
+
+  min-height: 130px;
+
+  padding: 16px 18px;
+
   resize: vertical;
-}
 
-
-/* Focus */
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: #d71920;
-  box-shadow: 0 0 0 2px rgba(215, 25, 32, 0.10);
+  line-height: 1.6;
 }
 
 
@@ -130,143 +288,319 @@ textarea:focus {
 
 input::placeholder,
 textarea::placeholder {
-  color: #888;
+
+  color: #999;
+
+  opacity: 1;
 }
 
 
-/* =========================================
-   TIME DROPDOWNS
-========================================= */
+/* ================================
+   Focus
+================================ */
+
+input:focus,
+select:focus,
+textarea:focus {
+
+  border-color: #d01920;
+
+  background: #fffafa;
+
+  box-shadow:
+    0 0 0 3px rgba(208, 25, 32, 0.10);
+}
+
+
+/* ================================
+   Time Row
+================================ */
 
 .time-row {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center;
-  gap: 10px !important;
-  width: 100% !important;
+
+  display: flex;
+
+  width: 100%;
+
+  gap: 16px;
 }
+
+
+/* দুইটা Dropdown সমান */
 
 .time-row select {
-  width: 50% !important;
-  flex: 1 1 0 !important;
-  min-width: 0 !important;
-  box-sizing: border-box !important;
+
+  width: 50%;
+
+  min-width: 0;
 }
 
 
-/* =========================================
-   BUTTON
-========================================= */
+/* ================================
+   Submit Button
+================================ */
 
 button {
+
   width: 100%;
-  height: 60px;
-  margin-top: 22px;
+
+  height: 70px;
+
+  margin-top: 30px;
+
   border: none;
-  border-radius: 12px;
-  background: #d71920;
+
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #d71920,
+      #b50910
+    );
+
   color: #ffffff;
-  font-family: inherit;
-  font-size: 19px;
-  font-weight: 700;
+
+  font-family:
+    "Noto Sans Bengali",
+    "SolaimanLipi",
+    Arial,
+    sans-serif;
+
+  font-size: 23px;
+
+  font-weight: 800;
+
   cursor: pointer;
-  transition: 0.2s;
+
+  box-shadow:
+    0 8px 18px rgba(190, 0, 0, 0.20);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
 }
 
-button:hover {
-  background: #b9151b;
-}
+
+/* Button Press */
 
 button:active {
+
   transform: scale(0.98);
+
+  box-shadow:
+    0 4px 10px rgba(190, 0, 0, 0.15);
 }
 
 
-/* =========================================
-   MOBILE
-========================================= */
+/* Disabled */
+
+button:disabled {
+
+  opacity: 0.65;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* ================================
+   Mobile
+================================ */
 
 @media (max-width: 600px) {
 
   body {
-    padding: 10px 5px;
+    background:
+      radial-gradient(
+        circle at 10% 10%,
+        rgba(220, 20, 60, 0.08),
+        transparent 30%
+      ),
+      linear-gradient(
+        135deg,
+        #fff7f7,
+        #f8f9fa
+      );
   }
+
 
   .container {
-    max-width: 100%;
+
+    margin: 10px auto;
+
+    padding: 0 8px;
   }
+
 
   .header {
-    padding: 18px 12px;
+
+    padding: 25px 15px 22px;
+
+    border-radius: 22px 22px 0 0;
   }
 
+
   .logo {
+
     width: 80px;
     height: 80px;
   }
 
+
   .header h1 {
-    font-size: 22px;
+
+    font-size: 25px;
   }
+
 
   .header p {
-    font-size: 17px;
-  }
 
-  .card {
-    padding: 15px;
-  }
-
-  label {
     font-size: 18px;
   }
 
-  input,
-  select,
-  textarea {
-    font-size: 17px;
+
+  .card {
+
+    padding: 25px 18px 30px;
+
+    border-radius: 0 0 22px 22px;
   }
 
-  /*
-     সময়ের দুই dropdown অবশ্যই
-     একই লাইনে থাকবে
-  */
+
+  label {
+
+    font-size: 20px;
+
+    margin-top: 20px;
+  }
+
+
+  input,
+  select {
+
+    height: 60px;
+
+    font-size: 18px;
+
+    border-radius: 14px;
+  }
+
+
+  textarea {
+
+    font-size: 18px;
+
+    border-radius: 14px;
+  }
+
 
   .time-row {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 8px !important;
-    width: 100% !important;
+
+    gap: 14px;
   }
 
+
   .time-row select {
-    display: block !important;
-    width: 50% !important;
-    flex: 1 1 0 !important;
-    min-width: 0 !important;
+
+    width: 50%;
+  }
+
+
+  button {
+
+    height: 65px;
+
+    font-size: 21px;
+
+    border-radius: 15px;
   }
 
 }
 
 
-/* =========================================
-   VERY SMALL SCREEN
-========================================= */
+/* ================================
+   Small Mobile
+================================ */
 
-@media (max-width: 350px) {
+@media (max-width: 380px) {
 
   .card {
-    padding: 12px;
+
+    padding-left: 14px;
+    padding-right: 14px;
   }
+
+
+  .header h1 {
+
+    font-size: 22px;
+  }
+
+
+  .header p {
+
+    font-size: 17px;
+  }
+
+
+  label {
+
+    font-size: 19px;
+  }
+
+
+  input,
+  select {
+
+    font-size: 17px;
+  }
+
 
   .time-row {
-    gap: 5px !important;
+
+    gap: 9px;
   }
+
 
   .time-row select {
-    font-size: 15px;
-    padding-left: 8px;
+
+    padding-left: 12px;
     padding-right: 8px;
+
+    font-size: 16px;
   }
 
+}
+
+
+/* ================================
+   Scrollbar
+================================ */
+
+::-webkit-scrollbar {
+
+  width: 7px;
+}
+
+
+::-webkit-scrollbar-track {
+
+  background: #f5f5f5;
+}
+
+
+::-webkit-scrollbar-thumb {
+
+  background: #c9141b;
+
+  border-radius: 10px;
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+
+  background: #a90008;
 }
