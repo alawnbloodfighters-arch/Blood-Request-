@@ -1,114 +1,232 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzFVagelgQ7pHeIUHP4yHvYkgHB5w4KFrH5a8GE7NnS0gMCk4nGDfOqaLasKRJNNEQ9CQ/exec";
+// ======================================
+// Google Apps Script URL
+// ======================================
+
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbzFVagelgQ7pHeIUHP4yHvYkgHB5w4KFrH5a8GE7NnS0gMCk4nGDfOqaLasKRJNNEQ9CQ/exec";
+
+
+// ======================================
+// Page Load
+// ======================================
 
 document.addEventListener("DOMContentLoaded", function () {
 
-  const form = document.getElementById("bloodRequestForm");
+    console.log("Blood Request Script Loaded");
 
-  form.addEventListener("submit", async function (e) {
 
-    e.preventDefault();
+    // Form
+    const form = document.getElementById("bloodRequestForm");
 
-    // =========================
-    // মোবাইল নম্বর যাচাই
-    // =========================
+    // Button
+    const submitButton = document.getElementById("submitButton");
 
-    const mobile = document.getElementById("mobile").value.trim();
 
-    if (!/^01\d{9}$/.test(mobile)) {
-      alert("❌ সঠিক ১১ সংখ্যার মোবাইল নম্বর লিখুন");
-      return;
-    }
+    // ======================================
+    // Form Submit
+    // ======================================
 
-    // =========================
-    // বেলা ও সময়
-    // =========================
+    form.addEventListener("submit", async function (event) {
 
-    const timePeriod = document.getElementById("timePeriod").value;
-    const timeValue = document.getElementById("timeValue").value;
+        event.preventDefault();
 
-    if (!timePeriod) {
-      alert("❌ বেলা নির্বাচন করুন");
-      return;
-    }
+        console.log("Submit button clicked");
 
-    if (!timeValue) {
-      alert("❌ সময় নির্বাচন করুন");
-      return;
-    }
 
-    // =========================
-    // সব তথ্য সংগ্রহ
-    // =========================
+        // ==================================
+        // Mobile Number
+        // ==================================
 
-    const data = {
+        const mobile =
+            document.getElementById("mobile").value.trim();
 
-      problem: document.getElementById("problem").value.trim(),
 
-      bloodGroup: document.getElementById("bloodGroup").value,
+        if (!/^01\d{9}$/.test(mobile)) {
 
-      hemoglobin: document.getElementById("hemoglobin").value,
+            alert("❌ সঠিক ১১ সংখ্যার মোবাইল নম্বর লিখুন");
 
-      date: document.getElementById("date").value,
+            return;
 
-      timePeriod: timePeriod,
+        }
 
-      timeValue: timeValue,
 
-      hospital: document.getElementById("hospital").value.trim(),
+        // ==================================
+        // Time Period
+        // ==================================
 
-      mobile: mobile,
+        const timePeriod =
+            document.getElementById("timePeriod").value;
 
-      note: document.getElementById("note").value.trim()
 
-    };
+        if (timePeriod === "") {
 
-    // =========================
-    // ডাটা পাঠানো
-    // =========================
+            alert("❌ বেলা নির্বাচন করুন");
 
-    try {
+            return;
 
-      alert("⏳ রিকুয়েস্ট পাঠানো হচ্ছে...");
+        }
 
-      const response = await fetch(SCRIPT_URL, {
 
-        method: "POST",
+        // ==================================
+        // Time
+        // ==================================
 
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
+        const timeValue =
+            document.getElementById("timeValue").value;
 
-        body: JSON.stringify(data)
 
-      });
+        if (timeValue === "") {
 
-      const result = await response.json();
+            alert("❌ সময় নির্বাচন করুন");
 
-      console.log("Server Response:", result);
+            return;
 
-      if (result.success) {
+        }
 
-        alert("✅ ব্লাড রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে");
 
-        form.reset();
+        // ==================================
+        // Collect Form Data
+        // ==================================
 
-      } else {
+        const data = {
 
-        alert("❌ " + (result.error || "রিকুয়েস্ট পাঠানো যায়নি"));
+            problem:
+                document.getElementById("problem").value.trim(),
 
-      }
+            bloodGroup:
+                document.getElementById("bloodGroup").value,
 
-    } catch (error) {
+            hemoglobin:
+                document.getElementById("hemoglobin").value,
 
-      console.error("Error:", error);
+            date:
+                document.getElementById("date").value,
 
-      alert(
-        "❌ সার্ভারের সাথে সংযোগ করা যায়নি।\n\n" +
-        "ইন্টারনেট এবং Apps Script Deployment পরীক্ষা করুন।"
-      );
+            timePeriod:
+                timePeriod,
 
-    }
+            timeValue:
+                timeValue,
 
-  });
+            hospital:
+                document.getElementById("hospital").value.trim(),
+
+            mobile:
+                mobile,
+
+            note:
+                document.getElementById("note").value.trim()
+
+        };
+
+
+        console.log("Sending Data:", data);
+
+
+        // ==================================
+        // Button Disable
+        // ==================================
+
+        submitButton.disabled = true;
+
+        submitButton.innerText = "⏳ রিকুয়েস্ট পাঠানো হচ্ছে...";
+
+
+        // ==================================
+        // Send Data to Google Sheets
+        // ==================================
+
+        try {
+
+            const response = await fetch(SCRIPT_URL, {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
+
+                },
+
+                body: JSON.stringify(data)
+
+            });
+
+
+            console.log("Response received");
+
+
+            const result =
+                await response.json();
+
+
+            console.log("Server result:", result);
+
+
+            // ==================================
+            // Success
+            // ==================================
+
+            if (result.success === true) {
+
+                alert(
+                    "✅ ব্লাড রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে"
+                );
+
+
+                // Form Reset
+
+                form.reset();
+
+
+            }
+
+            // ==================================
+            // Error
+            // ==================================
+
+            else {
+
+                alert(
+                    "❌ রিকুয়েস্ট পাঠানো যায়নি\n\n" +
+                    (result.error || "অজানা সমস্যা")
+                );
+
+            }
+
+
+        }
+
+        // ======================================
+        // Connection Error
+        // ======================================
+
+        catch (error) {
+
+            console.error(
+                "Connection Error:",
+                error
+            );
+
+
+            alert(
+                "❌ সার্ভারের সাথে সংযোগ করা যায়নি\n\n" +
+                "ইন্টারনেট অথবা Apps Script Deployment পরীক্ষা করুন।"
+            );
+
+        }
+
+
+        // ==================================
+        // Button Enable
+        // ==================================
+
+        submitButton.disabled = false;
+
+        submitButton.innerText =
+            "🩸 রিকুয়েস্ট পাঠান";
+
+    });
 
 });
