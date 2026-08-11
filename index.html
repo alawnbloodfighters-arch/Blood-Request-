@@ -1,119 +1,223 @@
 <!DOCTYPE html>
 <html lang="bn">
+
 <head>
 
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ব্লাড রিকুয়েস্ট</title>
+  <title>ব্লাড রিকুয়েস্ট</title>
 
-<link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 
 </head>
 
+
 <body>
 
-<div class="container">
+  <div class="container">
 
-<div class="header">
+    <div class="header">
 
-<img src="logo.png" class="logo">
+      <img src="logo.png" class="logo" alt="Logo">
 
-<h1>🩸 আল-আওন ব্লাড ফাইটার্স</h1>
+      <h1>🩸 আল-আওন ব্লাড ফাইটার্স</h1>
 
-<p>ব্লাড রিকুয়েস্ট ফর্ম</p>
+      <p>ব্লাড রিকুয়েস্ট ফর্ম</p>
 
-</div>
+    </div>
 
-<div class="card">
 
-<form id="bloodRequestForm">
+    <div class="card">
 
-<label>🩺 রোগের সমস্যা</label>
+      <form id="bloodRequestForm">
 
-<input
-type="text"
-id="problem"
-placeholder="রোগের সমস্যা লিখুন"
-required>
 
-<label>🩸 রক্তের গ্রুপ</label>
+        <!-- রোগের সমস্যা -->
 
-<select id="bloodGroup" required>
+        <label>🩺 রোগের সমস্যা</label>
 
-<option value="">নির্বাচন করুন</option>
+        <input
+          type="text"
+          id="problem"
+          placeholder="রোগের সমস্যা লিখুন"
+          required
+        >
 
-<option>A+</option>
-<option>A-</option>
-<option>B+</option>
-<option>B-</option>
-<option>AB+</option>
-<option>AB-</option>
-<option>O+</option>
-<option>O-</option>
 
-</select>
+        <!-- রক্তের গ্রুপ -->
 
-<label>🧪 হিমোগ্লোবিন</label>
+        <label>🩸 রক্তের গ্রুপ</label>
 
-<input
-type="number"
-id="hemoglobin"
-step="0.1"
-placeholder="যেমন 8.5"
-required>
-<label>📅 রক্তদানের তারিখ</label>
+        <select id="bloodGroup" required>
 
-<input
-type="date"
-id="date"
-required>
+          <option value="">নির্বাচন করুন</option>
 
-<label>🕒 রক্তদানের সময়</label>
+          <option value="A+">A+</option>
+          <option value="A-">A-</option>
 
-<input
-type="time"
-id="time"
-required>
+          <option value="B+">B+</option>
+          <option value="B-">B-</option>
 
-<label>🏥 হাসপাতালের নাম</label>
+          <option value="AB+">AB+</option>
+          <option value="AB-">AB-</option>
 
-<input
-type="text"
-id="hospital"
-placeholder="হাসপাতালের নাম লিখুন"
-required>
+          <option value="O+">O+</option>
+          <option value="O-">O-</option>
 
-<label>📱 যোগাযোগ নম্বর</label>
+        </select>
 
-<input
-type="tel"
-id="mobile"
-maxlength="11"
-placeholder="01XXXXXXXXX"
-required>
 
-<label>📝 অতিরিক্ত তথ্য</label>
+        <!-- হিমোগ্লোবিন -->
 
-<textarea
-id="note"
-rows="4"
-placeholder="প্রয়োজন হলে অতিরিক্ত তথ্য লিখুন"></textarea>
+        <label>🧪 হিমোগ্লোবিন</label>
 
-<button type="submit">
+        <input
+          type="number"
+          id="hemoglobin"
+          step="0.1"
+          placeholder="যেমন 8.5"
+          required
+        >
 
-🩸 রিকুয়েস্ট পাঠান
 
-</button>
+        <!-- রক্তদানের তারিখ -->
 
-</form>
+        <label>📅 রক্তদানের তারিখ</label>
 
-</div>
+        <input
+          type="date"
+          id="date"
+          required
+        >
 
-</div>
 
-<script src="script.js"></script>
+        <!-- রক্তদানের সময় -->
+
+        <label>🕒 রক্তদানের সময়</label>
+
+        <div class="time-row">
+
+          <!-- সকাল / দুপুর / বিকাল / সন্ধ্যা / রাত -->
+
+          <select id="timePeriod" required>
+
+            <option value="">সময় নির্বাচন করুন</option>
+
+            <option value="সকাল">সকাল</option>
+
+            <option value="দুপুর">দুপুর</option>
+
+            <option value="বিকাল">বিকাল</option>
+
+            <option value="সন্ধ্যা">সন্ধ্যা</option>
+
+            <option value="রাত">রাত</option>
+
+          </select>
+
+
+          <!-- সময় -->
+
+          <select id="timeValue" required>
+
+            <option value="">সময় নির্বাচন করুন</option>
+
+            <option value="01:00">01:00</option>
+            <option value="01:30">01:30</option>
+
+            <option value="02:00">02:00</option>
+            <option value="02:30">02:30</option>
+
+            <option value="03:00">03:00</option>
+            <option value="03:30">03:30</option>
+
+            <option value="04:00">04:00</option>
+            <option value="04:30">04:30</option>
+
+            <option value="05:00">05:00</option>
+            <option value="05:30">05:30</option>
+
+            <option value="06:00">06:00</option>
+            <option value="06:30">06:30</option>
+
+            <option value="07:00">07:00</option>
+            <option value="07:30">07:30</option>
+
+            <option value="08:00">08:00</option>
+            <option value="08:30">08:30</option>
+
+            <option value="09:00">09:00</option>
+            <option value="09:30">09:30</option>
+
+            <option value="10:00">10:00</option>
+            <option value="10:30">10:30</option>
+
+            <option value="11:00">11:00</option>
+            <option value="11:30">11:30</option>
+
+            <option value="12:00">12:00</option>
+            <option value="12:30">12:30</option>
+
+          </select>
+
+        </div>
+
+
+        <!-- হাসপাতাল -->
+
+        <label>🏥 হাসপাতালের নাম</label>
+
+        <input
+          type="text"
+          id="hospital"
+          placeholder="হাসপাতালের নাম লিখুন"
+          required
+        >
+
+
+        <!-- মোবাইল -->
+
+        <label>📱 যোগাযোগ নম্বর</label>
+
+        <input
+          type="tel"
+          id="mobile"
+          maxlength="11"
+          placeholder="01XXXXXXXXX"
+          required
+        >
+
+
+        <!-- অতিরিক্ত তথ্য -->
+
+        <label>📝 অতিরিক্ত তথ্য</label>
+
+        <textarea
+          id="note"
+          rows="4"
+          placeholder="প্রয়োজন হলে অতিরিক্ত তথ্য লিখুন"
+        ></textarea>
+
+
+        <!-- Submit -->
+
+        <button type="submit">
+
+          🩸 রিকুয়েস্ট পাঠান
+
+        </button>
+
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <script src="script.js"></script>
 
 </body>
 
