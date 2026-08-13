@@ -87,37 +87,19 @@ document.addEventListener("DOMContentLoaded", function () {
         // ==================================
         // Collect Form Data
         // ==================================
+const data = {
+  problem: document.getElementById("problem").value.trim(),
+  bloodGroup: document.getElementById("bloodGroup").value,
+  hemoglobin: document.getElementById("hemoglobin").value,
+  date: document.getElementById("date").value,
 
-        const data = {
+  timePeriod: document.getElementById("timePeriod").value,
+  timeValue: document.getElementById("timeValue").value,
 
-            problem:
-                document.getElementById("problem").value.trim(),
-
-            bloodGroup:
-                document.getElementById("bloodGroup").value,
-
-            hemoglobin:
-                document.getElementById("hemoglobin").value,
-
-            date:
-                document.getElementById("date").value,
-
-            timePeriod:
-                timePeriod,
-
-            timeValue:
-                timeValue,
-
-            hospital:
-                document.getElementById("hospital").value.trim(),
-
-            mobile:
-                mobile,
-
-            note:
-                document.getElementById("note").value.trim()
-
-        };
+  hospital: document.getElementById("hospital").value.trim(),
+  mobile: mobile,
+  note: document.getElementById("note").value.trim()
+};
 
 
         console.log("Sending Data:", data);
