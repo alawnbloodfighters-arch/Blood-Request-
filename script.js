@@ -3,7 +3,7 @@ const form = document.getElementById("bloodRequestForm");
 const submitButton = document.getElementById("submitButton");
 
 const SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbzFVagelgQ7pHeIUHP4yHvYkgHB5w4KFrH5a8GE7NnS0gMCk4nGDfOqaLasKRJNNEQ9CQ/exec";
+  "https://script.google.com/macros/s/AKfycbyD1JXVWPAagt_lQYqqW6391QrglW_0vvcTJxcACoQjzsMw0Sf72LBzCoIEFpRVWdXEcw/exec";
 
 
 form.addEventListener("submit", async function (event) {
