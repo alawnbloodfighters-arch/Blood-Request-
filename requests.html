@@ -17,67 +17,218 @@
 
 body {
     margin: 0;
-    padding: 20px 14px;
+    padding: 20px 15px;
     background: #f5f5f5;
     font-family: Arial, "Noto Sans Bengali", sans-serif;
     color: #222;
 }
 
-h1 {
-    text-align: center;
-    font-size: 30px;
-    margin: 10px 0 25px;
-    font-weight: bold;
-}
-
-#requests {
+.container {
     max-width: 700px;
     margin: auto;
 }
 
+
+/* =========================
+   Title
+========================= */
+
+.title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin: 10px 0 28px;
+}
+
+.title span {
+    color: #d00000;
+}
+
+
+/* =========================
+   Card
+========================= */
+
 .card {
-    background: white;
-    border-radius: 18px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.12);
-    border-left: 5px solid #d90000;
+    background: #ffffff;
+    border-radius: 24px;
+    margin-bottom: 25px;
+    padding: 25px 22px 20px 30px;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
+    border-left: 8px solid #d00000;
 }
 
-.blood {
-    font-size: 30px;
+
+/* =========================
+   Blood Group
+========================= */
+
+.blood-group {
+    font-size: 38px;
     font-weight: bold;
-    color: #c40000;
-    margin-bottom: 18px;
+    color: #c80000;
+    margin-bottom: 24px;
 }
 
-.info {
-    font-size: 18px;
-    line-height: 1.8;
-    margin: 5px 0;
-}
 
-.label {
-    font-weight: bold;
-}
+/* =========================
+   Information
+========================= */
 
-hr {
-    border: 0;
-    border-top: 1px solid #ddd;
+.row {
+    font-size: 21px;
     margin: 15px 0;
+    line-height: 1.55;
 }
+
+.row strong {
+    font-weight: bold;
+}
+
+
+/* =========================
+   UPDATE
+========================= */
+
+.update {
+    margin-top: 22px;
+    padding: 13px 15px;
+    border-radius: 12px;
+    font-size: 21px;
+    font-weight: bold;
+    border-left: 6px solid;
+}
+
+
+/* 🟢 Managed */
+
+.update.green {
+    background: #e7f8ec;
+    color: #138a3d;
+    border-color: #19a34a;
+}
+
+
+/* 🟡 Pending */
+
+.update.yellow {
+    background: #fff7d6;
+    color: #9a7600;
+    border-color: #e0b800;
+}
+
+
+/* 🔴 Request Cancelled */
+
+.update.red {
+    background: #ffe6e6;
+    color: #c00000;
+    border-color: #d00000;
+}
+
+
+/* =========================
+   Unknown Update
+========================= */
+
+.update.blue {
+    background: #e9f2ff;
+    color: #1769aa;
+    border-color: #287bdc;
+}
+
+
+/* =========================
+   Call Button
+========================= */
+
+.call-button {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    background: #168a3b;
+    color: white;
+    font-size: 21px;
+    font-weight: bold;
+    padding: 13px;
+    border-radius: 12px;
+    margin-top: 18px;
+}
+
+.call-button:active {
+    transform: scale(0.98);
+}
+
+
+/* =========================
+   Loading
+========================= */
 
 .loading {
     text-align: center;
-    font-size: 20px;
+    font-size: 21px;
     padding: 30px;
 }
 
+
+/* =========================
+   Error
+========================= */
+
 .error {
     text-align: center;
-    color: red;
-    font-size: 18px;
+    color: #d00000;
+    font-size: 20px;
+    padding: 25px;
+}
+
+
+/* =========================
+   Empty
+========================= */
+
+.empty {
+    text-align: center;
+    font-size: 21px;
     padding: 30px;
+}
+
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 15px 10px;
+    }
+
+    .title {
+        font-size: 29px;
+    }
+
+    .card {
+        padding: 22px 17px 18px 24px;
+        border-radius: 22px;
+    }
+
+    .blood-group {
+        font-size: 36px;
+    }
+
+    .row {
+        font-size: 19px;
+    }
+
+    .update {
+        font-size: 19px;
+    }
+
+    .call-button {
+        font-size: 20px;
+    }
+
 }
 
 </style>
@@ -88,14 +239,30 @@ hr {
 <body>
 
 
-<h1>🩸 শেষের আবেদনগুলি</h1>
+<div class="container">
 
 
-<div id="requests">
+    <!-- Title -->
 
-    <div class="loading">
-        আবেদনগুলো লোড হচ্ছে...
+    <div class="title">
+
+        🩸 <span>শেষের আবেদনগুলি</span>
+
     </div>
+
+
+    <!-- Request List -->
+
+    <div id="requestList">
+
+        <div class="loading">
+
+            ⏳ আবেদনগুলি লোড হচ্ছে...
+
+        </div>
+
+    </div>
+
 
 </div>
 
@@ -104,53 +271,66 @@ hr {
 <script>
 
 
-const SCRIPT_URL =
+/* ==================================
+   Google Apps Script URL
+================================== */
+
+const API_URL =
 "https://script.google.com/macros/s/AKfycbyD1JXVWPAagt_lQYqqW6391QrglW_0vvcTJxcACoQjzsMw0Sf72LBzCoIEFpRVWdXEcw/exec";
 
 
 
-/* =========================
-   তারিখ ঠিক করার ফাংশন
-========================= */
+/* ==================================
+   Date Format
+================================== */
 
-function formatDate(dateValue) {
+function formatDate(value) {
 
-    if (!dateValue) {
+    if (!value) {
+
         return "";
+
     }
 
-    let dateString = String(dateValue);
+
+    let dateString = String(value);
+
 
     /*
-      Google Sheet থেকে যদি
-      2026-08-20T21:00:00.000Z
-      আসে, তাহলে UTC থেকে সরাসরি
-      তারিখ নেওয়া হবে।
+       Google Sheet থেকে যদি
+       2026-08-20T21:00:00.000Z
+       আসে
     */
 
     let match = dateString.match(
         /^(\d{4})-(\d{2})-(\d{2})/
     );
 
+
     if (match) {
 
         let year = match[1];
+
         let month = match[2];
+
         let day = match[3];
 
+
         return `${day}/${month}/${year}`;
+
     }
 
 
     /*
-      অন্য format হলে সাধারণভাবে চেষ্টা করবে
+       অন্য format হলে
     */
 
-    let date = new Date(dateValue);
+    let date = new Date(value);
+
 
     if (isNaN(date.getTime())) {
 
-        return dateString;
+        return value;
 
     }
 
@@ -174,189 +354,387 @@ function formatDate(dateValue) {
 
 
 
-/* =========================
-   সময় সুন্দর করার ফাংশন
-========================= */
+/* ==================================
+   Update Color
+================================== */
 
-function formatTime(timeValue) {
+function getUpdateClass(update) {
 
-    if (!timeValue) {
-        return "";
-    }
+    if (!update) {
 
-    return String(timeValue);
-
-}
-
-
-
-/* =========================
-   আবেদনগুলো লোড
-========================= */
-
-fetch(SCRIPT_URL)
-
-.then(response => {
-
-    if (!response.ok) {
-
-        throw new Error(
-            "Server error"
-        );
+        return "blue";
 
     }
 
-    return response.json();
 
-})
-
-
-.then(data => {
-
-
-    const container =
-        document.getElementById("requests");
+    let text =
+        String(update)
+        .trim()
+        .toLowerCase();
 
 
-    container.innerHTML = "";
+    /*
+       🟢 MANAGED
+    */
 
+    if (text === "managed") {
 
-    if (!data || data.length === 0) {
-
-        container.innerHTML = `
-            <div class="loading">
-                🩸 এখনো কোনো রক্তের আবেদন নেই।
-            </div>
-        `;
-
-        return;
+        return "green";
 
     }
 
 
     /*
-      সর্বশেষ আবেদন আগে
+       🟡 PENDING
     */
 
-    data.reverse();
+    if (text === "pending") {
+
+        return "yellow";
+
+    }
 
 
-    data.forEach(request => {
+    /*
+       🔴 REQUEST CANCELLED
+    */
+
+    if (text === "request cancelled") {
+
+        return "red";
+
+    }
 
 
-        const card =
-            document.createElement("div");
+    /*
+       অন্য কিছু হলে
+    */
+
+    return "blue";
+
+}
 
 
-        card.className = "card";
+
+/* ==================================
+   Load Requests
+================================== */
+
+async function loadRequests() {
 
 
-        card.innerHTML = `
+    const requestList =
+        document.getElementById(
+            "requestList"
+        );
 
-            <div class="blood">
-                🩸 ${request.bloodGroup || ""}
+
+    try {
+
+
+        const response =
+            await fetch(API_URL);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Server Error"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+
+        /* ==========================
+           কোনো Request নেই
+        ========================== */
+
+        if (
+            !data ||
+            data.length === 0
+        ) {
+
+
+            requestList.innerHTML = `
+
+                <div class="empty">
+
+                    📭 এখন কোনো রক্তের আবেদন নেই।
+
+                </div>
+
+            `;
+
+
+            return;
+
+        }
+
+
+
+        /*
+           পুরোনো Data থেকে
+           সর্বশেষ Data আগে
+        */
+
+        data.reverse();
+
+
+        requestList.innerHTML = "";
+
+
+
+        /* ==========================
+           প্রতিটি Request
+        ========================== */
+
+        data.forEach(function(item) {
+
+
+            /*
+              Google Sheet Column:
+
+              A = রোগীর সমস্যা
+              B = রক্তের গ্রুপ
+              C = হিমোগ্লোবিন
+              D = রক্তদানের তারিখ
+              E = রক্তদানের সময়
+              F = হাসপাতাল
+              G = যোগাযোগ
+              H = Update
+            */
+
+
+            const problem =
+                item.problem || "";
+
+
+            const bloodGroup =
+                item.bloodGroup || "";
+
+
+            const hemoglobin =
+                item.hemoglobin || "";
+
+
+            const date =
+                item.date || "";
+
+
+            const time =
+                item.time || "";
+
+
+            const hospital =
+                item.hospital || "";
+
+
+            const mobile =
+                item.mobile || "";
+
+
+            const update =
+                item.note || "";
+
+
+
+            /*
+               Update অনুযায়ী
+               Color নির্বাচন
+            */
+
+            const updateClass =
+                getUpdateClass(update);
+
+
+
+            /*
+               Card তৈরি
+            */
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "card";
+
+
+
+            /*
+               Card HTML
+            */
+
+            card.innerHTML = `
+
+
+                <div class="blood-group">
+
+                    🩸 ${bloodGroup}
+
+                </div>
+
+
+
+                <div class="row">
+
+                    🩺
+
+                    <strong>
+                        রোগীর সমস্যা:
+                    </strong>
+
+                    ${problem}
+
+                </div>
+
+
+
+                <div class="row">
+
+                    🧪
+
+                    <strong>
+                        হিমোগ্লোবিন:
+                    </strong>
+
+                    ${hemoglobin}
+
+                </div>
+
+
+
+                <div class="row">
+
+                    📅
+
+                    <strong>
+                        রক্তদানের তারিখ:
+                    </strong>
+
+                    ${formatDate(date)}
+
+                </div>
+
+
+
+                <div class="row">
+
+                    🕒
+
+                    <strong>
+                        রক্তদানের সময়:
+                    </strong>
+
+                    ${time}
+
+                </div>
+
+
+
+                <div class="row">
+
+                    🏥
+
+                    <strong>
+                        হাসপাতাল:
+                    </strong>
+
+                    ${hospital}
+
+                </div>
+
+
+
+                <div class="row">
+
+                    📱
+
+                    <strong>
+                        যোগাযোগ:
+                    </strong>
+
+                    ${mobile}
+
+                </div>
+
+
+
+                <div
+                    class="update ${updateClass}"
+                >
+
+                    Update:
+                    ${update || "No Update"}
+
+                </div>
+
+
+
+                <a
+                    class="call-button"
+                    href="tel:${mobile}"
+                >
+
+                    📞 কল করুন
+
+                </a>
+
+
+            `;
+
+
+
+            requestList.appendChild(
+                card
+            );
+
+
+        });
+
+
+    }
+
+
+    catch (error) {
+
+
+        console.error(error);
+
+
+        requestList.innerHTML = `
+
+            <div class="error">
+
+                ❌ আবেদনগুলি লোড করা যাচ্ছে না।
+
+                <br><br>
+
+                ইন্টারনেট সংযোগ পরীক্ষা করুন।
+
             </div>
-
-
-            <div class="info">
-                🩺
-                <span class="label">
-                    রোগীর সমস্যা:
-                </span>
-                ${request.problem || ""}
-            </div>
-
-
-            <div class="info">
-                🧪
-                <span class="label">
-                    হিমোগ্লোবিন:
-                </span>
-                ${request.hemoglobin || ""}
-            </div>
-
-
-            <div class="info">
-                📅
-                <span class="label">
-                    রক্তদানের তারিখ:
-                </span>
-                ${formatDate(request.date)}
-            </div>
-
-
-            <div class="info">
-                🕒
-                <span class="label">
-                    রক্তদানের সময়:
-                </span>
-                ${formatTime(request.time)}
-            </div>
-
-
-            <div class="info">
-                🏥
-                <span class="label">
-                    হাসপাতাল:
-                </span>
-                ${request.hospital || ""}
-            </div>
-
-
-            <div class="info">
-                📱
-                <span class="label">
-                    যোগাযোগ:
-                </span>
-                ${request.mobile || ""}
-            </div>
-
-
-            <div class="info">
-                📝
-                <span class="label">
-                    অতিরিক্ত তথ্য:
-                </span>
-                ${request.note || ""}
-            </div>
-
-
-            <hr>
 
         `;
 
 
-        container.appendChild(card);
+    }
+
+}
 
 
-    });
 
+/* ==================================
+   Page Load
+================================== */
 
-})
-
-
-.catch(error => {
-
-
-    console.error(error);
-
-
-    document.getElementById("requests").innerHTML = `
-
-        <div class="error">
-
-            ❌ আবেদনগুলো লোড করা যাচ্ছে না।
-
-            <br><br>
-
-            আবার চেষ্টা করুন।
-
-        </div>
-
-    `;
-
-
-});
+loadRequests();
 
 
 </script>
