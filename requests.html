@@ -9,89 +9,358 @@
 
 <title>শেষের আবেদনগুলি</title>
 
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px 14px;
+    background: #f5f5f5;
+    font-family: Arial, "Noto Sans Bengali", sans-serif;
+    color: #222;
+}
+
+h1 {
+    text-align: center;
+    font-size: 30px;
+    margin: 10px 0 25px;
+    font-weight: bold;
+}
+
+#requests {
+    max-width: 700px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+    border-left: 5px solid #d90000;
+}
+
+.blood {
+    font-size: 30px;
+    font-weight: bold;
+    color: #c40000;
+    margin-bottom: 18px;
+}
+
+.info {
+    font-size: 18px;
+    line-height: 1.8;
+    margin: 5px 0;
+}
+
+.label {
+    font-weight: bold;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 15px 0;
+}
+
+.loading {
+    text-align: center;
+    font-size: 20px;
+    padding: 30px;
+}
+
+.error {
+    text-align: center;
+    color: red;
+    font-size: 18px;
+    padding: 30px;
+}
+
+</style>
+
 </head>
 
 
 <body>
 
+
 <h1>🩸 শেষের আবেদনগুলি</h1>
+
 
 <div id="requests">
 
-    আবেদনগুলো লোড হচ্ছে...
+    <div class="loading">
+        আবেদনগুলো লোড হচ্ছে...
+    </div>
 
 </div>
 
 
+
 <script>
+
 
 const SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbyD1JXVWPAagt_lQYqqW6391QrglW_0vvcTJxcACoQjzsMw0Sf72LBzCoIEFpRVWdXEcw/exec";
 
 
+
+/* =========================
+   তারিখ ঠিক করার ফাংশন
+========================= */
+
+function formatDate(dateValue) {
+
+    if (!dateValue) {
+        return "";
+    }
+
+    let dateString = String(dateValue);
+
+    /*
+      Google Sheet থেকে যদি
+      2026-08-20T21:00:00.000Z
+      আসে, তাহলে UTC থেকে সরাসরি
+      তারিখ নেওয়া হবে।
+    */
+
+    let match = dateString.match(
+        /^(\d{4})-(\d{2})-(\d{2})/
+    );
+
+    if (match) {
+
+        let year = match[1];
+        let month = match[2];
+        let day = match[3];
+
+        return `${day}/${month}/${year}`;
+    }
+
+
+    /*
+      অন্য format হলে সাধারণভাবে চেষ্টা করবে
+    */
+
+    let date = new Date(dateValue);
+
+    if (isNaN(date.getTime())) {
+
+        return dateString;
+
+    }
+
+
+    let day = String(
+        date.getDate()
+    ).padStart(2, "0");
+
+
+    let month = String(
+        date.getMonth() + 1
+    ).padStart(2, "0");
+
+
+    let year = date.getFullYear();
+
+
+    return `${day}/${month}/${year}`;
+
+}
+
+
+
+/* =========================
+   সময় সুন্দর করার ফাংশন
+========================= */
+
+function formatTime(timeValue) {
+
+    if (!timeValue) {
+        return "";
+    }
+
+    return String(timeValue);
+
+}
+
+
+
+/* =========================
+   আবেদনগুলো লোড
+========================= */
+
 fetch(SCRIPT_URL)
 
-.then(response => response.json())
+.then(response => {
+
+    if (!response.ok) {
+
+        throw new Error(
+            "Server error"
+        );
+
+    }
+
+    return response.json();
+
+})
+
 
 .then(data => {
 
-    const container = document.getElementById("requests");
+
+    const container =
+        document.getElementById("requests");
+
 
     container.innerHTML = "";
 
-    if (data.length === 0) {
 
-        container.innerHTML =
-        "<p>কোনো রক্তের আবেদন পাওয়া যায়নি।</p>";
+    if (!data || data.length === 0) {
+
+        container.innerHTML = `
+            <div class="loading">
+                🩸 এখনো কোনো রক্তের আবেদন নেই।
+            </div>
+        `;
 
         return;
 
     }
 
 
-    data.reverse().forEach(request => {
+    /*
+      সর্বশেষ আবেদন আগে
+    */
 
-        const card = document.createElement("div");
+    data.reverse();
+
+
+    data.forEach(request => {
+
+
+        const card =
+            document.createElement("div");
+
+
+        card.className = "card";
+
 
         card.innerHTML = `
 
-            <h2>🩸 ${request.bloodGroup}</h2>
+            <div class="blood">
+                🩸 ${request.bloodGroup || ""}
+            </div>
 
-            <p>🩺 রোগীর সমস্যা: ${request.problem}</p>
 
-            <p>🧪 হিমোগ্লোবিন: ${request.hemoglobin}</p>
+            <div class="info">
+                🩺
+                <span class="label">
+                    রোগীর সমস্যা:
+                </span>
+                ${request.problem || ""}
+            </div>
 
-            <p>📅 রক্তদানের তারিখ: ${request.date}</p>
 
-            <p>🕒 রক্তদানের সময়: ${request.time}</p>
+            <div class="info">
+                🧪
+                <span class="label">
+                    হিমোগ্লোবিন:
+                </span>
+                ${request.hemoglobin || ""}
+            </div>
 
-            <p>🏥 হাসপাতাল: ${request.hospital}</p>
 
-            <p>📱 যোগাযোগ: ${request.mobile}</p>
+            <div class="info">
+                📅
+                <span class="label">
+                    রক্তদানের তারিখ:
+                </span>
+                ${formatDate(request.date)}
+            </div>
 
-            <p>📝 অতিরিক্ত তথ্য: ${request.note}</p>
+
+            <div class="info">
+                🕒
+                <span class="label">
+                    রক্তদানের সময়:
+                </span>
+                ${formatTime(request.time)}
+            </div>
+
+
+            <div class="info">
+                🏥
+                <span class="label">
+                    হাসপাতাল:
+                </span>
+                ${request.hospital || ""}
+            </div>
+
+
+            <div class="info">
+                📱
+                <span class="label">
+                    যোগাযোগ:
+                </span>
+                ${request.mobile || ""}
+            </div>
+
+
+            <div class="info">
+                📝
+                <span class="label">
+                    অতিরিক্ত তথ্য:
+                </span>
+                ${request.note || ""}
+            </div>
+
 
             <hr>
 
         `;
 
+
         container.appendChild(card);
 
+
     });
+
 
 })
 
 
 .catch(error => {
 
-    document.getElementById("requests").innerHTML =
-    "❌ আবেদন লোড করা যাচ্ছে না।";
 
     console.error(error);
 
+
+    document.getElementById("requests").innerHTML = `
+
+        <div class="error">
+
+            ❌ আবেদনগুলো লোড করা যাচ্ছে না।
+
+            <br><br>
+
+            আবার চেষ্টা করুন।
+
+        </div>
+
+    `;
+
+
 });
 
+
 </script>
+
 
 </body>
 
