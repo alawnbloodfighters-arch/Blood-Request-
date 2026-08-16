@@ -1,1 +1,98 @@
+<!DOCTYPE html>
+<html lang="bn">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>শেষের আবেদনগুলি</title>
+
+</head>
+
+
+<body>
+
+<h1>🩸 শেষের আবেদনগুলি</h1>
+
+<div id="requests">
+
+    আবেদনগুলো লোড হচ্ছে...
+
+</div>
+
+
+<script>
+
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbyD1JXVWPAagt_lQYqqW6391QrglW_0vvcTJxcACoQjzsMw0Sf72LBzCoIEFpRVWdXEcw/exec";
+
+
+fetch(SCRIPT_URL)
+
+.then(response => response.json())
+
+.then(data => {
+
+    const container = document.getElementById("requests");
+
+    container.innerHTML = "";
+
+    if (data.length === 0) {
+
+        container.innerHTML =
+        "<p>কোনো রক্তের আবেদন পাওয়া যায়নি।</p>";
+
+        return;
+
+    }
+
+
+    data.reverse().forEach(request => {
+
+        const card = document.createElement("div");
+
+        card.innerHTML = `
+
+            <h2>🩸 ${request.bloodGroup}</h2>
+
+            <p>🩺 রোগীর সমস্যা: ${request.problem}</p>
+
+            <p>🧪 হিমোগ্লোবিন: ${request.hemoglobin}</p>
+
+            <p>📅 রক্তদানের তারিখ: ${request.date}</p>
+
+            <p>🕒 রক্তদানের সময়: ${request.time}</p>
+
+            <p>🏥 হাসপাতাল: ${request.hospital}</p>
+
+            <p>📱 যোগাযোগ: ${request.mobile}</p>
+
+            <p>📝 অতিরিক্ত তথ্য: ${request.note}</p>
+
+            <hr>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+})
+
+
+.catch(error => {
+
+    document.getElementById("requests").innerHTML =
+    "❌ আবেদন লোড করা যাচ্ছে না।";
+
+    console.error(error);
+
+});
+
+</script>
+
+</body>
+
+</html>
