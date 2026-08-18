@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="bn">
 
 <head>
@@ -282,101 +282,38 @@ const API_URL =
 
 /* ==================================
    Date Format
+   Bangladesh Time (UTC+6)
 ================================== */
 
 function formatDate(value) {
 
     if (!value) {
-
         return "";
-
     }
 
 
-    let dateString = String(value);
+    const dateString = String(value).trim();
 
 
     /*
-       Google Sheet থেকে যদি
-       2026-08-17T18:00:00.000Z
-       আসে,
-       তাহলে এটি বাংলাদেশ সময় অনুযায়ী
-       18/08/2026 তারিখের Date।
+       যদি API থেকে সরাসরি
+       YYYY-MM-DD
+       আসে
     */
 
-    let match = dateString.match(
-        /^(\d{4})-(\d{2})-(\d{2})T/
-    );
-
-
-    if (match) {
-
-        let year = Number(match[1]);
-
-        let month = Number(match[2]);
-
-        let day = Number(match[3]);
-
-
-        /*
-           Google Sheet timezone conversion-এর
-           কারণে ১ দিন পিছিয়ে গেলে এখানে
-           ১ দিন যোগ করা হচ্ছে।
-        */
-
-        let fixedDate = new Date(
-            Date.UTC(
-                year,
-                month - 1,
-                day
-            )
+    const dateOnlyMatch =
+        dateString.match(
+            /^(\d{4})-(\d{2})-(\d{2})$/
         );
-
-
-        fixedDate.setUTCDate(
-            fixedDate.getUTCDate() + 1
-        );
-
-
-        let fixedDay =
-            String(
-                fixedDate.getUTCDate()
-            ).padStart(2, "0");
-
-
-        let fixedMonth =
-            String(
-                fixedDate.getUTCMonth() + 1
-            ).padStart(2, "0");
-
-
-        let fixedYear =
-            fixedDate.getUTCFullYear();
-
-
-        return `${fixedDay}/${fixedMonth}/${fixedYear}`;
-
-    }
-
-
-    /*
-       যদি Date শুধু
-       2026-08-18
-       এই format-এ আসে
-    */
-
-    let dateOnlyMatch = dateString.match(
-        /^(\d{4})-(\d{2})-(\d{2})$/
-    );
 
 
     if (dateOnlyMatch) {
 
-        let year = dateOnlyMatch[1];
+        const year = dateOnlyMatch[1];
 
-        let month = dateOnlyMatch[2];
+        const month = dateOnlyMatch[2];
 
-        let day = dateOnlyMatch[3];
+        const day = dateOnlyMatch[3];
 
 
         return `${day}/${month}/${year}`;
@@ -384,31 +321,108 @@ function formatDate(value) {
     }
 
 
+
     /*
-       অন্য format হলে
+       যদি API থেকে
+       2026-08-17T18:00:00.000Z
+       এরকম আসে,
+       তাহলে Bangladesh Time অনুযায়ী
+       তারিখ বের করা হবে।
     */
 
-    let date = new Date(value);
+    const isoMatch =
+        dateString.match(
+            /^(\d{4})-(\d{2})-(\d{2})T/
+        );
 
 
-    if (isNaN(date.getTime())) {
+    if (isoMatch) {
 
-        return value;
+        const date =
+            new Date(dateString);
+
+
+        if (!isNaN(date.getTime())) {
+
+
+            /*
+               Bangladesh = UTC + 6
+            */
+
+            const bdTime =
+                new Date(
+                    date.getTime() +
+                    (6 * 60 * 60 * 1000)
+                );
+
+
+            const day =
+                String(
+                    bdTime.getUTCDate()
+                ).padStart(2, "0");
+
+
+            const month =
+                String(
+                    bdTime.getUTCMonth() + 1
+                ).padStart(2, "0");
+
+
+            const year =
+                bdTime.getUTCFullYear();
+
+
+            return `${day}/${month}/${year}`;
+
+        }
 
     }
 
 
-    let day = String(
-        date.getDate()
-    ).padStart(2, "0");
+
+    /*
+       অন্য format হলে
+       সরাসরি দেখানোর চেষ্টা
+    */
+
+    const date =
+        new Date(dateString);
 
 
-    let month = String(
-        date.getMonth() + 1
-    ).padStart(2, "0");
+    if (isNaN(date.getTime())) {
+
+        return dateString;
+
+    }
 
 
-    let year = date.getFullYear();
+    /*
+       সাধারণ Date object হলে
+       Bangladesh timezone অনুযায়ী
+       তারিখ নেওয়া হবে
+    */
+
+    const bdTime =
+        new Date(
+            date.getTime() +
+            (6 * 60 * 60 * 1000)
+        );
+
+
+    const day =
+        String(
+            bdTime.getUTCDate()
+        ).padStart(2, "0");
+
+
+    const month =
+        String(
+            bdTime.getUTCMonth() + 1
+        ).padStart(2, "0");
+
+
+    const year =
+        bdTime.getUTCFullYear();
 
 
     return `${day}/${month}/${year}`;
@@ -541,7 +555,6 @@ async function loadRequests() {
 
 
         /*
-           পুরোনো Data থেকে
            সর্বশেষ Data আগে
         */
 
