@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="bn">
 
 <head>
@@ -276,13 +276,12 @@ body {
 ================================== */
 
 const API_URL =
-"https://script.google.com/macros/s/AKfycbwh3UoHGwPNtudPY3vHmDVt853S-RAG8v4oDCCLsmz29JEsgcGoQ7HBVWu4NVdxpj0nRQ/exec";
+"https://script.google.com/macros/s/AKfycbzJLYulqrxXeJeyt2tZhKI34eSed-dx6LMca2JaxVQttdRFtWfDXUnEt1n4nW0l7Tfp8Q/exec";
 
 
 
 /* ==================================
    Date Format
-   Bangladesh Time (UTC+6)
 ================================== */
 
 function formatDate(value) {
@@ -291,12 +290,31 @@ function formatDate(value) {
         return "";
     }
 
-
-    const dateString = String(value).trim();
+    const dateString =
+        String(value).trim();
 
 
     /*
-       যদি API থেকে সরাসরি
+       যদি API থেকে
+       DD/MM/YYYY
+       আসে
+    */
+
+    const bdDateMatch =
+        dateString.match(
+            /^(\d{2})\/(\d{2})\/(\d{4})$/
+        );
+
+
+    if (bdDateMatch) {
+
+        return dateString;
+
+    }
+
+
+    /*
+       যদি API থেকে
        YYYY-MM-DD
        আসে
     */
@@ -309,25 +327,22 @@ function formatDate(value) {
 
     if (dateOnlyMatch) {
 
-        const year = dateOnlyMatch[1];
+        const year =
+            dateOnlyMatch[1];
 
-        const month = dateOnlyMatch[2];
+        const month =
+            dateOnlyMatch[2];
 
-        const day = dateOnlyMatch[3];
-
+        const day =
+            dateOnlyMatch[3];
 
         return `${day}/${month}/${year}`;
 
     }
 
 
-
     /*
-       যদি API থেকে
-       2026-08-17T18:00:00.000Z
-       এরকম আসে,
-       তাহলে Bangladesh Time অনুযায়ী
-       তারিখ বের করা হবে।
+       যদি ISO Date আসে
     */
 
     const isoMatch =
@@ -338,94 +353,33 @@ function formatDate(value) {
 
     if (isoMatch) {
 
-        const date =
-            new Date(dateString);
+        /*
+           ISO Date-এর প্রথম
+           YYYY-MM-DD অংশটাই নেওয়া হচ্ছে।
+           এতে timezone-এর কারণে
+           একদিন পিছিয়ে যাবে না।
+        */
 
+        const year =
+            isoMatch[1];
 
-        if (!isNaN(date.getTime())) {
+        const month =
+            isoMatch[2];
 
+        const day =
+            isoMatch[3];
 
-            /*
-               Bangladesh = UTC + 6
-            */
-
-            const bdTime =
-                new Date(
-                    date.getTime() +
-                    (6 * 60 * 60 * 1000)
-                );
-
-
-            const day =
-                String(
-                    bdTime.getUTCDate()
-                ).padStart(2, "0");
-
-
-            const month =
-                String(
-                    bdTime.getUTCMonth() + 1
-                ).padStart(2, "0");
-
-
-            const year =
-                bdTime.getUTCFullYear();
-
-
-            return `${day}/${month}/${year}`;
-
-        }
+        return `${day}/${month}/${year}`;
 
     }
-
 
 
     /*
        অন্য format হলে
-       সরাসরি দেখানোর চেষ্টা
+       সরাসরি দেখাবে
     */
 
-    const date =
-        new Date(dateString);
-
-
-    if (isNaN(date.getTime())) {
-
-        return dateString;
-
-    }
-
-
-    /*
-       সাধারণ Date object হলে
-       Bangladesh timezone অনুযায়ী
-       তারিখ নেওয়া হবে
-    */
-
-    const bdTime =
-        new Date(
-            date.getTime() +
-            (6 * 60 * 60 * 1000)
-        );
-
-
-    const day =
-        String(
-            bdTime.getUTCDate()
-        ).padStart(2, "0");
-
-
-    const month =
-        String(
-            bdTime.getUTCMonth() + 1
-        ).padStart(2, "0");
-
-
-    const year =
-        bdTime.getUTCFullYear();
-
-
-    return `${day}/${month}/${year}`;
+    return dateString;
 
 }
 
@@ -575,47 +529,75 @@ async function loadRequests() {
             /*
               Google Sheet Column:
 
-              A = রোগীর সমস্যা
-              B = রক্তের গ্রুপ
-              C = হিমোগ্লোবিন
-              D = রক্তদানের তারিখ
-              E = রক্তদানের সময়
-              F = হাসপাতাল
-              G = যোগাযোগ
-              H = Update
+              A = Reference
+              B = রোগীর সমস্যা
+              C = রক্তের গ্রুপ
+              D = হিমোগ্লোবিন
+              E = রক্তদানের তারিখ
+              F = রক্তদানের সময়
+              G = হাসপাতাল
+              H = যোগাযোগ
+              I = Update
             */
 
 
+            const reference =
+                String(
+                    item.reference || ""
+                );
+
+
             const problem =
-                item.problem || "";
+                String(
+                    item.problem || ""
+                );
 
 
             const bloodGroup =
-                item.bloodGroup || "";
+                String(
+                    item.bloodGroup || ""
+                );
 
 
             const hemoglobin =
-                item.hemoglobin || "";
+                String(
+                    item.hemoglobin || ""
+                );
 
 
             const date =
-                item.date || "";
+                String(
+                    item.date || ""
+                );
 
 
             const time =
-                item.time || "";
+                String(
+                    item.time || ""
+                );
 
 
             const hospital =
-                item.hospital || "";
+                String(
+                    item.hospital || ""
+                );
 
+
+            /*
+               Mobile number String হিসেবে রাখা
+               যাতে 0 হারিয়ে না যায়
+            */
 
             const mobile =
-                item.mobile || "";
+                String(
+                    item.mobile || ""
+                );
 
 
             const update =
-                item.note || "";
+                String(
+                    item.note || ""
+                );
 
 
 
@@ -654,6 +636,20 @@ async function loadRequests() {
                 <div class="blood-group">
 
                     🩸 ${bloodGroup}
+
+                </div>
+
+
+
+                <div class="row">
+
+                    👤
+
+                    <strong>
+                        রেফারেন্স:
+                    </strong>
+
+                    ${reference}
 
                 </div>
 
