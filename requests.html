@@ -5,7 +5,7 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>শেষের আবেদনগুলি</title>
 
@@ -294,12 +294,6 @@ function formatDate(value) {
         String(value).trim();
 
 
-    /*
-       যদি API থেকে
-       DD/MM/YYYY
-       আসে
-    */
-
     const bdDateMatch =
         dateString.match(
             /^(\d{2})\/(\d{2})\/(\d{4})$/
@@ -312,12 +306,6 @@ function formatDate(value) {
 
     }
 
-
-    /*
-       যদি API থেকে
-       YYYY-MM-DD
-       আসে
-    */
 
     const dateOnlyMatch =
         dateString.match(
@@ -341,10 +329,6 @@ function formatDate(value) {
     }
 
 
-    /*
-       যদি ISO Date আসে
-    */
-
     const isoMatch =
         dateString.match(
             /^(\d{4})-(\d{2})-(\d{2})T/
@@ -352,13 +336,6 @@ function formatDate(value) {
 
 
     if (isoMatch) {
-
-        /*
-           ISO Date-এর প্রথম
-           YYYY-MM-DD অংশটাই নেওয়া হচ্ছে।
-           এতে timezone-এর কারণে
-           একদিন পিছিয়ে যাবে না।
-        */
 
         const year =
             isoMatch[1];
@@ -373,11 +350,6 @@ function formatDate(value) {
 
     }
 
-
-    /*
-       অন্য format হলে
-       সরাসরি দেখাবে
-    */
 
     return dateString;
 
@@ -404,20 +376,12 @@ function getUpdateClass(update) {
         .toLowerCase();
 
 
-    /*
-       🟢 MANAGED
-    */
-
     if (text === "managed") {
 
         return "green";
 
     }
 
-
-    /*
-       🟡 PENDING
-    */
 
     if (text === "pending") {
 
@@ -426,20 +390,12 @@ function getUpdateClass(update) {
     }
 
 
-    /*
-       🔴 REQUEST CANCELLED
-    */
-
     if (text === "request cancelled") {
 
         return "red";
 
     }
 
-
-    /*
-       অন্য কিছু হলে
-    */
 
     return "blue";
 
@@ -481,10 +437,6 @@ async function loadRequests() {
 
 
 
-        /* ==========================
-           কোনো Request নেই
-        ========================== */
-
         if (
             !data ||
             data.length === 0
@@ -508,10 +460,6 @@ async function loadRequests() {
 
 
 
-        /*
-           সর্বশেষ Data আগে
-        */
-
         data.reverse();
 
 
@@ -519,26 +467,7 @@ async function loadRequests() {
 
 
 
-        /* ==========================
-           প্রতিটি Request
-        ========================== */
-
         data.forEach(function(item) {
-
-
-            /*
-              Google Sheet Column:
-
-              A = Reference
-              B = রোগীর সমস্যা
-              C = রক্তের গ্রুপ
-              D = হিমোগ্লোবিন
-              E = রক্তদানের তারিখ
-              F = রক্তদানের সময়
-              G = হাসপাতাল
-              H = যোগাযোগ
-              I = Update
-            */
 
 
             const reference =
@@ -583,11 +512,6 @@ async function loadRequests() {
                 );
 
 
-            /*
-               Mobile number String হিসেবে রাখা
-               যাতে 0 হারিয়ে না যায়
-            */
-
             const mobile =
                 String(
                     item.mobile || ""
@@ -601,19 +525,10 @@ async function loadRequests() {
 
 
 
-            /*
-               Update অনুযায়ী
-               Color নির্বাচন
-            */
-
             const updateClass =
                 getUpdateClass(update);
 
 
-
-            /*
-               Card তৈরি
-            */
 
             const card =
                 document.createElement(
@@ -625,10 +540,6 @@ async function loadRequests() {
                 "card";
 
 
-
-            /*
-               Card HTML
-            */
 
             card.innerHTML = `
 
