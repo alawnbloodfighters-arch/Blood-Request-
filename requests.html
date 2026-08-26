@@ -27,16 +27,17 @@ body {
     margin: 0;
     padding: 20px 15px;
     background: #f5f5f5;
-    font-family: Arial, "Noto Sans Bengali", sans-serif;
+
+    font-family:
+        Arial,
+        "Noto Sans Bengali",
+        sans-serif;
+
     color: #222;
 
-    /* Scroll থাকবে */
     overflow-y: auto;
-
-    /* Horizontal overflow বন্ধ */
     overflow-x: hidden;
 
-    /* Browser text auto-size বন্ধ */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
 }
@@ -48,13 +49,15 @@ body {
 
 
 /* =========================
-   Title
+   TITLE
 ========================= */
 
 .title {
     text-align: center;
+
     font-size: 32px;
     font-weight: bold;
+
     margin: 10px 0 28px;
 }
 
@@ -64,38 +67,59 @@ body {
 
 
 /* =========================
-   Card
+   CARD
 ========================= */
 
 .card {
+
     background: #ffffff;
+
     border-radius: 24px;
+
     margin-bottom: 25px;
-    padding: 25px 22px 20px 30px;
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
-    border-left: 8px solid #d00000;
+
+    padding:
+        25px
+        22px
+        20px
+        30px;
+
+    box-shadow:
+        0 5px 18px
+        rgba(0, 0, 0, 0.12);
+
+    border-left:
+        8px solid
+        #d00000;
 }
 
 
 /* =========================
-   Blood Group
+   BLOOD GROUP
 ========================= */
 
 .blood-group {
+
     font-size: 38px;
+
     font-weight: bold;
+
     color: #c80000;
+
     margin-bottom: 24px;
 }
 
 
 /* =========================
-   Information
+   INFORMATION
 ========================= */
 
 .row {
+
     font-size: 21px;
+
     margin: 15px 0;
+
     line-height: 1.55;
 }
 
@@ -109,218 +133,458 @@ body {
 ========================= */
 
 .update {
+
     margin-top: 22px;
-    padding: 13px 15px;
+
+    padding:
+        13px
+        15px;
+
     border-radius: 12px;
+
     font-size: 21px;
+
     font-weight: bold;
-    border-left: 6px solid;
+
+    border-left:
+        6px solid;
 }
 
 
-/* 🟢 Managed */
+/* GREEN */
 
 .update.green {
+
     background: #e7f8ec;
+
     color: #138a3d;
+
     border-color: #19a34a;
 }
 
 
-/* 🟡 Pending */
+/* YELLOW */
 
 .update.yellow {
+
     background: #fff7d6;
+
     color: #9a7600;
+
     border-color: #e0b800;
 }
 
 
-/* 🔴 Request Cancelled */
+/* RED */
 
 .update.red {
+
     background: #ffe6e6;
+
     color: #c00000;
+
     border-color: #d00000;
 }
 
 
-/* =========================
-   Unknown Update
-========================= */
+/* BLUE */
 
 .update.blue {
+
     background: #e9f2ff;
+
     color: #1769aa;
+
     border-color: #287bdc;
 }
 
 
 /* =========================
-   Call Button
+   STATUS SELECT AREA
 ========================= */
 
-.call-button {
+.status-area {
+
+    margin-top: 12px;
+}
+
+.status-label {
+
     display: block;
-    text-align: center;
-    text-decoration: none;
-    background: #168a3b;
-    color: white;
-    font-size: 21px;
+
+    font-size: 15px;
+
     font-weight: bold;
-    padding: 13px;
-    border-radius: 12px;
+
+    margin-bottom: 7px;
+
+    color: #555;
+}
+
+.status-select {
+
+    width: 100%;
+
+    min-height: 48px;
+
+    border:
+        1px solid
+        #ccc;
+
+    border-radius: 11px;
+
+    padding:
+        8px
+        12px;
+
+    font-size: 17px;
+
+    background: #fff;
+
+    font-family:
+        Arial,
+        "Noto Sans Bengali",
+        sans-serif;
+
+    outline: none;
+}
+
+.status-select:focus {
+
+    border-color:
+        #168a3b;
+}
+
+
+/* =========================
+   BUTTON AREA
+========================= */
+
+.button-row {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 10px;
+
     margin-top: 18px;
 }
 
+
+/* =========================
+   CALL BUTTON
+========================= */
+
+.call-button {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    background: #168a3b;
+
+    color: white;
+
+    font-size: 19px;
+
+    font-weight: bold;
+
+    padding: 13px 8px;
+
+    border-radius: 12px;
+}
+
 .call-button:active {
+
     transform: scale(0.98);
 }
 
 
 /* =========================
-   Loading
+   MESSAGE BUTTON
+========================= */
+
+.message-button {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    background: #086b61;
+
+    color: white;
+
+    font-size: 19px;
+
+    font-weight: bold;
+
+    padding: 13px 8px;
+
+    border-radius: 12px;
+
+    border: none;
+
+    cursor: pointer;
+
+    font-family:
+        Arial,
+        "Noto Sans Bengali",
+        sans-serif;
+}
+
+.message-button:active {
+
+    transform: scale(0.98);
+}
+
+
+/* =========================
+   STATUS SAVED MESSAGE
+========================= */
+
+.status-message {
+
+    font-size: 14px;
+
+    color: #168a3b;
+
+    margin-top: 7px;
+
+    min-height: 18px;
+
+    text-align: right;
+}
+
+
+/* =========================
+   LOADING
 ========================= */
 
 .loading {
+
     text-align: center;
+
     font-size: 21px;
+
     padding: 30px;
 }
 
 
 /* =========================
-   Error
+   ERROR
 ========================= */
 
 .error {
+
     text-align: center;
+
     color: #d00000;
+
     font-size: 20px;
+
     padding: 25px;
 }
 
 
 /* =========================
-   Empty
+   EMPTY
 ========================= */
 
 .empty {
+
     text-align: center;
+
     font-size: 21px;
+
     padding: 30px;
 }
 
 
 /* =========================
-   Mobile
+   MOBILE
 ========================= */
 
 @media (max-width: 600px) {
 
     body {
-        padding: 12px 8px;
+
+        padding:
+            12px
+            8px;
     }
 
     .title {
+
         font-size: 26px;
-        margin: 8px 0 22px;
+
+        margin:
+            8px
+            0
+            22px;
     }
 
     .card {
-        padding: 18px 15px 16px 20px;
+
+        padding:
+            18px
+            15px
+            16px
+            20px;
+
         border-radius: 20px;
+
         margin-bottom: 18px;
+
         border-left-width: 7px;
     }
 
     .blood-group {
+
         font-size: 32px;
+
         margin-bottom: 18px;
     }
 
     .row {
+
         font-size: 17px;
+
         margin: 11px 0;
+
         line-height: 1.45;
     }
 
     .update {
+
         font-size: 17px;
+
         margin-top: 18px;
-        padding: 11px 13px;
+
+        padding:
+            11px
+            13px;
     }
 
-    .call-button {
-        font-size: 18px;
-        padding: 11px;
-        margin-top: 15px;
+    .status-select {
+
+        font-size: 16px;
+
+        min-height: 46px;
+    }
+
+    .call-button,
+    .message-button {
+
+        font-size: 17px;
+
+        padding: 11px 7px;
     }
 
 }
 
 
 /* =========================
-   Small Mobile
+   SMALL MOBILE
 ========================= */
 
 @media (max-width: 380px) {
 
     body {
-        padding: 10px 7px;
+
+        padding:
+            10px
+            7px;
     }
 
     .title {
+
         font-size: 24px;
     }
 
     .card {
-        padding: 16px 13px 14px 18px;
+
+        padding:
+            16px
+            13px
+            14px
+            18px;
+
         border-radius: 19px;
     }
 
     .blood-group {
+
         font-size: 30px;
+
         margin-bottom: 16px;
     }
 
     .row {
+
         font-size: 16px;
+
         margin: 10px 0;
+
         line-height: 1.4;
     }
 
     .update {
+
         font-size: 16px;
-        padding: 10px 12px;
+
+        padding:
+            10px
+            12px;
     }
 
-    .call-button {
-        font-size: 17px;
-        padding: 10px;
+    .call-button,
+    .message-button {
+
+        font-size: 16px;
+
+        padding: 10px 5px;
     }
 
 }
 
 
 /* =========================
-   Scrollbar
+   SCROLLBAR
 ========================= */
 
 ::-webkit-scrollbar {
+
     width: 7px;
 }
 
 ::-webkit-scrollbar-track {
+
     background: #f5f5f5;
 }
 
 ::-webkit-scrollbar-thumb {
+
     background: #c9141b;
+
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
+
     background: #a90008;
 }
 
@@ -335,7 +599,7 @@ body {
 <div class="container">
 
 
-    <!-- Title -->
+    <!-- TITLE -->
 
     <div class="title">
 
@@ -344,7 +608,7 @@ body {
     </div>
 
 
-    <!-- Request List -->
+    <!-- REQUEST LIST -->
 
     <div id="requestList">
 
@@ -361,37 +625,144 @@ body {
 
 
 
-<script>
+<script type="module">
 
 
-/* ==================================
-   Google Apps Script URL
-================================== */
+/* =========================================
+   FIREBASE
+========================================= */
 
-const API_URL =
-"https://script.google.com/macros/s/AKfycbzJLYulqrxXeJeyt2tZhKI34eSed-dx6LMca2JaxVQttdRFtWfDXUnEt1n4nW0l7Tfp8Q/exec";
+import {
+
+    initializeApp
+
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+
+    getAuth,
+    onAuthStateChanged
+
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+import {
+
+    getDatabase,
+    ref,
+    onValue,
+    update
+
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
 
-/* ==================================
-   Date Format
-================================== */
+/* =========================================
+   FIREBASE CONFIG
+========================================= */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyAR3uyMlvGNwZaG_w1zs6IKQ2lXB_Y_9M0",
+
+    authDomain:
+        "al-awn-blood-fighters.firebaseapp.com",
+
+    projectId:
+        "al-awn-blood-fighters",
+
+    storageBucket:
+        "al-awn-blood-fighters.firebasestorage.app",
+
+    messagingSenderId:
+        "299061496611",
+
+    appId:
+        "1:299061496611:web:4762f74dbf311cd57f1a96",
+
+    measurementId:
+        "G-D31EXKJWQ3"
+
+};
+
+
+
+/* =========================================
+   INITIALIZE
+========================================= */
+
+const app =
+    initializeApp(
+        firebaseConfig
+    );
+
+
+const auth =
+    getAuth(app);
+
+
+const db =
+    getDatabase(app);
+
+
+
+/* =========================================
+   ADMIN UID
+========================================= */
+
+const ADMIN_UIDS = [
+
+    "TAWXxissVvXqHVK9gCrdxzM9Qjf2",
+
+    "y3HwNswW8wYIi6GOEbZauIhcyis1"
+
+];
+
+
+
+/* =========================================
+   ELEMENT
+========================================= */
+
+const requestList =
+    document.getElementById(
+        "requestList"
+    );
+
+
+
+/* =========================================
+   CURRENT USER
+========================================= */
+
+let currentUser = null;
+
+
+
+/* =========================================
+   DATE FORMAT
+========================================= */
 
 function formatDate(value) {
 
     if (!value) {
+
         return "";
+
     }
+
 
     const dateString =
         String(value).trim();
 
-
-    /*
-       যদি API থেকে
-       DD/MM/YYYY
-       আসে
-    */
 
     const bdDateMatch =
         dateString.match(
@@ -406,12 +777,6 @@ function formatDate(value) {
     }
 
 
-    /*
-       যদি API থেকে
-       YYYY-MM-DD
-       আসে
-    */
-
     const dateOnlyMatch =
         dateString.match(
             /^(\d{4})-(\d{2})-(\d{2})$/
@@ -420,23 +785,18 @@ function formatDate(value) {
 
     if (dateOnlyMatch) {
 
-        const year =
-            dateOnlyMatch[1];
+        return (
 
-        const month =
-            dateOnlyMatch[2];
+            dateOnlyMatch[3] +
+            "/" +
+            dateOnlyMatch[2] +
+            "/" +
+            dateOnlyMatch[1]
 
-        const day =
-            dateOnlyMatch[3];
-
-        return `${day}/${month}/${year}`;
+        );
 
     }
 
-
-    /*
-       যদি ISO Date আসে
-    */
 
     const isoMatch =
         dateString.match(
@@ -446,31 +806,18 @@ function formatDate(value) {
 
     if (isoMatch) {
 
-        /*
-           ISO Date-এর প্রথম
-           YYYY-MM-DD অংশটাই নেওয়া হচ্ছে।
-           এতে timezone-এর কারণে
-           একদিন পিছিয়ে যাবে না।
-        */
+        return (
 
-        const year =
-            isoMatch[1];
+            isoMatch[3] +
+            "/" +
+            isoMatch[2] +
+            "/" +
+            isoMatch[1]
 
-        const month =
-            isoMatch[2];
-
-        const day =
-            isoMatch[3];
-
-        return `${day}/${month}/${year}`;
+        );
 
     }
 
-
-    /*
-       অন্য format হলে
-       সরাসরি দেখাবে
-    */
 
     return dateString;
 
@@ -478,9 +825,9 @@ function formatDate(value) {
 
 
 
-/* ==================================
-   Update Color
-================================== */
+/* =========================================
+   STATUS CLASS
+========================================= */
 
 function getUpdateClass(update) {
 
@@ -491,48 +838,38 @@ function getUpdateClass(update) {
     }
 
 
-    let text =
+    const text =
         String(update)
         .trim()
         .toLowerCase();
 
 
-    /*
-       🟢 MANAGED
-    */
-
-    if (text === "managed") {
+    if (
+        text === "managed"
+    ) {
 
         return "green";
 
     }
 
 
-    /*
-       🟡 PENDING
-    */
-
-    if (text === "pending") {
+    if (
+        text === "pending"
+    ) {
 
         return "yellow";
 
     }
 
 
-    /*
-       🔴 REQUEST CANCELLED
-    */
-
-    if (text === "request cancelled") {
+    if (
+        text === "request cancelled"
+    ) {
 
         return "red";
 
     }
 
-
-    /*
-       অন্য কিছু হলে
-    */
 
     return "blue";
 
@@ -540,55 +877,697 @@ function getUpdateClass(update) {
 
 
 
-/* ==================================
-   Load Requests
-================================== */
+/* =========================================
+   STATUS DISPLAY
+========================================= */
 
-async function loadRequests() {
+function getStatusText(status) {
+
+    if (!status) {
+
+        return "No Update";
+
+    }
 
 
-    const requestList =
-        document.getElementById(
-            "requestList"
+    return String(status).trim();
+
+}
+
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHTML(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+
+/* =========================================
+   SAVE STATUS
+========================================= */
+
+async function changeStatus(
+    requestId,
+    newStatus,
+    ownerUid,
+    statusMessage
+) {
+
+
+    if (!currentUser) {
+
+        alert(
+            "⚠️ আগে Login করুন।"
         );
+
+        return;
+
+    }
+
+
+    /*
+       Admin হলে
+       যেকোনো Request-এর
+       status পরিবর্তন করতে পারবে।
+
+       সাধারণ User হলে
+       শুধু নিজের Request-এর
+       status পরিবর্তন করতে পারবে।
+    */
+
+    const isAdmin =
+        ADMIN_UIDS.includes(
+            currentUser.uid
+        );
+
+
+    const isOwner =
+        currentUser.uid === ownerUid;
+
+
+    if (
+        !isAdmin &&
+        !isOwner
+    ) {
+
+        alert(
+            "❌ এই আবেদনের Status পরিবর্তন করার অনুমতি আপনার নেই।"
+        );
+
+        return;
+
+    }
+
+
+    statusMessage.textContent =
+        "⏳ সংরক্ষণ হচ্ছে...";
 
 
     try {
 
 
-        const response =
-            await fetch(API_URL);
+        await update(
+
+            ref(
+                db,
+                "bloodRequests/" +
+                requestId
+            ),
+
+            {
+
+                status:
+                    newStatus,
+
+                updatedAt:
+                    Date.now(),
+
+                updatedBy:
+                    currentUser.uid
+
+            }
+
+        );
 
 
-        if (!response.ok) {
+        statusMessage.textContent =
+            "✅ Status সংরক্ষণ হয়েছে";
 
-            throw new Error(
-                "Server Error"
+
+        setTimeout(
+
+            () => {
+
+                statusMessage.textContent =
+                    "";
+
+            },
+
+            2000
+
+        );
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Status Update Error:",
+            error
+        );
+
+
+        statusMessage.textContent =
+            "";
+
+
+        alert(
+
+            "❌ Status পরিবর্তন করা যায়নি।\n\n" +
+
+            "Firebase Database Rules পরীক্ষা করুন।"
+
+        );
+
+    }
+
+}
+
+
+
+/* =========================================
+   CREATE CARD
+========================================= */
+
+function createCard(
+    requestId,
+    item
+) {
+
+
+    const reference =
+        String(
+            item.reference || ""
+        );
+
+
+    const problem =
+        String(
+            item.problem || ""
+        );
+
+
+    const bloodGroup =
+        String(
+            item.bloodGroup || ""
+        );
+
+
+    const hemoglobin =
+        String(
+            item.hemoglobin || ""
+        );
+
+
+    const date =
+        String(
+            item.date || ""
+        );
+
+
+    const time =
+        String(
+            item.time || ""
+        );
+
+
+    const hospital =
+        String(
+            item.hospital || ""
+        );
+
+
+    const mobile =
+        String(
+            item.mobile || ""
+        );
+
+
+    const status =
+        getStatusText(
+            item.status ||
+            item.note
+        );
+
+
+    const ownerUid =
+        String(
+            item.uid || ""
+        );
+
+
+    const updateClass =
+        getUpdateClass(
+            status
+        );
+
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "card";
+
+
+    card.innerHTML = `
+
+        <div class="blood-group">
+
+            🩸 ${escapeHTML(
+                bloodGroup
+            )}
+
+        </div>
+
+
+        <div class="row">
+
+            👤
+
+            <strong>
+                রেফারেন্স:
+            </strong>
+
+            ${escapeHTML(
+                reference
+            )}
+
+        </div>
+
+
+        <div class="row">
+
+            🩺
+
+            <strong>
+                রোগীর সমস্যা:
+            </strong>
+
+            ${escapeHTML(
+                problem
+            )}
+
+        </div>
+
+
+        <div class="row">
+
+            🧪
+
+            <strong>
+                হিমোগ্লোবিন:
+            </strong>
+
+            ${escapeHTML(
+                hemoglobin
+            )}
+
+        </div>
+
+
+        <div class="row">
+
+            📅
+
+            <strong>
+                রক্তদানের তারিখ:
+            </strong>
+
+            ${escapeHTML(
+                formatDate(date)
+            )}
+
+        </div>
+
+
+        <div class="row">
+
+            🕒
+
+            <strong>
+                রক্তদানের সময়:
+            </strong>
+
+            ${escapeHTML(
+                time
+            )}
+
+        </div>
+
+
+        <div class="row">
+
+            🏥
+
+            <strong>
+                হাসপাতাল:
+            </strong>
+
+            ${escapeHTML(
+                hospital
+            )}
+
+        </div>
+
+
+        <div class="row">
+
+            📱
+
+            <strong>
+                যোগাযোগ:
+            </strong>
+
+            ${escapeHTML(
+                mobile
+            )}
+
+        </div>
+
+
+        <div class="update ${updateClass}">
+
+            Update:
+            ${escapeHTML(
+                status
+            )}
+
+        </div>
+
+
+        <div class="status-area">
+
+            <label class="status-label">
+
+                Update Status পরিবর্তন করুন
+
+            </label>
+
+
+            <select class="status-select">
+
+                <option value="No Update">
+                    🔵 No Update
+                </option>
+
+                <option value="Pending">
+                    🟡 Pending
+                </option>
+
+                <option value="Managed">
+                    🟢 Managed
+                </option>
+
+                <option value="Request Cancelled">
+                    🔴 Request Cancelled
+                </option>
+
+            </select>
+
+
+            <div class="status-message"></div>
+
+        </div>
+
+
+        <div class="button-row">
+
+            <a
+                class="call-button"
+                href="tel:${escapeHTML(
+                    mobile
+                )}"
+            >
+
+                📞 কল করুন
+
+            </a>
+
+
+            <button
+                type="button"
+                class="message-button"
+            >
+
+                💬 মেসেজ করুন
+
+            </button>
+
+        </div>
+
+    `;
+
+
+    /* ==================================
+       STATUS SELECT
+    ================================== */
+
+    const statusSelect =
+        card.querySelector(
+            ".status-select"
+        );
+
+
+    const statusMessage =
+        card.querySelector(
+            ".status-message"
+        );
+
+
+    statusSelect.value =
+        status;
+
+
+    statusSelect.addEventListener(
+
+        "change",
+
+        function() {
+
+            changeStatus(
+
+                requestId,
+
+                statusSelect.value,
+
+                ownerUid,
+
+                statusMessage
+
             );
 
         }
 
-
-        const data =
-            await response.json();
+    );
 
 
+    /* ==================================
+       MESSAGE BUTTON
+    ================================== */
 
-        /* ==========================
-           কোনো Request নেই
-        ========================== */
+    const messageButton =
+        card.querySelector(
+            ".message-button"
+        );
 
-        if (
-            !data ||
-            data.length === 0
-        ) {
+
+    messageButton.addEventListener(
+
+        "click",
+
+        function() {
+
+            /*
+               প্রতিটি Request-এর
+               আলাদা Group Chat
+
+               message.html
+               ?requestId=REQUEST_ID
+            */
+
+            window.location.href =
+                "message.html?requestId=" +
+                encodeURIComponent(
+                    requestId
+                );
+
+        }
+
+    );
+
+
+    return card;
+
+}
+
+
+
+/* =========================================
+   LOAD REQUESTS
+========================================= */
+
+function loadRequests() {
+
+
+    const requestsRef =
+        ref(
+            db,
+            "bloodRequests"
+        );
+
+
+    onValue(
+
+        requestsRef,
+
+        snapshot => {
+
+
+            requestList.innerHTML =
+                "";
+
+
+            const data =
+                snapshot.val();
+
+
+            if (!data) {
+
+
+                requestList.innerHTML = `
+
+                    <div class="empty">
+
+                        📭 এখন কোনো রক্তের আবেদন নেই।
+
+                    </div>
+
+                `;
+
+
+                return;
+
+            }
+
+
+            const requests =
+                Object.entries(data)
+                .map(
+
+                    ([requestId, item]) => ({
+
+                        requestId,
+
+                        ...item
+
+                    })
+
+                )
+                .sort(
+
+                    (a, b) =>
+
+                        (
+                            Number(
+                                b.createdAt || 0
+                            )
+                        )
+
+                        -
+
+                        (
+                            Number(
+                                a.createdAt || 0
+                            )
+                        )
+
+                );
+
+
+            requests.forEach(
+
+                request => {
+
+                    requestList.appendChild(
+
+                        createCard(
+
+                            request.requestId,
+
+                            request
+
+                        )
+
+                    );
+
+                }
+
+            );
+
+        },
+
+
+        error => {
+
+
+            console.error(
+                "Firebase Load Error:",
+                error
+            );
 
 
             requestList.innerHTML = `
 
-                <div class="empty">
+                <div class="error">
 
-                    📭 এখন কোনো রক্তের আবেদন নেই।
+                    ❌ আবেদনগুলি লোড করা যাচ্ছে না।
+
+                    <br><br>
+
+                    Firebase Database Rules
+                    অথবা Internet connection
+                    পরীক্ষা করুন।
+
+                </div>
+
+            `;
+
+        }
+
+    );
+
+}
+
+
+
+/* =========================================
+   AUTH
+========================================= */
+
+onAuthStateChanged(
+
+    auth,
+
+    user => {
+
+
+        if (!user) {
+
+
+            currentUser =
+                null;
+
+
+            requestList.innerHTML = `
+
+                <div class="error">
+
+                    ⚠️ আবেদন দেখতে আগে Login করুন।
 
                 </div>
 
@@ -600,307 +1579,15 @@ async function loadRequests() {
         }
 
 
+        currentUser =
+            user;
 
-        /*
-           সর্বশেষ Data আগে
-        */
 
-        data.reverse();
-
-
-        requestList.innerHTML = "";
-
-
-
-        /* ==========================
-           প্রতিটি Request
-        ========================== */
-
-        data.forEach(function(item) {
-
-
-            /*
-              Google Sheet Column:
-
-              A = Reference
-              B = রোগীর সমস্যা
-              C = রক্তের গ্রুপ
-              D = হিমোগ্লোবিন
-              E = রক্তদানের তারিখ
-              F = রক্তদানের সময়
-              G = হাসপাতাল
-              H = যোগাযোগ
-              I = Update
-            */
-
-
-            const reference =
-                String(
-                    item.reference || ""
-                );
-
-
-            const problem =
-                String(
-                    item.problem || ""
-                );
-
-
-            const bloodGroup =
-                String(
-                    item.bloodGroup || ""
-                );
-
-
-            const hemoglobin =
-                String(
-                    item.hemoglobin || ""
-                );
-
-
-            const date =
-                String(
-                    item.date || ""
-                );
-
-
-            const time =
-                String(
-                    item.time || ""
-                );
-
-
-            const hospital =
-                String(
-                    item.hospital || ""
-                );
-
-
-            /*
-               Mobile number String হিসেবে রাখা
-               যাতে 0 হারিয়ে না যায়
-            */
-
-            const mobile =
-                String(
-                    item.mobile || ""
-                );
-
-
-            const update =
-                String(
-                    item.note || ""
-                );
-
-
-
-            /*
-               Update অনুযায়ী
-               Color নির্বাচন
-            */
-
-            const updateClass =
-                getUpdateClass(update);
-
-
-
-            /*
-               Card তৈরি
-            */
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-
-            card.className =
-                "card";
-
-
-
-            /*
-               Card HTML
-            */
-
-            card.innerHTML = `
-
-
-                <div class="blood-group">
-
-                    🩸 ${bloodGroup}
-
-                </div>
-
-
-
-                <div class="row">
-
-                    👤
-
-                    <strong>
-                        রেফারেন্স:
-                    </strong>
-
-                    ${reference}
-
-                </div>
-
-
-
-                <div class="row">
-
-                    🩺
-
-                    <strong>
-                        রোগীর সমস্যা:
-                    </strong>
-
-                    ${problem}
-
-                </div>
-
-
-
-                <div class="row">
-
-                    🧪
-
-                    <strong>
-                        হিমোগ্লোবিন:
-                    </strong>
-
-                    ${hemoglobin}
-
-                </div>
-
-
-
-                <div class="row">
-
-                    📅
-
-                    <strong>
-                        রক্তদানের তারিখ:
-                    </strong>
-
-                    ${formatDate(date)}
-
-                </div>
-
-
-
-                <div class="row">
-
-                    🕒
-
-                    <strong>
-                        রক্তদানের সময়:
-                    </strong>
-
-                    ${time}
-
-                </div>
-
-
-
-                <div class="row">
-
-                    🏥
-
-                    <strong>
-                        হাসপাতাল:
-                    </strong>
-
-                    ${hospital}
-
-                </div>
-
-
-
-                <div class="row">
-
-                    📱
-
-                    <strong>
-                        যোগাযোগ:
-                    </strong>
-
-                    ${mobile}
-
-                </div>
-
-
-
-                <div
-                    class="update ${updateClass}"
-                >
-
-                    Update:
-                    ${update || "No Update"}
-
-                </div>
-
-
-
-                <a
-                    class="call-button"
-                    href="tel:${mobile}"
-                >
-
-                    📞 কল করুন
-
-                </a>
-
-
-            `;
-
-
-
-            requestList.appendChild(
-                card
-            );
-
-
-        });
-
+        loadRequests();
 
     }
 
-
-    catch (error) {
-
-
-        console.error(error);
-
-
-        requestList.innerHTML = `
-
-            <div class="error">
-
-                ❌ আবেদনগুলি লোড করা যাচ্ছে না।
-
-                <br><br>
-
-                ইন্টারনেট সংযোগ পরীক্ষা করুন।
-
-            </div>
-
-        `;
-
-
-    }
-
-}
-
-
-
-/* ==================================
-   Page Load
-================================== */
-
-loadRequests();
-
+);
 
 </script>
 
