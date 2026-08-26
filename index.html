@@ -147,7 +147,7 @@
 
 
             <!-- =========================
-                 রোগীর লোকের মোবাইল
+                 মোবাইল
             ========================== -->
 
             <label>📱 যোগাযোগ নম্বর</label>
@@ -180,7 +180,10 @@
                  Submit
             ========================== -->
 
-            <button type="submit" id="submitButton">
+            <button
+                type="submit"
+                id="submitButton"
+            >
 
                 🩸 রিকুয়েস্ট পাঠান
 
@@ -195,12 +198,98 @@
 
 
 
-<script>
+<script type="module">
 
 
-// ==========================================
-// FORM ELEMENT
-// ==========================================
+/* =========================================
+   FIREBASE
+========================================= */
+
+import {
+
+    initializeApp
+
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+
+    getAuth,
+    onAuthStateChanged
+
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+import {
+
+    getDatabase,
+    ref,
+    push,
+    set
+
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+
+/* =========================================
+   FIREBASE CONFIG
+========================================= */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyAR3uyMlvGNwZaG_w1zs6IKQ2lXB_Y_9M0",
+
+    authDomain:
+        "al-awn-blood-fighters.firebaseapp.com",
+
+    projectId:
+        "al-awn-blood-fighters",
+
+    storageBucket:
+        "al-awn-blood-fighters.firebasestorage.app",
+
+    messagingSenderId:
+        "299061496611",
+
+    appId:
+        "1:299061496611:web:4762f74dbf311cd57f1a96",
+
+    measurementId:
+        "G-D31EXKJWQ3"
+
+};
+
+
+
+/* =========================================
+   INITIALIZE FIREBASE
+========================================= */
+
+const app =
+    initializeApp(
+        firebaseConfig
+    );
+
+
+const auth =
+    getAuth(app);
+
+
+const db =
+    getDatabase(app);
+
+
+
+/* =========================================
+   FORM ELEMENT
+========================================= */
 
 const form =
     document.getElementById(
@@ -215,30 +304,59 @@ const submitButton =
 
 
 
-// ==========================================
-// NEW GOOGLE APPS SCRIPT URL
-// ==========================================
+/* =========================================
+   CURRENT USER
+========================================= */
 
-const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbzJLYulqrxXeJeyt2tZhKI34eSed-dx6LMca2JaxVQttdRFtWfDXUnEt1n4nW0l7Tfp8Q/exec";
-
+let currentUser = null;
 
 
-// ==========================================
-// FORM SUBMIT
-// ==========================================
+onAuthStateChanged(
+
+    auth,
+
+    user => {
+
+        currentUser = user;
+
+    }
+
+);
+
+
+
+/* =========================================
+   FORM SUBMIT
+========================================= */
 
 form.addEventListener(
+
     "submit",
-    async function (event) {
+
+    async function(event) {
 
 
         event.preventDefault();
 
 
-        // ==================================
-        // Button Disable
-        // ==================================
+        /* ==============================
+           LOGIN CHECK
+        ============================== */
+
+        if (!currentUser) {
+
+            alert(
+                "⚠️ রিকুয়েস্ট পাঠানোর আগে Login করুন।"
+            );
+
+            return;
+
+        }
+
+
+        /* ==============================
+           BUTTON DISABLE
+        ============================== */
 
         submitButton.disabled = true;
 
@@ -246,268 +364,261 @@ form.addEventListener(
             "⏳ পাঠানো হচ্ছে...";
 
 
-
-        // ==================================
-        // Mobile Number
-        // String হিসেবে নেওয়া হচ্ছে
-        // ==================================
-
-        const mobile =
-            String(
-                document
-                    .getElementById("mobile")
-                    .value
-                    .trim()
-            );
-
-
-
-        // ==================================
-        // Form Data
-        // ==================================
-
-        const data = {
-
-            reference:
-                document
-                    .getElementById("reference")
-                    .value
-                    .trim(),
-
-
-            problem:
-                document
-                    .getElementById("problem")
-                    .value
-                    .trim(),
-
-
-            bloodGroup:
-                document
-                    .getElementById("bloodGroup")
-                    .value,
-
-
-            hemoglobin:
-                document
-                    .getElementById("hemoglobin")
-                    .value,
-
-
-            /*
-               Date input থেকে
-               YYYY-MM-DD String যাবে
-            */
-
-            date:
-                document
-                    .getElementById("date")
-                    .value,
-
-
-            time:
-                document
-                    .getElementById("time")
-                    .value
-                    .trim(),
-
-
-            hospital:
-                document
-                    .getElementById("hospital")
-                    .value
-                    .trim(),
-
-
-            /*
-               রোগীর লোকের নম্বর
-               0 সহ String হিসেবে পাঠানো হবে
-            */
-
-            mobile:
-                mobile,
-
-
-            note:
-                document
-                    .getElementById("note")
-                    .value
-                    .trim()
-
-        };
-
-
-
-        // ==================================
-        // Reference Validation
-        // ==================================
-
-        if (data.reference === "") {
-
-            alert(
-                "⚠️ আপনার নাম লিখুন।"
-            );
-
-
-            submitButton.disabled = false;
-
-            submitButton.innerText =
-                "🩸 রিকুয়েস্ট পাঠান";
-
-            return;
-
-        }
-
-
-
-        // ==================================
-        // Mobile Validation
-        // ==================================
-
-        if (
-            !/^01[0-9]{9}$/.test(
-                data.mobile
-            )
-        ) {
-
-
-            alert(
-                "⚠️ সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন।"
-            );
-
-
-            submitButton.disabled = false;
-
-            submitButton.innerText =
-                "🩸 রিকুয়েস্ট পাঠান";
-
-            return;
-
-        }
-
-
-
-        // ==================================
-        // Time Validation
-        // ==================================
-
-        if (data.time === "") {
-
-
-            alert(
-                "⚠️ রক্তদানের সময় লিখুন।"
-            );
-
-
-            submitButton.disabled = false;
-
-            submitButton.innerText =
-                "🩸 রিকুয়েস্ট পাঠান";
-
-            return;
-
-        }
-
-
-
-        // ==================================
-        // Date Validation
-        // ==================================
-
-        if (data.date === "") {
-
-
-            alert(
-                "⚠️ রক্তদানের তারিখ নির্বাচন করুন।"
-            );
-
-
-            submitButton.disabled = false;
-
-            submitButton.innerText =
-                "🩸 রিকুয়েস্ট পাঠান";
-
-            return;
-
-        }
-
-
-
-        // ==================================
-        // SEND DATA
-        // ==================================
-
         try {
 
 
-            const response =
-                await fetch(
-                    SCRIPT_URL,
-                    {
+            /* ==============================
+               MOBILE
+            ============================== */
 
-                        method: "POST",
+            const mobile =
 
-                        headers: {
+                String(
 
-                            "Content-Type":
-                                "text/plain;charset=utf-8"
+                    document
+                        .getElementById("mobile")
+                        .value
+                        .trim()
 
-                        },
-
-                        body:
-                            JSON.stringify(data)
-
-                    }
                 );
 
 
+            /* ==============================
+               FORM DATA
+            ============================== */
 
-            // ==================================
-            // Response
-            // ==================================
+            const data = {
 
-            const result =
-                await response.json();
+                reference:
+
+                    document
+                        .getElementById("reference")
+                        .value
+                        .trim(),
+
+
+                problem:
+
+                    document
+                        .getElementById("problem")
+                        .value
+                        .trim(),
+
+
+                bloodGroup:
+
+                    document
+                        .getElementById("bloodGroup")
+                        .value,
+
+
+                hemoglobin:
+
+                    document
+                        .getElementById("hemoglobin")
+                        .value
+                        .trim(),
+
+
+                date:
+
+                    document
+                        .getElementById("date")
+                        .value,
+
+
+                time:
+
+                    document
+                        .getElementById("time")
+                        .value
+                        .trim(),
+
+
+                hospital:
+
+                    document
+                        .getElementById("hospital")
+                        .value
+                        .trim(),
+
+
+                mobile:
+
+                    mobile,
+
+
+                note:
+
+                    document
+                        .getElementById("note")
+                        .value
+                        .trim(),
 
 
 
-            // ==================================
-            // Success
-            // ==================================
+                /* ==========================
+                   FIREBASE INFORMATION
+                ========================== */
 
-            if (result.success) {
+                uid:
+                    currentUser.uid,
 
+
+                requesterName:
+                    currentUser.displayName ||
+                    document
+                        .getElementById("reference")
+                        .value
+                        .trim(),
+
+
+                requesterEmail:
+                    currentUser.email || "",
+
+
+                /* ==========================
+                   DEFAULT STATUS
+                ========================== */
+
+                status:
+                    "No Update",
+
+
+                /* ==========================
+                   CREATED TIME
+                ========================== */
+
+                createdAt:
+                    Date.now()
+
+            };
+
+
+
+            /* ==============================
+               VALIDATION
+            ============================== */
+
+            if (
+                data.reference === ""
+            ) {
 
                 alert(
-                    "✅ রক্তের রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে।"
+                    "⚠️ আপনার নাম লিখুন।"
                 );
 
-
-                form.reset();
-
-
-            } else {
-
-
-                alert(
-
-                    "❌ রিকুয়েস্ট পাঠানো যায়নি।\n\n" +
-
-                    (
-                        result.error ||
-                        "অজানা সমস্যা হয়েছে।"
-                    )
-
-                );
+                return;
 
             }
 
 
-        } catch (error) {
+
+            if (
+                !/^01[0-9]{9}$/.test(
+                    data.mobile
+                )
+            ) {
+
+                alert(
+                    "⚠️ সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন।"
+                );
+
+                return;
+
+            }
+
+
+
+            if (
+                data.time === ""
+            ) {
+
+                alert(
+                    "⚠️ রক্তদানের সময় লিখুন।"
+                );
+
+                return;
+
+            }
+
+
+
+            if (
+                data.date === ""
+            ) {
+
+                alert(
+                    "⚠️ রক্তদানের তারিখ নির্বাচন করুন।"
+                );
+
+                return;
+
+            }
+
+
+
+            /* ==============================
+               CREATE FIREBASE REQUEST ID
+            ============================== */
+
+            const requestRef =
+                push(
+                    ref(
+                        db,
+                        "bloodRequests"
+                    )
+                );
+
+
+            const requestId =
+                requestRef.key;
+
+
+
+            /* ==============================
+               REQUEST ID SAVE
+            ============================== */
+
+            data.requestId =
+                requestId;
+
+
+
+            /* ==============================
+               SAVE REQUEST
+            ============================== */
+
+            await set(
+
+                requestRef,
+
+                data
+
+            );
+
+
+
+            /* ==============================
+               SUCCESS
+            ============================== */
+
+            alert(
+                "✅ রক্তের রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে।"
+            );
+
+
+            form.reset();
+
+
+
+        }
+
+        catch (error) {
 
 
             console.error(
-                "Error:",
+                "Firebase Error:",
                 error
             );
 
@@ -516,26 +627,31 @@ form.addEventListener(
 
                 "❌ রিকুয়েস্ট পাঠানো যায়নি।\n\n" +
 
-                "ইন্টারনেট সংযোগ অথবা সার্ভারের সমস্যা হতে পারে।"
+                "Firebase সংযোগ অথবা Database Rules পরীক্ষা করুন।"
 
             );
 
         }
 
 
+        finally {
 
-        // ==================================
-        // Button আবার চালু
-        // ==================================
 
-        submitButton.disabled = false;
+            /* ==============================
+               BUTTON ENABLE
+            ============================== */
 
-        submitButton.innerText =
-            "🩸 রিকুয়েস্ট পাঠান";
+            submitButton.disabled = false;
+
+            submitButton.innerText =
+                "🩸 রিকুয়েস্ট পাঠান";
+
+        }
 
     }
 
 );
+
 
 </script>
 
