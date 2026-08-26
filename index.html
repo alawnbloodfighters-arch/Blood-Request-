@@ -7,7 +7,10 @@
 
 <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    content="width=device-width,
+             initial-scale=1.0,
+             maximum-scale=1.0,
+             user-scalable=no"
 >
 
 <title>ব্লাড রিকুয়েস্ট</title>
@@ -16,22 +19,35 @@
 
 </head>
 
+
 <body>
+
 
 <div class="container">
 
+
     <div class="header">
 
-        <img src="logo.png" class="logo" alt="Logo">
+        <img
+            src="logo.png"
+            class="logo"
+            alt="Logo"
+        >
 
-        <h1>🩸 আল-আওন ব্লাড ফাইটার্স</h1>
+        <h1>
+            🩸 আল-আওন ব্লাড ফাইটার্স
+        </h1>
 
-        <p>ব্লাড রিকুয়েস্ট ফর্ম</p>
+        <p>
+            ব্লাড রিকুয়েস্ট ফর্ম
+        </p>
 
     </div>
 
 
+
     <div class="card">
+
 
         <form id="bloodRequestForm">
 
@@ -40,7 +56,9 @@
                  রেফারেন্স
             ========================== -->
 
-            <label>👤 রেফারেন্স</label>
+            <label>
+                👤 রেফারেন্স
+            </label>
 
             <input
                 type="text"
@@ -50,11 +68,14 @@
             >
 
 
+
             <!-- =========================
                  রোগীর সমস্যা
             ========================== -->
 
-            <label>🩺 রোগীর সমস্যা</label>
+            <label>
+                🩺 রোগীর সমস্যা
+            </label>
 
             <input
                 type="text"
@@ -64,15 +85,23 @@
             >
 
 
+
             <!-- =========================
                  রক্তের গ্রুপ
             ========================== -->
 
-            <label>🩸 রক্তের গ্রুপ</label>
+            <label>
+                🩸 রক্তের গ্রুপ
+            </label>
 
-            <select id="bloodGroup" required>
+            <select
+                id="bloodGroup"
+                required
+            >
 
-                <option value="">নির্বাচন করুন</option>
+                <option value="">
+                    নির্বাচন করুন
+                </option>
 
                 <option value="A+">A+</option>
                 <option value="A-">A-</option>
@@ -89,11 +118,14 @@
             </select>
 
 
+
             <!-- =========================
                  হিমোগ্লোবিন
             ========================== -->
 
-            <label>🧪 হিমোগ্লোবিন</label>
+            <label>
+                🧪 হিমোগ্লোবিন
+            </label>
 
             <input
                 type="number"
@@ -105,11 +137,14 @@
             >
 
 
+
             <!-- =========================
-                 রক্তদানের তারিখ
+                 তারিখ
             ========================== -->
 
-            <label>📅 রক্তদানের তারিখ</label>
+            <label>
+                📅 রক্তদানের তারিখ
+            </label>
 
             <input
                 type="date"
@@ -118,11 +153,14 @@
             >
 
 
+
             <!-- =========================
-                 রক্তদানের সময়
+                 সময়
             ========================== -->
 
-            <label>🕒 রক্তদানের সময়</label>
+            <label>
+                🕒 রক্তদানের সময়
+            </label>
 
             <input
                 type="text"
@@ -132,11 +170,14 @@
             >
 
 
+
             <!-- =========================
                  হাসপাতাল
             ========================== -->
 
-            <label>🏥 হাসপাতালের নাম</label>
+            <label>
+                🏥 হাসপাতালের নাম
+            </label>
 
             <input
                 type="text"
@@ -146,11 +187,14 @@
             >
 
 
+
             <!-- =========================
                  মোবাইল
             ========================== -->
 
-            <label>📱 যোগাযোগ নম্বর</label>
+            <label>
+                📱 যোগাযোগ নম্বর
+            </label>
 
             <input
                 type="tel"
@@ -163,17 +207,21 @@
             >
 
 
+
             <!-- =========================
                  অতিরিক্ত তথ্য
             ========================== -->
 
-            <label>📝 অতিরিক্ত তথ্য</label>
+            <label>
+                📝 অতিরিক্ত তথ্য
+            </label>
 
             <textarea
                 id="note"
                 rows="4"
                 placeholder="প্রয়োজন হলে অতিরিক্ত তথ্য লিখুন"
             ></textarea>
+
 
 
             <!-- =========================
@@ -192,468 +240,18 @@
 
         </form>
 
+
     </div>
+
 
 </div>
 
 
 
-<script type="module">
-
-
-/* =========================================
-   FIREBASE
-========================================= */
-
-import {
-
-    initializeApp
-
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-
-import {
-
-    getAuth,
-    onAuthStateChanged
-
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-
-import {
-
-    getDatabase,
-    ref,
-    push,
-    set
-
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-
-
-/* =========================================
-   FIREBASE CONFIG
-========================================= */
-
-const firebaseConfig = {
-
-    apiKey:
-        "AIzaSyAR3uyMlvGNwZaG_w1zs6IKQ2lXB_Y_9M0",
-
-    authDomain:
-        "al-awn-blood-fighters.firebaseapp.com",
-
-    projectId:
-        "al-awn-blood-fighters",
-
-    storageBucket:
-        "al-awn-blood-fighters.firebasestorage.app",
-
-    messagingSenderId:
-        "299061496611",
-
-    appId:
-        "1:299061496611:web:4762f74dbf311cd57f1a96",
-
-    measurementId:
-        "G-D31EXKJWQ3"
-
-};
-
-
-
-/* =========================================
-   INITIALIZE FIREBASE
-========================================= */
-
-const app =
-    initializeApp(
-        firebaseConfig
-    );
-
-
-const auth =
-    getAuth(app);
-
-
-const db =
-    getDatabase(app);
-
-
-
-/* =========================================
-   FORM ELEMENT
-========================================= */
-
-const form =
-    document.getElementById(
-        "bloodRequestForm"
-    );
-
-
-const submitButton =
-    document.getElementById(
-        "submitButton"
-    );
-
-
-
-/* =========================================
-   CURRENT USER
-========================================= */
-
-let currentUser = null;
-
-
-onAuthStateChanged(
-
-    auth,
-
-    user => {
-
-        currentUser = user;
-
-    }
-
-);
-
-
-
-/* =========================================
-   FORM SUBMIT
-========================================= */
-
-form.addEventListener(
-
-    "submit",
-
-    async function(event) {
-
-
-        event.preventDefault();
-
-
-        /* ==============================
-           LOGIN CHECK
-        ============================== */
-
-        if (!currentUser) {
-
-            alert(
-                "⚠️ রিকুয়েস্ট পাঠানোর আগে Login করুন।"
-            );
-
-            return;
-
-        }
-
-
-        /* ==============================
-           BUTTON DISABLE
-        ============================== */
-
-        submitButton.disabled = true;
-
-        submitButton.innerText =
-            "⏳ পাঠানো হচ্ছে...";
-
-
-        try {
-
-
-            /* ==============================
-               MOBILE
-            ============================== */
-
-            const mobile =
-
-                String(
-
-                    document
-                        .getElementById("mobile")
-                        .value
-                        .trim()
-
-                );
-
-
-            /* ==============================
-               FORM DATA
-            ============================== */
-
-            const data = {
-
-                reference:
-
-                    document
-                        .getElementById("reference")
-                        .value
-                        .trim(),
-
-
-                problem:
-
-                    document
-                        .getElementById("problem")
-                        .value
-                        .trim(),
-
-
-                bloodGroup:
-
-                    document
-                        .getElementById("bloodGroup")
-                        .value,
-
-
-                hemoglobin:
-
-                    document
-                        .getElementById("hemoglobin")
-                        .value
-                        .trim(),
-
-
-                date:
-
-                    document
-                        .getElementById("date")
-                        .value,
-
-
-                time:
-
-                    document
-                        .getElementById("time")
-                        .value
-                        .trim(),
-
-
-                hospital:
-
-                    document
-                        .getElementById("hospital")
-                        .value
-                        .trim(),
-
-
-                mobile:
-
-                    mobile,
-
-
-                note:
-
-                    document
-                        .getElementById("note")
-                        .value
-                        .trim(),
-
-
-
-                /* ==========================
-                   FIREBASE INFORMATION
-                ========================== */
-
-                uid:
-                    currentUser.uid,
-
-
-                requesterName:
-                    currentUser.displayName ||
-                    document
-                        .getElementById("reference")
-                        .value
-                        .trim(),
-
-
-                requesterEmail:
-                    currentUser.email || "",
-
-
-                /* ==========================
-                   DEFAULT STATUS
-                ========================== */
-
-                status:
-                    "No Update",
-
-
-                /* ==========================
-                   CREATED TIME
-                ========================== */
-
-                createdAt:
-                    Date.now()
-
-            };
-
-
-
-            /* ==============================
-               VALIDATION
-            ============================== */
-
-            if (
-                data.reference === ""
-            ) {
-
-                alert(
-                    "⚠️ আপনার নাম লিখুন।"
-                );
-
-                return;
-
-            }
-
-
-
-            if (
-                !/^01[0-9]{9}$/.test(
-                    data.mobile
-                )
-            ) {
-
-                alert(
-                    "⚠️ সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন।"
-                );
-
-                return;
-
-            }
-
-
-
-            if (
-                data.time === ""
-            ) {
-
-                alert(
-                    "⚠️ রক্তদানের সময় লিখুন।"
-                );
-
-                return;
-
-            }
-
-
-
-            if (
-                data.date === ""
-            ) {
-
-                alert(
-                    "⚠️ রক্তদানের তারিখ নির্বাচন করুন।"
-                );
-
-                return;
-
-            }
-
-
-
-            /* ==============================
-               CREATE FIREBASE REQUEST ID
-            ============================== */
-
-            const requestRef =
-                push(
-                    ref(
-                        db,
-                        "bloodRequests"
-                    )
-                );
-
-
-            const requestId =
-                requestRef.key;
-
-
-
-            /* ==============================
-               REQUEST ID SAVE
-            ============================== */
-
-            data.requestId =
-                requestId;
-
-
-
-            /* ==============================
-               SAVE REQUEST
-            ============================== */
-
-            await set(
-
-                requestRef,
-
-                data
-
-            );
-
-
-
-            /* ==============================
-               SUCCESS
-            ============================== */
-
-            alert(
-                "✅ রক্তের রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে।"
-            );
-
-
-            form.reset();
-
-
-
-        }
-
-        catch (error) {
-
-
-            console.error(
-                "Firebase Error:",
-                error
-            );
-
-
-            alert(
-
-                "❌ রিকুয়েস্ট পাঠানো যায়নি।\n\n" +
-
-                "Firebase সংযোগ অথবা Database Rules পরীক্ষা করুন।"
-
-            );
-
-        }
-
-
-        finally {
-
-
-            /* ==============================
-               BUTTON ENABLE
-            ============================== */
-
-            submitButton.disabled = false;
-
-            submitButton.innerText =
-                "🩸 রিকুয়েস্ট পাঠান";
-
-        }
-
-    }
-
-);
-
-
-</script>
+<script
+    type="module"
+    src="script.js"
+></script>
 
 
 </body>
