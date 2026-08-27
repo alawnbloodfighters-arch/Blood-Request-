@@ -583,7 +583,7 @@ body {
 
         <div class="loading">
 
-            ⏳ Login যাচাই করা হচ্ছে...
+            ⏳ আবেদনগুলি লোড হচ্ছে...
 
         </div>
 
@@ -642,6 +642,8 @@ let isAdmin = false;
 
 let authReady = false;
 
+let requestsListenerStarted = false;
+
 
 
 // ==========================================
@@ -675,106 +677,84 @@ onAuthStateChanged(
 
 
         // ==================================
-        // LOGIN না থাকলে
+        // LOGIN থাকলে ADMIN CHECK
         // ==================================
 
-        if (!user) {
+        if (user) {
 
-            requestList.innerHTML = `
-
-                <div class="error">
-
-                    ⚠️ আবেদন দেখতে আগে Login করুন।
-
-                    <br><br>
-
-                    Login করার পর আবার
-                    "আবেদন দেখুন" চাপুন।
-
-                </div>
-
-            `;
-
-            return;
-
-        }
+            try {
 
 
+                const userSnapshot =
 
-        // ==================================
-        // ADMIN CHECK
-        // ==================================
+                    await new Promise(
 
-        try {
-
-
-            const userSnapshot =
-
-                await new Promise(
-
-                    function(resolve, reject) {
+                        function(resolve, reject) {
 
 
-                        onValue(
+                            onValue(
 
-                            ref(
-                                db,
-                                "users/" +
-                                user.uid
-                            ),
+                                ref(
+                                    db,
+                                    "users/" +
+                                    user.uid
+                                ),
 
-                            resolve,
+                                resolve,
 
-                            {
+                                {
 
-                                onlyOnce: true
+                                    onlyOnce: true
 
-                            }
+                                }
 
-                        );
+                            );
 
-                    }
+                        }
 
-                );
+                    );
 
 
 
-            const userData =
-                userSnapshot.val();
+                const userData =
+                    userSnapshot.val();
 
 
 
-            if (
+                if (
 
-                userData &&
+                    userData &&
 
-                userData.role === "admin"
+                    userData.role === "admin"
 
-            ) {
+                ) {
 
-                isAdmin = true;
+                    isAdmin = true;
+
+                }
+
 
             }
 
-
-        }
-
-        catch(error) {
+            catch(error) {
 
 
-            console.error(
-                "Admin check error:",
-                error
-            );
+                console.error(
+                    "Admin check error:",
+                    error
+                );
 
+
+            }
 
         }
 
 
 
         // ==================================
-        // AUTH CONFIRMED
-        // তারপর Request Load
+        // IMPORTANT
+        // LOGIN থাকুক বা না থাকুক
+        // REQUEST LOAD হবে
         // ==================================
 
         loadRequests();
@@ -937,27 +917,10 @@ function loadRequests() {
 
 
     // ==================================
-    // EXTRA AUTH SAFETY CHECK
+    // AUTH READY না হলে অপেক্ষা
     // ==================================
 
-    if (
-
-        !authReady ||
-        !currentUser
-
-    ) {
-
-
-        requestList.innerHTML = `
-
-            <div class="error">
-
-                ⚠️ আবেদন দেখতে আগে Login করুন।
-
-            </div>
-
-        `;
-
+    if (!authReady) {
 
         return;
 
@@ -966,7 +929,29 @@ function loadRequests() {
 
 
     // ==================================
+    // একই listener বারবার চালু না করা
+    // ==================================
+
+    if (requestsListenerStarted) {
+
+        return;
+
+    }
+
+
+    requestsListenerStarted = true;
+
+
+
+    // ==================================
     // DATABASE READ
+    // ==================================
+    //
+    // Firebase Rules অনুযায়ী
+    // bloodRequests READ public
+    //
+    // তাই Login ছাড়াও আবেদন দেখা যাবে
+    //
     // ==================================
 
     onValue(
@@ -1490,7 +1475,7 @@ function loadRequests() {
 
 
                                     alert(
-                                        "⚠️ আগে Login করুন।"
+                                        "⚠️ Status পরিবর্তন করতে আগে Login করুন।"
                                     );
 
 
@@ -1670,10 +1655,6 @@ function loadRequests() {
         function(error) {
 
 
-            // ==================================
-            // CONSOLE ERROR
-            // ==================================
-
             console.error(
                 "Firebase Database Error:",
                 error
@@ -1694,10 +1675,6 @@ function loadRequests() {
             );
 
 
-
-            // ==================================
-            // SHOW REAL ERROR
-            // ==================================
 
             const errorMessage =
 
