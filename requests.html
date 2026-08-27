@@ -1,138 +1,99 @@
-<!DOCTYPE html>
-<html lang="bn">
+<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><meta
+name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no"
 
-<head>
+«»
 
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width,
-             initial-scale=1.0,
-             maximum-scale=1.0,
-             user-scalable=no"
->
-
-<title>শেষের আবেদনগুলি</title>
-
-
-<style>
+<title>শেষের আবেদনগুলি</title><style>
 
 * {
     box-sizing: border-box;
 }
 
-
 html {
     scroll-behavior: smooth;
 }
 
-
 body {
-
     margin: 0;
-
     padding: 20px 15px;
-
     background: #f5f5f5;
-
-    font-family:
-        Arial,
-        "Noto Sans Bengali",
-        sans-serif;
-
+    font-family: Arial, "Noto Sans Bengali", sans-serif;
     color: #222;
 
     overflow-y: auto;
-
     overflow-x: hidden;
 
     -webkit-text-size-adjust: 100%;
-
     text-size-adjust: 100%;
-
 }
-
 
 .container {
-
     max-width: 700px;
-
     margin: auto;
-
 }
 
+
+/* =========================
+   TITLE
+========================= */
 
 .title {
-
     text-align: center;
-
     font-size: 32px;
-
     font-weight: bold;
-
-    margin:
-        10px 0 28px;
-
+    margin: 10px 0 28px;
 }
-
 
 .title span {
-
     color: #d00000;
-
 }
 
+
+/* =========================
+   CARD
+========================= */
 
 .card {
-
     background: #ffffff;
-
     border-radius: 24px;
-
     margin-bottom: 25px;
-
-    padding:
-        25px 22px 20px 30px;
+    padding: 25px 22px 20px 30px;
 
     box-shadow:
-        0 5px 18px
-        rgba(0,0,0,0.12);
+        0 5px 18px rgba(0,0,0,0.12);
 
-    border-left:
-        8px solid #d00000;
-
+    border-left: 8px solid #d00000;
 }
 
+
+/* =========================
+   BLOOD GROUP
+========================= */
 
 .blood-group {
-
     font-size: 38px;
-
     font-weight: bold;
-
     color: #c80000;
-
     margin-bottom: 24px;
-
 }
 
+
+/* =========================
+   INFORMATION
+========================= */
 
 .row {
-
     font-size: 21px;
-
     margin: 15px 0;
-
     line-height: 1.55;
-
 }
 
-
 .row strong {
-
     font-weight: bold;
-
 }
 
 
@@ -141,63 +102,38 @@ body {
 ========================= */
 
 .update {
-
     margin-top: 22px;
-
     padding: 13px 15px;
-
     border-radius: 12px;
 
     font-size: 21px;
-
     font-weight: bold;
 
     border-left: 6px solid;
-
 }
-
 
 .update.green {
-
     background: #e7f8ec;
-
     color: #138a3d;
-
     border-color: #19a34a;
-
 }
-
 
 .update.yellow {
-
     background: #fff7d6;
-
     color: #9a7600;
-
     border-color: #e0b800;
-
 }
-
 
 .update.red {
-
     background: #ffe6e6;
-
     color: #c00000;
-
     border-color: #d00000;
-
 }
 
-
 .update.blue {
-
     background: #e9f2ff;
-
     color: #1769aa;
-
     border-color: #287bdc;
-
 }
 
 
@@ -206,57 +142,38 @@ body {
 ========================= */
 
 .status-control {
-
     margin-top: 10px;
-
 }
 
-
 .status-select {
-
     width: 100%;
-
     padding: 11px;
 
     border-radius: 10px;
-
-    border:
-        1px solid #ccc;
+    border: 1px solid #ccc;
 
     font-size: 17px;
-
     background: white;
-
 }
 
-
 .status-save {
-
     width: 100%;
-
     margin-top: 8px;
 
     padding: 11px;
 
     border: none;
-
     border-radius: 10px;
 
     background: #333;
-
     color: white;
 
     font-size: 17px;
-
     font-weight: bold;
-
 }
 
-
 .status-save:active {
-
     transform: scale(0.98);
-
 }
 
 
@@ -265,15 +182,10 @@ body {
 ========================= */
 
 .button-row {
-
     display: flex;
-
     gap: 10px;
-
     margin-top: 18px;
-
 }
-
 
 .call-button,
 .message-button {
@@ -283,13 +195,11 @@ body {
     display: block;
 
     text-align: center;
-
     text-decoration: none;
 
     color: white;
 
     font-size: 19px;
-
     font-weight: bold;
 
     padding: 13px 8px;
@@ -297,29 +207,19 @@ body {
     border-radius: 12px;
 
     border: none;
-
 }
-
 
 .call-button {
-
     background: #168a3b;
-
 }
-
 
 .message-button {
-
     background: #087f73;
-
 }
-
 
 .call-button:active,
 .message-button:active {
-
     transform: scale(0.98);
-
 }
 
 
@@ -328,37 +228,32 @@ body {
 ========================= */
 
 .loading {
-
     text-align: center;
-
     font-size: 21px;
-
     padding: 30px;
-
 }
 
+
+/* =========================
+   ERROR
+========================= */
 
 .error {
-
     text-align: center;
-
     color: #d00000;
-
     font-size: 20px;
-
     padding: 25px;
-
 }
 
 
+/* =========================
+   EMPTY
+========================= */
+
 .empty {
-
     text-align: center;
-
     font-size: 21px;
-
     padding: 30px;
-
 }
 
 
@@ -369,195 +264,127 @@ body {
 @media (max-width: 600px) {
 
     body {
-
-        padding:
-            12px 8px;
-
+        padding: 12px 8px;
     }
-
 
     .title {
-
         font-size: 26px;
-
-        margin:
-            8px 0 22px;
-
+        margin: 8px 0 22px;
     }
-
 
     .card {
-
-        padding:
-            18px 15px 16px 20px;
-
+        padding: 18px 15px 16px 20px;
         border-radius: 20px;
-
         margin-bottom: 18px;
-
         border-left-width: 7px;
-
     }
-
 
     .blood-group {
-
         font-size: 32px;
-
         margin-bottom: 18px;
-
     }
-
 
     .row {
-
         font-size: 17px;
-
         margin: 11px 0;
-
         line-height: 1.45;
-
     }
-
 
     .update {
-
         font-size: 17px;
-
         margin-top: 18px;
-
-        padding:
-            11px 13px;
-
+        padding: 11px 13px;
     }
-
 
     .button-row {
-
         gap: 8px;
-
     }
-
 
     .call-button,
     .message-button {
-
         font-size: 17px;
-
         padding: 11px 5px;
-
     }
-
 }
 
+
+/* =========================
+   SMALL MOBILE
+========================= */
 
 @media (max-width: 380px) {
 
     .title {
-
         font-size: 24px;
-
     }
-
 
     .card {
-
-        padding:
-            16px 13px 14px 18px;
-
+        padding: 16px 13px 14px 18px;
     }
-
 
     .blood-group {
-
         font-size: 30px;
-
     }
-
 
     .row {
-
         font-size: 16px;
-
     }
-
 
     .update {
-
         font-size: 16px;
-
     }
-
 
     .call-button,
     .message-button {
-
         font-size: 16px;
-
     }
-
 }
 
+
+/* =========================
+   SCROLLBAR
+========================= */
 
 ::-webkit-scrollbar {
-
     width: 7px;
-
 }
-
 
 ::-webkit-scrollbar-track {
-
     background: #f5f5f5;
-
 }
-
 
 ::-webkit-scrollbar-thumb {
-
     background: #c9141b;
-
     border-radius: 10px;
-
 }
 
-</style>
+</style></head><body><div class="container"><div class="title">
 
-</head>
+    🩸
 
-
-<body>
-
-
-<div class="container">
-
-
-    <div class="title">
-
-        🩸
-        <span>
-            শেষের আবেদনগুলি
-        </span>
-
-    </div>
-
-
-    <div id="requestList">
-
-        <div class="loading">
-
-            ⏳ আবেদনগুলি লোড হচ্ছে...
-
-        </div>
-
-    </div>
-
+    <span>
+        শেষের আবেদনগুলি
+    </span>
 
 </div>
 
 
+<div id="requestList">
 
-<script type="module">
+    <div class="loading">
+
+        ⏳ আবেদনগুলি লোড হচ্ছে...
+
+    </div>
+
+</div>
+
+</div><script type="module">
+
+
+/* =========================================
+   FIREBASE CONFIG
+========================================= */
 
 import {
 
@@ -589,87 +416,105 @@ from
 
 
 
-// ==========================================
-// GLOBAL
-// ==========================================
+/* =========================================
+   ADMIN UID
+========================================= */
+
+const ADMIN_UID_1 =
+    "TAWXxissVvXqHVK9gCrdxzM9Qjf2";
+
+
+const ADMIN_UID_2 =
+    "y3HwNswW8wYIi6GOEbZauIhcyis1";
+
+
+
+/* =========================================
+   GLOBAL
+========================================= */
 
 let currentUser = null;
 
 let isAdmin = false;
 
+let requestsLoaded = false;
 
 
-// ==========================================
-// AUTH
-// ==========================================
+
+/* =========================================
+   REQUEST LIST
+========================================= */
+
+const requestList =
+    document.getElementById(
+        "requestList"
+    );
+
+
+
+/* =========================================
+   AUTH STATE
+========================================= */
 
 onAuthStateChanged(
 
     auth,
 
-    async function(user) {
+    function(user) {
+
 
         currentUser = user;
 
         isAdmin = false;
 
 
-        if (user) {
+        /* ==============================
+           LOGIN REQUIRED
+        ============================== */
 
-            try {
-
-                const userSnapshot =
-                    await new Promise(
-                        function(resolve, reject) {
-
-                            onValue(
-
-                                ref(
-                                    db,
-                                    "users/" +
-                                    user.uid
-                                ),
-
-                                resolve,
-
-                                {
-                                    onlyOnce: true
-                                }
-
-                            );
-
-                        }
-                    );
+        if (!user) {
 
 
-                const userData =
-                    userSnapshot.val();
+            requestList.innerHTML = `
+
+                <div class="error">
+
+                    ⚠️ আবেদন দেখতে আগে Login করুন।
+
+                </div>
+
+            `;
 
 
-                if (
-                    userData &&
-                    userData.role === "admin"
-                ) {
-
-                    isAdmin = true;
-
-                }
-
-            }
-
-            catch(error) {
-
-                console.error(
-                    "Admin check error:",
-                    error
-                );
-
-            }
+            return;
 
         }
 
 
-        loadRequests();
+
+        /* ==============================
+           ADMIN CHECK
+        ============================== */
+
+        isAdmin =
+
+            user.uid === ADMIN_UID_1 ||
+
+            user.uid === ADMIN_UID_2;
+
+
+
+        /* ==============================
+           LOAD REQUESTS
+        ============================== */
+
+        if (!requestsLoaded) {
+
+            requestsLoaded = true;
+
+            loadRequests();
+
+        }
 
     }
 
@@ -677,11 +522,12 @@ onAuthStateChanged(
 
 
 
-// ==========================================
-// DATE
-// ==========================================
+/* =========================================
+   DATE FORMAT
+========================================= */
 
 function formatDate(value) {
+
 
     if (!value) {
 
@@ -694,6 +540,13 @@ function formatDate(value) {
         String(value).trim();
 
 
+
+    /*
+
+       YYYY-MM-DD
+
+    */
+
     const match =
         dateString.match(
             /^(\d{4})-(\d{2})-(\d{2})/
@@ -703,11 +556,13 @@ function formatDate(value) {
     if (match) {
 
         return (
+
             match[3] +
             "/" +
             match[2] +
             "/" +
             match[1]
+
         );
 
     }
@@ -719,30 +574,29 @@ function formatDate(value) {
 
 
 
-// ==========================================
-// UPDATE COLOR
-// ==========================================
+/* =========================================
+   UPDATE COLOR
+========================================= */
 
 function getUpdateClass(status) {
 
+
     const text =
+
         String(status || "")
         .trim()
         .toLowerCase();
 
 
-    if (
-        text === "managed"
-    ) {
+
+    if (text === "managed") {
 
         return "green";
 
     }
 
 
-    if (
-        text === "pending"
-    ) {
+    if (text === "pending") {
 
         return "yellow";
 
@@ -764,13 +618,14 @@ function getUpdateClass(status) {
 
 
 
-// ==========================================
-// ESCAPE HTML
-// ==========================================
+/* =========================================
+   ESCAPE HTML
+========================================= */
 
 function escapeHtml(value) {
 
-    return String(value || "")
+
+    return String(value ?? "")
 
         .replace(
             /&/g,
@@ -801,25 +656,37 @@ function escapeHtml(value) {
 
 
 
-// ==========================================
-// LOAD REQUESTS
-// ==========================================
+/* =========================================
+   LOAD REQUESTS
+========================================= */
 
 function loadRequests() {
 
 
-    const requestList =
-        document.getElementById(
-            "requestList"
+    requestList.innerHTML = `
+
+        <div class="loading">
+
+            ⏳ আবেদনগুলি লোড হচ্ছে...
+
+        </div>
+
+    `;
+
+
+
+    const requestsRef =
+        ref(
+            db,
+            "bloodRequests"
         );
+
 
 
     onValue(
 
-        ref(
-            db,
-            "bloodRequests"
-        ),
+        requestsRef,
+
 
         function(snapshot) {
 
@@ -828,7 +695,13 @@ function loadRequests() {
                 snapshot.val();
 
 
+
+            /* ==========================
+               NO REQUEST
+            ========================== */
+
             if (!value) {
+
 
                 requestList.innerHTML = `
 
@@ -840,26 +713,80 @@ function loadRequests() {
 
                 `;
 
+
                 return;
 
             }
 
 
-            const requests =
-                Object.values(value);
 
+            /* ==========================
+               CONVERT OBJECT TO ARRAY
+            ========================== */
+
+            const requests =
+
+                Object.entries(value)
+
+                .map(
+
+                    function(entry) {
+
+
+                        const firebaseKey =
+                            entry[0];
+
+
+                        const item =
+                            entry[1] || {};
+
+
+
+                        /*
+
+                           Firebase key-কে
+                           requestId হিসেবে ব্যবহার
+
+                        */
+
+                        return {
+
+                            ...item,
+
+                            requestId:
+
+                                item.requestId ||
+                                firebaseKey
+
+                        };
+
+                    }
+
+                );
+
+
+
+            /* ==========================
+               SORT NEWEST FIRST
+            ========================== */
 
             requests.sort(
 
                 function(a, b) {
 
+
                     return (
+
                         Number(
                             b.createdAt || 0
-                        ) -
+                        )
+
+                        -
+
                         Number(
                             a.createdAt || 0
                         )
+
                     );
 
                 }
@@ -867,8 +794,14 @@ function loadRequests() {
             );
 
 
+
             requestList.innerHTML = "";
 
+
+
+            /* ==========================
+               CREATE CARDS
+            ========================== */
 
             requests.forEach(
 
@@ -876,8 +809,8 @@ function loadRequests() {
 
 
                     const requestId =
-                        escapeHtml(
-                            item.requestId
+                        String(
+                            item.requestId || ""
                         );
 
 
@@ -932,26 +865,47 @@ function loadRequests() {
 
 
                     const status =
-                        item.status ||
-                        "No Update";
+
+                        String(
+                            item.status ||
+                            "No Update"
+                        );
+
 
 
                     const updateClass =
+
                         getUpdateClass(
                             status
                         );
 
 
+
+                    /* ==========================
+                       STATUS PERMISSION
+                    ========================== */
+
                     const canChangeStatus =
+
                         currentUser &&
+
                         (
+
                             isAdmin ||
-                            currentUser.uid === item.uid
+
+                            currentUser.uid ===
+                            item.uid
+
                         );
 
 
 
+                    /* ==========================
+                       CARD
+                    ========================== */
+
                     const card =
+
                         document.createElement(
                             "div"
                         );
@@ -972,6 +926,7 @@ function loadRequests() {
                         </div>
 
 
+
                         <div class="row">
 
                             👤
@@ -983,6 +938,7 @@ function loadRequests() {
                             ${reference}
 
                         </div>
+
 
 
                         <div class="row">
@@ -998,6 +954,7 @@ function loadRequests() {
                         </div>
 
 
+
                         <div class="row">
 
                             🧪
@@ -1009,6 +966,7 @@ function loadRequests() {
                             ${hemoglobin}
 
                         </div>
+
 
 
                         <div class="row">
@@ -1024,6 +982,7 @@ function loadRequests() {
                         </div>
 
 
+
                         <div class="row">
 
                             🕒
@@ -1035,6 +994,7 @@ function loadRequests() {
                             ${time}
 
                         </div>
+
 
 
                         <div class="row">
@@ -1050,6 +1010,7 @@ function loadRequests() {
                         </div>
 
 
+
                         <div class="row">
 
                             📱
@@ -1063,27 +1024,31 @@ function loadRequests() {
                         </div>
 
 
+
                         <div
                             class="update ${updateClass}"
                         >
 
                             Update:
+
                             ${escapeHtml(status)}
 
                         </div>
 
 
+
                         ${
                             canChangeStatus
+
                             ?
 
                             `
 
                             <div class="status-control">
 
+
                                 <select
                                     class="status-select"
-                                    data-request-id="${requestId}"
                                 >
 
                                     <option
@@ -1093,6 +1058,7 @@ function loadRequests() {
                                         🔵 No Update
                                     </option>
 
+
                                     <option
                                         value="Pending"
                                         ${status === "Pending" ? "selected" : ""}
@@ -1100,12 +1066,14 @@ function loadRequests() {
                                         🟡 Pending
                                     </option>
 
+
                                     <option
                                         value="Managed"
                                         ${status === "Managed" ? "selected" : ""}
                                     >
                                         🟢 Managed
                                     </option>
+
 
                                     <option
                                         value="Request Cancelled"
@@ -1117,14 +1085,15 @@ function loadRequests() {
                                 </select>
 
 
+
                                 <button
                                     class="status-save"
-                                    data-request-id="${requestId}"
                                 >
 
                                     Update Status
 
                                 </button>
+
 
                             </div>
 
@@ -1137,7 +1106,9 @@ function loadRequests() {
                         }
 
 
+
                         <div class="button-row">
+
 
                             <a
                                 class="call-button"
@@ -1149,18 +1120,21 @@ function loadRequests() {
                             </a>
 
 
+
                             <a
                                 class="message-button"
-                                href="conversation.html?requestId=${encodeURIComponent(item.requestId)}"
+                                href="conversation.html?requestId=${encodeURIComponent(requestId)}"
                             >
 
                                 💬 মেসেজ করুন
 
                             </a>
 
+
                         </div>
 
                     `;
+
 
 
                     requestList.appendChild(
@@ -1168,25 +1142,32 @@ function loadRequests() {
                     );
 
 
-                }
 
-            );
+                    /* ==========================
+                       STATUS UPDATE BUTTON
+                    ========================== */
 
-
-            // ==================================
-            // STATUS BUTTON
-            // ==================================
-
-            document
-                .querySelectorAll(
-                    ".status-save"
-                )
-                .forEach(
-
-                    function(button) {
+                    if (
+                        canChangeStatus
+                    ) {
 
 
-                        button.addEventListener(
+                        const select =
+
+                            card.querySelector(
+                                ".status-select"
+                            );
+
+
+                        const saveButton =
+
+                            card.querySelector(
+                                ".status-save"
+                            );
+
+
+
+                        saveButton.addEventListener(
 
                             "click",
 
@@ -1195,43 +1176,30 @@ function loadRequests() {
 
                                 if (!currentUser) {
 
+
                                     alert(
                                         "⚠️ আগে Login করুন।"
                                     );
 
-                                    return;
-
-                                }
-
-
-                                const id =
-                                    button.dataset.requestId;
-
-
-                                const select =
-                                    cardSelect(
-                                        button,
-                                        id
-                                    );
-
-
-                                if (!select) {
 
                                     return;
 
                                 }
+
 
 
                                 const newStatus =
                                     select.value;
 
 
-                                button.disabled =
+
+                                saveButton.disabled =
                                     true;
 
 
-                                button.innerText =
+                                saveButton.innerText =
                                     "⏳ আপডেট হচ্ছে...";
+
 
 
                                 try {
@@ -1240,9 +1208,12 @@ function loadRequests() {
                                     await update(
 
                                         ref(
+
                                             db,
+
                                             "bloodRequests/" +
-                                            id
+                                            requestId
+
                                         ),
 
                                         {
@@ -1261,6 +1232,7 @@ function loadRequests() {
                                     );
 
 
+
                                     alert(
                                         "✅ Status আপডেট হয়েছে।"
                                     );
@@ -1272,23 +1244,34 @@ function loadRequests() {
 
 
                                     console.error(
+                                        "Status Update Error:",
                                         error
                                     );
 
 
                                     alert(
-                                        "❌ Status আপডেট করা যায়নি।"
+
+                                        "❌ Status আপডেট করা যায়নি।\n\n" +
+
+                                        (
+                                            error.message ||
+                                            "Firebase Database Rules পরীক্ষা করুন।"
+                                        )
+
                                     );
 
                                 }
 
 
+
                                 finally {
 
-                                    button.disabled =
+
+                                    saveButton.disabled =
                                         false;
 
-                                    button.innerText =
+
+                                    saveButton.innerText =
                                         "Update Status";
 
                                 }
@@ -1299,13 +1282,20 @@ function loadRequests() {
 
                     }
 
-                );
+                }
+
+            );
 
         },
 
+
         function(error) {
 
-            console.error(error);
+
+            console.error(
+                "Firebase Load Error:",
+                error
+            );
 
 
             requestList.innerHTML = `
@@ -1316,7 +1306,15 @@ function loadRequests() {
 
                     <br><br>
 
-                    Firebase Database Rules পরীক্ষা করুন।
+                    ${
+                        error &&
+                        error.code
+                        ?
+                        "Firebase Error: " +
+                        escapeHtml(error.code)
+                        :
+                        "Firebase Database Rules অথবা Login পরীক্ষা করুন।"
+                    }
 
                 </div>
 
@@ -1328,29 +1326,4 @@ function loadRequests() {
 
 }
 
-
-
-// ==========================================
-// FIND STATUS SELECT
-// ==========================================
-
-function cardSelect(button, requestId) {
-
-    const controls =
-        button
-            .closest(".card")
-            .querySelector(
-                ".status-select"
-            );
-
-
-    return controls || null;
-
-}
-
-</script>
-
-
-</body>
-
-</html>
+</script></body></html>
