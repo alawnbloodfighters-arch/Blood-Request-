@@ -43,7 +43,14 @@ const firebaseConfig = {
         "1:299061496611:web:4762f74dbf311cd57f1a96",
 
     measurementId:
-        "G-D31EXKJWQ3"
+        "G-D31EXKJWQ3",
+
+    // ======================================
+    // REALTIME DATABASE
+    // ======================================
+
+    databaseURL:
+        "https://al-awn-blood-fighters-default-rtdb.firebaseio.com/"
 
 };
 
