@@ -15,6 +15,7 @@
 
 <title>শেষের আবেদনগুলি</title>
 
+
 <style>
 
 * {
@@ -267,8 +268,6 @@ body {
 
     display: flex;
 
-    flex-direction: column;
-
     gap: 10px;
 
     margin-top: 18px;
@@ -279,7 +278,7 @@ body {
 .call-button,
 .message-button {
 
-    width: 100%;
+    flex: 1;
 
     display: block;
 
@@ -548,7 +547,7 @@ body {
 
         <div class="loading">
 
-            ⏳ Login যাচাই করা হচ্ছে...
+            ⏳ আবেদন লোড হচ্ছে...
 
         </div>
 
@@ -558,8 +557,8 @@ body {
 </div>
 
 
-<script type="module">
 
+<script type="module">
 
 import {
 
@@ -591,6 +590,10 @@ from
 
 
 
+// ==========================================
+// GLOBAL
+// ==========================================
+
 let currentUser = null;
 
 let isAdmin = false;
@@ -599,6 +602,24 @@ let authReady = false;
 
 
 
+// ==========================================
+// ADMIN UID
+// ==========================================
+
+const ADMIN_UIDS = [
+
+    "TAWXxissVvXqHVK9gCrdxzM9Qjf2",
+
+    "y3HwNswW8wYIi6GOEbZauIhcyis1"
+
+];
+
+
+
+// ==========================================
+// REQUEST LIST
+// ==========================================
+
 const requestList =
     document.getElementById(
         "requestList"
@@ -606,9 +627,9 @@ const requestList =
 
 
 
-/* =========================
-   AUTH
-========================= */
+// ==========================================
+// AUTH
+// ==========================================
 
 onAuthStateChanged(
 
@@ -623,80 +644,91 @@ onAuthStateChanged(
         authReady = true;
 
 
-        if (!user) {
+        // ==================================
+        // LOGIN থাকলে ADMIN CHECK
+        // ==================================
 
-            requestList.innerHTML = `
+        if (user) {
 
-                <div class="error">
-
-                    ⚠️ আবেদন দেখতে আগে Login করুন।
-
-                    <br><br>
-
-                    Login করার পর আবার
-                    "আবেদন দেখুন" চাপুন।
-
-                </div>
-
-            `;
-
-            return;
-
-        }
-
-
-        try {
-
-            const userSnapshot =
-                await new Promise(
-
-                    function(resolve, reject) {
-
-                        onValue(
-
-                            ref(
-                                db,
-                                "users/" +
-                                user.uid
-                            ),
-
-                            resolve,
-
-                            {
-                                onlyOnce: true
-                            }
-
-                        );
-
-                    }
-
-                );
-
-
-            const userData =
-                userSnapshot.val();
-
+            // সরাসরি UID দিয়ে Admin check
 
             if (
-                userData &&
-                userData.role === "admin"
+                ADMIN_UIDS.includes(
+                    user.uid
+                )
             ) {
 
                 isAdmin = true;
 
             }
 
+
+            // users node থেকেও role check
+
+            else {
+
+                try {
+
+                    const userSnapshot =
+                        await new Promise(
+
+                            function(resolve, reject) {
+
+                                onValue(
+
+                                    ref(
+                                        db,
+                                        "users/" +
+                                        user.uid
+                                    ),
+
+                                    resolve,
+
+                                    {
+                                        onlyOnce: true
+                                    }
+
+                                );
+
+                            }
+
+                        );
+
+
+                    const userData =
+                        userSnapshot.val();
+
+
+                    if (
+                        userData &&
+                        userData.role === "admin"
+                    ) {
+
+                        isAdmin = true;
+
+                    }
+
+                }
+
+                catch(error) {
+
+                    console.error(
+                        "Admin check error:",
+                        error
+                    );
+
+                }
+
+            }
+
         }
 
-        catch(error) {
 
-            console.error(
-                "Admin check error:",
-                error
-            );
-
-        }
-
+        // ==================================
+        // IMPORTANT
+        // ==================================
+        // Login থাকুক বা না থাকুক
+        // Request load হবে
 
         loadRequests();
 
@@ -706,9 +738,9 @@ onAuthStateChanged(
 
 
 
-/* =========================
-   DATE
-========================= */
+// ==========================================
+// DATE FORMAT
+// ==========================================
 
 function formatDate(value) {
 
@@ -732,11 +764,13 @@ function formatDate(value) {
     if (match) {
 
         return (
+
             match[3] +
             "/" +
             match[2] +
             "/" +
             match[1]
+
         );
 
     }
@@ -748,9 +782,9 @@ function formatDate(value) {
 
 
 
-/* =========================
-   UPDATE COLOR
-========================= */
+// ==========================================
+// UPDATE COLOR
+// ==========================================
 
 function getUpdateClass(status) {
 
@@ -760,14 +794,18 @@ function getUpdateClass(status) {
         .toLowerCase();
 
 
-    if (text === "managed") {
+    if (
+        text === "managed"
+    ) {
 
         return "green";
 
     }
 
 
-    if (text === "pending") {
+    if (
+        text === "pending"
+    ) {
 
         return "yellow";
 
@@ -789,47 +827,55 @@ function getUpdateClass(status) {
 
 
 
-/* =========================
-   ESCAPE HTML
-========================= */
+// ==========================================
+// ESCAPE HTML
+// ==========================================
 
 function escapeHtml(value) {
 
     return String(value || "")
 
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
 
 
-/* =========================
-   LOAD REQUESTS
-========================= */
+// ==========================================
+// LOAD REQUESTS
+// ==========================================
 
 function loadRequests() {
 
 
-    if (!authReady || !currentUser) {
-
-        requestList.innerHTML = `
-
-            <div class="error">
-
-                ⚠️ আবেদন দেখতে আগে Login করুন।
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
+    // ==================================
+    // DATABASE READ
+    // ==================================
+    // এখানে Login check নেই
+    // কারণ Public Request View
 
     onValue(
 
@@ -871,12 +917,17 @@ function loadRequests() {
                 function(a, b) {
 
                     return (
+
                         Number(
                             b.createdAt || 0
-                        ) -
+                        )
+
+                        -
+
                         Number(
                             a.createdAt || 0
                         )
+
                     );
 
                 }
@@ -959,12 +1010,23 @@ function loadRequests() {
                         );
 
 
+                    // ==================================
+                    // STATUS CHANGE PERMISSION
+                    // ==================================
+
                     const canChangeStatus =
+
                         currentUser &&
+
                         (
+
                             isAdmin ||
-                            currentUser.uid === item.uid
+
+                            currentUser.uid ===
+                            item.uid
+
                         );
+
 
 
                     const card =
@@ -1104,33 +1166,65 @@ function loadRequests() {
 
                                     <option
                                         value="No Update"
-                                        ${status === "No Update" ? "selected" : ""}
+                                        ${
+                                            status === "No Update"
+                                            ?
+                                            "selected"
+                                            :
+                                            ""
+                                        }
                                     >
+
                                         🔵 No Update
+
                                     </option>
 
 
                                     <option
                                         value="Pending"
-                                        ${status === "Pending" ? "selected" : ""}
+                                        ${
+                                            status === "Pending"
+                                            ?
+                                            "selected"
+                                            :
+                                            ""
+                                        }
                                     >
+
                                         🟡 Pending
+
                                     </option>
 
 
                                     <option
                                         value="Managed"
-                                        ${status === "Managed" ? "selected" : ""}
+                                        ${
+                                            status === "Managed"
+                                            ?
+                                            "selected"
+                                            :
+                                            ""
+                                        }
                                     >
+
                                         🟢 Managed
+
                                     </option>
 
 
                                     <option
                                         value="Request Cancelled"
-                                        ${status === "Request Cancelled" ? "selected" : ""}
+                                        ${
+                                            status === "Request Cancelled"
+                                            ?
+                                            "selected"
+                                            :
+                                            ""
+                                        }
                                     >
+
                                         🔴 Request Cancelled
+
                                     </option>
 
                                 </select>
@@ -1156,26 +1250,8 @@ function loadRequests() {
                         }
 
 
-                        <!-- =========================
-                             MESSAGE + CALL BUTTON
-                        ========================== -->
-
                         <div class="button-row">
 
-
-                            <!-- MESSAGE FIRST -->
-
-                            <a
-                                class="message-button"
-                                href="conversation.html?requestId=${encodeURIComponent(item.requestId || "")}"
-                            >
-
-                                💬 মেসেজ করুন
-
-                            </a>
-
-
-                            <!-- CALL SECOND -->
 
                             <a
                                 class="call-button"
@@ -1183,6 +1259,18 @@ function loadRequests() {
                             >
 
                                 📞 কল করুন
+
+                            </a>
+
+
+                            <a
+                                class="message-button"
+                                href="conversation.html?requestId=${encodeURIComponent(
+                                    item.requestId || ""
+                                )}"
+                            >
+
+                                💬 মেসেজ করুন
 
                             </a>
 
@@ -1200,6 +1288,10 @@ function loadRequests() {
 
             );
 
+
+            // ==================================
+            // STATUS BUTTONS
+            // ==================================
 
             document
                 .querySelectorAll(
@@ -1220,7 +1312,7 @@ function loadRequests() {
                                 if (!currentUser) {
 
                                     alert(
-                                        "⚠️ আগে Login করুন।"
+                                        "⚠️ Status পরিবর্তন করতে Login করুন।"
                                     );
 
                                     return;
@@ -1234,8 +1326,7 @@ function loadRequests() {
 
                                 const select =
                                     cardSelect(
-                                        button,
-                                        id
+                                        button
                                     );
 
 
@@ -1291,10 +1382,12 @@ function loadRequests() {
 
                                 }
 
+
                                 catch(error) {
 
 
                                     console.error(
+                                        "Status update error:",
                                         error
                                     );
 
@@ -1326,7 +1419,9 @@ function loadRequests() {
 
         },
 
+
         function(error) {
+
 
             console.error(
                 "Firebase Database Error:",
@@ -1356,16 +1451,14 @@ function loadRequests() {
 
 
 
-/* =========================
-   FIND STATUS SELECT
-========================= */
+// ==========================================
+// FIND STATUS SELECT
+// ==========================================
 
-function cardSelect(
-    button,
-    requestId
-) {
+function cardSelect(button) {
 
     const controls =
+
         button
             .closest(".card")
             .querySelector(
@@ -1376,7 +1469,6 @@ function cardSelect(
     return controls || null;
 
 }
-
 
 </script>
 
