@@ -1,13 +1,21 @@
-<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><meta
-name="viewport"
-content="width=device-width,
-initial-scale=1.0,
-maximum-scale=1.0,
-user-scalable=no"
+<!DOCTYPE html>
+<html lang="bn">
 
-«»
+<head>
 
-<title>শেষের আবেদনগুলি</title><style>
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,
+             initial-scale=1.0,
+             maximum-scale=1.0,
+             user-scalable=no"
+>
+
+<title>শেষের আবেদনগুলি</title>
+
+<style>
 
 * {
     box-sizing: border-box;
@@ -259,6 +267,8 @@ body {
 
     display: flex;
 
+    flex-direction: column;
+
     gap: 10px;
 
     margin-top: 18px;
@@ -269,7 +279,7 @@ body {
 .call-button,
 .message-button {
 
-    flex: 1;
+    width: 100%;
 
     display: block;
 
@@ -512,27 +522,44 @@ body {
 
 }
 
-</style></head><body><div class="container"><div class="title">
+</style>
 
-    🩸
-    <span>
-        শেষের আবেদনগুলি
-    </span>
-
-</div>
+</head>
 
 
-<div id="requestList">
+<body>
 
-    <div class="loading">
 
-        ⏳ Login যাচাই করা হচ্ছে...
+<div class="container">
+
+
+    <div class="title">
+
+        🩸
+
+        <span>
+            শেষের আবেদনগুলি
+        </span>
 
     </div>
 
+
+    <div id="requestList">
+
+        <div class="loading">
+
+            ⏳ Login যাচাই করা হচ্ছে...
+
+        </div>
+
+    </div>
+
+
 </div>
 
-</div><script type="module">
+
+<script type="module">
+
 
 import {
 
@@ -564,10 +591,6 @@ from
 
 
 
-// ==========================================
-// GLOBAL
-// ==========================================
-
 let currentUser = null;
 
 let isAdmin = false;
@@ -576,10 +599,6 @@ let authReady = false;
 
 
 
-// ==========================================
-// REQUEST LIST ELEMENT
-// ==========================================
-
 const requestList =
     document.getElementById(
         "requestList"
@@ -587,9 +606,9 @@ const requestList =
 
 
 
-// ==========================================
-// AUTH
-// ==========================================
+/* =========================
+   AUTH
+========================= */
 
 onAuthStateChanged(
 
@@ -603,10 +622,6 @@ onAuthStateChanged(
 
         authReady = true;
 
-
-        // ==================================
-        // LOGIN না থাকলে
-        // ==================================
 
         if (!user) {
 
@@ -630,14 +645,11 @@ onAuthStateChanged(
         }
 
 
-        // ==================================
-        // ADMIN CHECK
-        // ==================================
-
         try {
 
             const userSnapshot =
                 await new Promise(
+
                     function(resolve, reject) {
 
                         onValue(
@@ -657,6 +669,7 @@ onAuthStateChanged(
                         );
 
                     }
+
                 );
 
 
@@ -685,11 +698,6 @@ onAuthStateChanged(
         }
 
 
-        // ==================================
-        // AUTH CONFIRMED
-        // তারপর Request Load
-        // ==================================
-
         loadRequests();
 
     }
@@ -698,9 +706,9 @@ onAuthStateChanged(
 
 
 
-// ==========================================
-// DATE
-// ==========================================
+/* =========================
+   DATE
+========================= */
 
 function formatDate(value) {
 
@@ -740,9 +748,9 @@ function formatDate(value) {
 
 
 
-// ==========================================
-// UPDATE COLOR
-// ==========================================
+/* =========================
+   UPDATE COLOR
+========================= */
 
 function getUpdateClass(status) {
 
@@ -752,18 +760,14 @@ function getUpdateClass(status) {
         .toLowerCase();
 
 
-    if (
-        text === "managed"
-    ) {
+    if (text === "managed") {
 
         return "green";
 
     }
 
 
-    if (
-        text === "pending"
-    ) {
+    if (text === "pending") {
 
         return "yellow";
 
@@ -785,53 +789,30 @@ function getUpdateClass(status) {
 
 
 
-// ==========================================
-// ESCAPE HTML
-// ==========================================
+/* =========================
+   ESCAPE HTML
+========================= */
 
 function escapeHtml(value) {
 
     return String(value || "")
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
 }
 
 
 
-// ==========================================
-// LOAD REQUESTS
-// ==========================================
+/* =========================
+   LOAD REQUESTS
+========================= */
 
 function loadRequests() {
 
-
-    // ==================================
-    // EXTRA AUTH SAFETY CHECK
-    // ==================================
 
     if (!authReady || !currentUser) {
 
@@ -849,10 +830,6 @@ function loadRequests() {
 
     }
 
-
-    // ==================================
-    // DATABASE READ
-    // ==================================
 
     onValue(
 
@@ -990,7 +967,6 @@ function loadRequests() {
                         );
 
 
-
                     const card =
                         document.createElement(
                             "div"
@@ -999,7 +975,6 @@ function loadRequests() {
 
                     card.className =
                         "card";
-
 
 
                     card.innerHTML = `
@@ -1115,6 +1090,7 @@ function loadRequests() {
 
                         ${
                             canChangeStatus
+
                             ?
 
                             `
@@ -1133,6 +1109,7 @@ function loadRequests() {
                                         🔵 No Update
                                     </option>
 
+
                                     <option
                                         value="Pending"
                                         ${status === "Pending" ? "selected" : ""}
@@ -1140,12 +1117,14 @@ function loadRequests() {
                                         🟡 Pending
                                     </option>
 
+
                                     <option
                                         value="Managed"
                                         ${status === "Managed" ? "selected" : ""}
                                     >
                                         🟢 Managed
                                     </option>
+
 
                                     <option
                                         value="Request Cancelled"
@@ -1177,7 +1156,26 @@ function loadRequests() {
                         }
 
 
+                        <!-- =========================
+                             MESSAGE + CALL BUTTON
+                        ========================== -->
+
                         <div class="button-row">
+
+
+                            <!-- MESSAGE FIRST -->
+
+                            <a
+                                class="message-button"
+                                href="conversation.html?requestId=${encodeURIComponent(item.requestId || "")}"
+                            >
+
+                                💬 মেসেজ করুন
+
+                            </a>
+
+
+                            <!-- CALL SECOND -->
 
                             <a
                                 class="call-button"
@@ -1189,15 +1187,6 @@ function loadRequests() {
                             </a>
 
 
-                            <a
-                                class="message-button"
-                                href="conversation.html?requestId=${encodeURIComponent(item.requestId || "")}"
-                            >
-
-                                💬 মেসেজ করুন
-
-                            </a>
-
                         </div>
 
                     `;
@@ -1207,15 +1196,10 @@ function loadRequests() {
                         card
                     );
 
-
                 }
 
             );
 
-
-            // ==================================
-            // STATUS BUTTON
-            // ==================================
 
             document
                 .querySelectorAll(
@@ -1305,7 +1289,6 @@ function loadRequests() {
                                         "✅ Status আপডেট হয়েছে।"
                                     );
 
-
                                 }
 
                                 catch(error) {
@@ -1373,11 +1356,14 @@ function loadRequests() {
 
 
 
-// ==========================================
-// FIND STATUS SELECT
-// ==========================================
+/* =========================
+   FIND STATUS SELECT
+========================= */
 
-function cardSelect(button, requestId) {
+function cardSelect(
+    button,
+    requestId
+) {
 
     const controls =
         button
@@ -1391,4 +1377,10 @@ function cardSelect(button, requestId) {
 
 }
 
-</script></body></html>
+
+</script>
+
+
+</body>
+
+</html>
