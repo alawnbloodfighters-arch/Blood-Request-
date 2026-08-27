@@ -187,8 +187,6 @@ body {
 }
 
 
-/* রিকুয়েস্টকারীর মেসেজ */
-
 .message.requester {
 
     margin-left: auto;
@@ -202,8 +200,6 @@ body {
 }
 
 
-/* অন্যান্য ব্যবহারকারীর মেসেজ */
-
 .message.other {
 
     margin-right: auto;
@@ -213,21 +209,6 @@ body {
     color: #222;
 
     border-bottom-left-radius: 5px;
-
-}
-
-
-/* নিজের মেসেজ */
-
-.message.me {
-
-    margin-left: auto;
-
-    background: #d7f4ef;
-
-    color: #07584f;
-
-    border-bottom-right-radius: 5px;
 
 }
 
@@ -248,13 +229,6 @@ body {
 .requester .sender-name {
 
     color: #b00000;
-
-}
-
-
-.me .sender-name {
-
-    color: #087f73;
 
 }
 
@@ -290,13 +264,6 @@ body {
 }
 
 
-.me .message-time {
-
-    color: #357a73;
-
-}
-
-
 /* =========================
    EMPTY
 ========================= */
@@ -310,6 +277,30 @@ body {
     font-size: 18px;
 
     padding: 30px 10px;
+
+}
+
+
+.login-message {
+
+    text-align: center;
+
+    padding: 40px 20px;
+
+    font-size: 19px;
+
+}
+
+
+.error-message {
+
+    text-align: center;
+
+    padding: 40px 20px;
+
+    font-size: 19px;
+
+    color: #c00000;
 
 }
 
@@ -405,20 +396,7 @@ body {
 
     opacity: .6;
 
-}
-
-
-/* =========================
-   LOGIN / ERROR
-========================= */
-
-.login-message {
-
-    text-align: center;
-
-    padding: 40px 20px;
-
-    font-size: 19px;
+    cursor: not-allowed;
 
 }
 
@@ -500,6 +478,7 @@ body {
 
     <button
         class="back-button"
+        type="button"
         onclick="history.back()"
     >
 
@@ -509,7 +488,6 @@ body {
 
 
     <div class="header-info">
-
 
         <div
             class="header-title"
@@ -526,10 +504,9 @@ body {
             id="chatSubtitle"
         >
 
-            লোড হচ্ছে...
+            Login যাচাই করা হচ্ছে...
 
         </div>
-
 
     </div>
 
@@ -558,7 +535,7 @@ body {
 
 
 <!-- =========================
-     INPUT
+     INPUT AREA
 ========================= -->
 
 <div
@@ -566,25 +543,26 @@ body {
     id="inputArea"
 >
 
-
     <input
         type="text"
         class="message-input"
         id="messageInput"
         placeholder="মেসেজ লিখুন"
         autocomplete="off"
+        disabled
     >
 
 
     <button
+        type="button"
         class="send-button"
         id="sendButton"
+        disabled
     >
 
         Send
 
     </button>
-
 
 </div>
 
@@ -592,6 +570,10 @@ body {
 
 <script type="module">
 
+
+// ==========================================
+// FIREBASE
+// ==========================================
 
 import {
 
@@ -624,9 +606,24 @@ from
 
 
 
-/* ==========================================
-   REQUEST ID
-========================================== */
+// ==========================================
+// ADMIN UID
+// আপনার Rules-এর একই Admin UID
+// ==========================================
+
+const ADMIN_UIDS = [
+
+    "TAWXxissVvXqHVK9gCrdxzM9Qjf2",
+
+    "y3HwNswW8wYIi6GOEbZauIhcyis1"
+
+];
+
+
+
+// ==========================================
+// REQUEST ID
+// ==========================================
 
 const urlParams =
     new URLSearchParams(
@@ -641,9 +638,9 @@ const requestId =
 
 
 
-/* ==========================================
-   ELEMENTS
-========================================== */
+// ==========================================
+// ELEMENTS
+// ==========================================
 
 const chatArea =
     document.getElementById(
@@ -676,26 +673,27 @@ const sendButton =
 
 
 
-/* ==========================================
-   GLOBAL
-========================================== */
+// ==========================================
+// GLOBAL
+// ==========================================
 
 let currentUser = null;
 
 let requestData = null;
 
-let requestExists = false;
+let isAdmin = false;
+
+let requestLoaded = false;
 
 
 
-/* ==========================================
-   ESCAPE HTML
-========================================== */
+// ==========================================
+// ESCAPE HTML
+// ==========================================
 
 function escapeHtml(value) {
 
-
-    return String(value || "")
+    return String(value ?? "")
 
         .replace(
             /&/g,
@@ -726,12 +724,11 @@ function escapeHtml(value) {
 
 
 
-/* ==========================================
-   TIME FORMAT
-========================================== */
+// ==========================================
+// TIME FORMAT
+// ==========================================
 
 function formatTime(timestamp) {
-
 
     if (!timestamp) {
 
@@ -744,6 +741,17 @@ function formatTime(timestamp) {
         new Date(
             Number(timestamp)
         );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "";
+
+    }
 
 
     return date.toLocaleTimeString(
@@ -766,75 +774,122 @@ function formatTime(timestamp) {
 
 
 
-/* ==========================================
-   DISABLE CHAT
-========================================== */
+// ==========================================
+// ACCESS CHECK
+// ==========================================
 
-function disableChat() {
+function canAccessConversation() {
+
+    if (!currentUser) {
+
+        return false;
+
+    }
 
 
-    sendButton.disabled =
-        true;
+    if (!requestData) {
+
+        return false;
+
+    }
+
+
+    if (isAdmin) {
+
+        return true;
+
+    }
+
+
+    return (
+        currentUser.uid ===
+        requestData.uid
+    );
+
+}
+
+
+
+// ==========================================
+// SHOW ACCESS ERROR
+// ==========================================
+
+function showAccessError() {
+
+    chatArea.innerHTML = `
+
+        <div class="error-message">
+
+            ⚠️ এই কথোপকথনে আপনার প্রবেশাধিকার নেই।
+
+            <br><br>
+
+            শুধুমাত্র রিকুয়েস্টকারী
+            অথবা Admin মেসেজ করতে পারবেন।
+
+        </div>
+
+    `;
 
 
     messageInput.disabled =
+        true;
+
+
+    sendButton.disabled =
         true;
 
 }
 
 
 
-/* ==========================================
-   ENABLE CHAT
-========================================== */
-
-function enableChat() {
-
-
-    sendButton.disabled =
-        false;
-
-
-    messageInput.disabled =
-        false;
-
-}
-
-
-
-/* ==========================================
-   AUTH
-========================================== */
+// ==========================================
+// AUTH
+// ==========================================
 
 onAuthStateChanged(
 
     auth,
 
-    function(user) {
+    async function(user) {
 
 
-        currentUser = user;
+        currentUser =
+            user;
 
 
-        /* ==============================
-           LOGIN CHECK
-        ============================== */
+        isAdmin =
+            false;
+
+
+        // ==================================
+        // LOGIN না থাকলে
+        // ==================================
 
         if (!user) {
+
+            chatSubtitle.innerText =
+                "Login প্রয়োজন";
 
 
             chatArea.innerHTML = `
 
                 <div class="login-message">
 
-                    ⚠️ মেসেজ দেখতে ও পাঠাতে Login করতে হবে।
+                    ⚠️ মেসেজ দেখতে ও পাঠাতে
+                    Login করতে হবে।
 
                 </div>
 
             `;
 
 
-            disableChat();
+            messageInput.disabled =
+                true;
+
+
+            sendButton.disabled =
+                true;
 
 
             return;
@@ -843,16 +898,23 @@ onAuthStateChanged(
 
 
 
-        /* ==============================
-           REQUEST ID CHECK
-        ============================== */
+        // ==================================
+        // REQUEST ID CHECK
+        // ==================================
 
         if (!requestId) {
+
+            chatTitle.innerText =
+                "❌ Request ID নেই";
+
+
+            chatSubtitle.innerText =
+                "";
 
 
             chatArea.innerHTML = `
 
-                <div class="login-message">
+                <div class="error-message">
 
                     ❌ Request ID পাওয়া যায়নি।
 
@@ -861,18 +923,26 @@ onAuthStateChanged(
             `;
 
 
-            disableChat();
-
-
             return;
 
         }
 
 
 
-        /* ==============================
-           REQUEST LOAD FIRST
-        ============================== */
+        // ==================================
+        // ADMIN CHECK
+        // ==================================
+
+        isAdmin =
+            ADMIN_UIDS.includes(
+                user.uid
+            );
+
+
+
+        // ==================================
+        // REQUEST LOAD
+        // ==================================
 
         loadRequest();
 
@@ -882,9 +952,9 @@ onAuthStateChanged(
 
 
 
-/* ==========================================
-   LOAD REQUEST
-========================================== */
+// ==========================================
+// LOAD REQUEST
+// ==========================================
 
 function loadRequest() {
 
@@ -892,12 +962,9 @@ function loadRequest() {
     onValue(
 
         ref(
-
             db,
-
             "bloodRequests/" +
             requestId
-
         ),
 
         function(snapshot) {
@@ -907,17 +974,15 @@ function loadRequest() {
                 snapshot.val();
 
 
+            requestLoaded =
+                true;
 
-            /* ==============================
-               REQUEST NOT FOUND
-            ============================== */
+
+            // ==================================
+            // REQUEST NOT FOUND
+            // ==================================
 
             if (!requestData) {
-
-
-                requestExists =
-                    false;
-
 
                 chatTitle.innerText =
                     "❌ Request পাওয়া যায়নি";
@@ -929,16 +994,22 @@ function loadRequest() {
 
                 chatArea.innerHTML = `
 
-                    <div class="login-message">
+                    <div class="error-message">
 
-                        ❌ এই রক্তের আবেদনটি পাওয়া যায়নি।
+                        ❌ এই Blood Request
+                        আর পাওয়া যাচ্ছে না।
 
                     </div>
 
                 `;
 
 
-                disableChat();
+                messageInput.disabled =
+                    true;
+
+
+                sendButton.disabled =
+                    true;
 
 
                 return;
@@ -947,13 +1018,9 @@ function loadRequest() {
 
 
 
-            /* ==============================
-               REQUEST FOUND
-            ============================== */
-
-            requestExists =
-                true;
-
+            // ==================================
+            // HEADER
+            // ==================================
 
             chatTitle.innerText =
 
@@ -963,7 +1030,6 @@ function loadRequest() {
                     requestData.bloodGroup ||
                     "Blood Request"
                 );
-
 
 
             chatSubtitle.innerText =
@@ -977,15 +1043,65 @@ function loadRequest() {
 
 
 
-            enableChat();
+            // ==================================
+            // ACCESS CHECK
+            // ==================================
+
+            if (
+                !canAccessConversation()
+            ) {
+
+                showAccessError();
+
+                return;
+
+            }
 
 
 
-            /* ==============================
-               LOAD PUBLIC MESSAGES
-            ============================== */
+            // ==================================
+            // ENABLE INPUT
+            // ==================================
+
+            messageInput.disabled =
+                false;
+
+
+            sendButton.disabled =
+                false;
+
+
+
+            // ==================================
+            // LOAD MESSAGES
+            // ==================================
 
             loadMessages();
+
+        },
+
+        function(error) {
+
+
+            console.error(
+                "Request Load Error:",
+                error
+            );
+
+
+            chatArea.innerHTML = `
+
+                <div class="error-message">
+
+                    ❌ Request লোড করা যাচ্ছে না।
+
+                    <br><br>
+
+                    Firebase Rules পরীক্ষা করুন।
+
+                </div>
+
+            `;
 
         }
 
@@ -995,24 +1111,59 @@ function loadRequest() {
 
 
 
-/* ==========================================
-   LOAD MESSAGES
-========================================== */
+// ==========================================
+// LOAD CONVERSATION MESSAGES
+// ==========================================
 
 function loadMessages() {
 
 
-    onValue(
+    if (!currentUser) {
+
+        return;
+
+    }
+
+
+    if (!requestData) {
+
+        return;
+
+    }
+
+
+    if (!canAccessConversation()) {
+
+        return;
+
+    }
+
+
+
+    // ==================================
+    // NEW CORRECT PATH
+    // conversations/requestId/messages
+    // ==================================
+
+    const messagesRef =
 
         ref(
 
             db,
 
-            "bloodRequests/" +
+            "conversations/" +
+
             requestId +
+
             "/messages"
 
-        ),
+        );
+
+
+
+    onValue(
+
+        messagesRef,
 
         function(snapshot) {
 
@@ -1022,12 +1173,11 @@ function loadMessages() {
 
 
 
-            /* ==============================
-               NO MESSAGE
-            ============================== */
+            // ==================================
+            // NO MESSAGE
+            // ==================================
 
             if (!data) {
-
 
                 chatArea.innerHTML = `
 
@@ -1043,41 +1193,41 @@ function loadMessages() {
 
                 `;
 
-
                 return;
 
             }
 
 
 
-            /* ==============================
-               OBJECT → ARRAY
-            ============================== */
+            // ==================================
+            // MESSAGE ARRAY
+            // ==================================
 
             const messages =
-                Object.values(data);
+                Object.entries(
+                    data
+                );
 
 
 
-            /* ==============================
-               SORT
-            ============================== */
+            // ==================================
+            // SORT BY TIMESTAMP
+            // ==================================
 
             messages.sort(
 
                 function(a, b) {
 
-
                     return (
 
                         Number(
-                            a.createdAt || 0
+                            a[1].timestamp || 0
                         )
 
                         -
 
                         Number(
-                            b.createdAt || 0
+                            b[1].timestamp || 0
                         )
 
                     );
@@ -1088,39 +1238,38 @@ function loadMessages() {
 
 
 
-            /* ==============================
-               CLEAR CHAT
-            ============================== */
+            // ==================================
+            // CLEAR
+            // ==================================
 
-            chatArea.innerHTML =
-                "";
-
+            chatArea.innerHTML = "";
 
 
-            /* ==============================
-               CREATE MESSAGE
-            ============================== */
+
+            // ==================================
+            // RENDER
+            // ==================================
 
             messages.forEach(
 
-                function(message) {
+                function(entry) {
 
+
+                    const message =
+                        entry[1];
+
+
+
+                    // ==================================
+                    // REQUESTER MESSAGE?
+                    // ==================================
 
                     const isRequester =
 
                         requestData &&
 
-                        message.uid ===
+                        message.senderUid ===
                         requestData.uid;
-
-
-
-                    const isMe =
-
-                        currentUser &&
-
-                        message.uid ===
-                        currentUser.uid;
 
 
 
@@ -1131,39 +1280,28 @@ function loadMessages() {
 
 
 
-                    /* ==========================
-                       MESSAGE TYPE
-                    ========================== */
+                    messageDiv.className =
 
-                    if (isRequester) {
+                        "message " +
 
+                        (
 
-                        messageDiv.className =
-                            "message requester";
+                            isRequester
 
-                    }
+                            ?
 
+                            "requester"
 
-                    else if (isMe) {
+                            :
 
+                            "other"
 
-                        messageDiv.className =
-                            "message me";
-
-                    }
-
-
-                    else {
-
-
-                        messageDiv.className =
-                            "message other";
-
-                    }
+                        );
 
 
 
                     const senderName =
+
                         escapeHtml(
 
                             message.senderName ||
@@ -1175,15 +1313,21 @@ function loadMessages() {
 
 
                     const messageText =
+
                         escapeHtml(
+
                             message.text
+
                         );
 
 
 
                     const time =
+
                         formatTime(
-                            message.createdAt
+
+                            message.timestamp
+
                         );
 
 
@@ -1208,6 +1352,14 @@ function loadMessages() {
 
                             ${time}
 
+                            ${
+                                isRequester
+                                ?
+                                " ✓✓"
+                                :
+                                ""
+                            }
+
                         </div>
 
                     `;
@@ -1224,11 +1376,12 @@ function loadMessages() {
 
 
 
-            /* ==============================
-               SCROLL LAST MESSAGE
-            ============================== */
+            // ==================================
+            // SCROLL BOTTOM
+            // ==================================
 
             chatArea.scrollTop =
+
                 chatArea.scrollHeight;
 
         },
@@ -1237,19 +1390,21 @@ function loadMessages() {
 
 
             console.error(
-                "Message Load Error:",
+                "Conversation Load Error:",
                 error
             );
 
 
             chatArea.innerHTML = `
 
-                <div class="login-message">
+                <div class="error-message">
 
                     ❌ মেসেজ লোড করা যাচ্ছে না।
 
                     <br><br>
 
+                    আপনার এই কথোপকথনে
+                    Access নেই অথবা
                     Firebase Rules পরীক্ষা করুন।
 
                 </div>
@@ -1264,48 +1419,38 @@ function loadMessages() {
 
 
 
-/* ==========================================
-   SEND MESSAGE
-========================================== */
+// ==========================================
+// SEND MESSAGE
+// ==========================================
 
 async function sendMessage() {
 
 
-    /* ==============================
-       LOGIN CHECK
-    ============================== */
+    // ==================================
+    // LOGIN
+    // ==================================
 
     if (!currentUser) {
-
 
         alert(
             "⚠️ আগে Login করুন।"
         );
 
-
         return;
 
     }
 
 
 
-    /* ==============================
-       REQUEST CHECK
-    ============================== */
+    // ==================================
+    // REQUEST ID
+    // ==================================
 
-    if (
-
-        !requestId ||
-
-        !requestExists
-
-    ) {
-
+    if (!requestId) {
 
         alert(
-            "❌ এই Request-এ মেসেজ পাঠানো যাবে না।"
+            "❌ Request ID পাওয়া যায়নি।"
         );
-
 
         return;
 
@@ -1313,14 +1458,44 @@ async function sendMessage() {
 
 
 
-    /* ==============================
-       MESSAGE TEXT
-    ============================== */
+    // ==================================
+    // REQUEST DATA
+    // ==================================
+
+    if (!requestData) {
+
+        alert(
+            "⏳ Request তথ্য লোড হচ্ছে।"
+        );
+
+        return;
+
+    }
+
+
+
+    // ==================================
+    // ACCESS
+    // ==================================
+
+    if (!canAccessConversation()) {
+
+        alert(
+            "⚠️ এই কথোপকথনে আপনার Access নেই।"
+        );
+
+        return;
+
+    }
+
+
+
+    // ==================================
+    // MESSAGE TEXT
+    // ==================================
 
     const text =
-        messageInput.value
-        .trim();
-
+        messageInput.value.trim();
 
 
     if (!text) {
@@ -1331,25 +1506,29 @@ async function sendMessage() {
 
 
 
-    /* ==============================
-       DISABLE SEND
-    ============================== */
+    // ==================================
+    // DISABLE BUTTON
+    // ==================================
 
     sendButton.disabled =
         true;
 
 
+    messageInput.disabled =
+        true;
+
+
     sendButton.innerText =
-        "...";
+        "⏳";
 
 
 
     try {
 
 
-        /* ==============================
-           MESSAGE LOCATION
-        ============================== */
+        // ==================================
+        // CORRECT FIREBASE PATH
+        // ==================================
 
         const messagesRef =
 
@@ -1357,13 +1536,19 @@ async function sendMessage() {
 
                 db,
 
-                "bloodRequests/" +
+                "conversations/" +
+
                 requestId +
+
                 "/messages"
 
             );
 
 
+
+        // ==================================
+        // NEW MESSAGE ID
+        // ==================================
 
         const messageRef =
             push(
@@ -1372,15 +1557,13 @@ async function sendMessage() {
 
 
 
-        /* ==============================
-           SENDER NAME
-        ============================== */
+        // ==================================
+        // SENDER NAME
+        // ==================================
 
         const senderName =
 
             currentUser.displayName ||
-
-            requestData?.requesterName ||
 
             currentUser.email ||
 
@@ -1388,14 +1571,19 @@ async function sendMessage() {
 
 
 
-        /* ==============================
-           MESSAGE DATA
-        ============================== */
+        // ==================================
+        // MESSAGE DATA
+        // আপনার Rules-এর সাথে মিল
+        // ==================================
 
         const messageData = {
 
+            text:
 
-            uid:
+                text,
+
+
+            senderUid:
 
                 currentUser.uid,
 
@@ -1405,17 +1593,7 @@ async function sendMessage() {
                 senderName,
 
 
-            senderEmail:
-
-                currentUser.email || "",
-
-
-            text:
-
-                text,
-
-
-            createdAt:
+            timestamp:
 
                 Date.now()
 
@@ -1423,9 +1601,9 @@ async function sendMessage() {
 
 
 
-        /* ==============================
-           SAVE
-        ============================== */
+        // ==================================
+        // SAVE
+        // ==================================
 
         await set(
 
@@ -1437,12 +1615,11 @@ async function sendMessage() {
 
 
 
-        /* ==============================
-           CLEAR INPUT
-        ============================== */
+        // ==================================
+        // CLEAR INPUT
+        // ==================================
 
-        messageInput.value =
-            "";
+        messageInput.value = "";
 
 
     }
@@ -1451,13 +1628,19 @@ async function sendMessage() {
 
 
         console.error(
-            "Message Error:",
+            "Message Send Error:",
             error
         );
 
 
         alert(
-            "❌ মেসেজ পাঠানো যায়নি।\n\nFirebase Rules পরীক্ষা করুন।"
+
+            "❌ মেসেজ পাঠানো যায়নি।\n\n" +
+
+            "Firebase Rules অথবা Internet " +
+
+            "সংযোগ পরীক্ষা করুন।"
+
         );
 
     }
@@ -1467,6 +1650,10 @@ async function sendMessage() {
 
 
         sendButton.disabled =
+            false;
+
+
+        messageInput.disabled =
             false;
 
 
@@ -1482,9 +1669,9 @@ async function sendMessage() {
 
 
 
-/* ==========================================
-   SEND BUTTON
-========================================== */
+// ==========================================
+// SEND BUTTON
+// ==========================================
 
 sendButton.addEventListener(
 
@@ -1496,9 +1683,9 @@ sendButton.addEventListener(
 
 
 
-/* ==========================================
-   ENTER TO SEND
-========================================== */
+// ==========================================
+// ENTER TO SEND
+// ==========================================
 
 messageInput.addEventListener(
 
@@ -1508,12 +1695,8 @@ messageInput.addEventListener(
 
 
         if (
-
-            event.key ===
-            "Enter"
-
+            event.key === "Enter"
         ) {
-
 
             event.preventDefault();
 
@@ -1525,7 +1708,6 @@ messageInput.addEventListener(
     }
 
 );
-
 
 </script>
 
