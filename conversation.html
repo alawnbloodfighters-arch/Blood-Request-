@@ -15,27 +15,22 @@
 
 <title>পাবলিক চ্যাট</title>
 
-
 <style>
 
 * {
     box-sizing: border-box;
 }
 
-
 html,
 body {
 
     margin: 0;
-
     padding: 0;
 
     width: 100%;
-
     height: 100%;
 
 }
-
 
 body {
 
@@ -67,15 +62,12 @@ body {
 
     align-items: center;
 
-    padding:
-        10px 15px;
+    padding: 10px 15px;
 
     position: fixed;
 
     top: 0;
-
     left: 0;
-
     right: 0;
 
     z-index: 10;
@@ -85,7 +77,6 @@ body {
         rgba(0,0,0,0.18);
 
 }
-
 
 .back-button {
 
@@ -104,17 +95,15 @@ body {
 
 }
 
-
 .header-info {
 
     overflow: hidden;
 
 }
 
-
 .header-title {
 
-    font-size: 22px;
+    font-size: 21px;
 
     font-weight: bold;
 
@@ -125,7 +114,6 @@ body {
     text-overflow: ellipsis;
 
 }
-
 
 .header-subtitle {
 
@@ -153,11 +141,9 @@ body {
     position: fixed;
 
     top: 82px;
-
     bottom: 75px;
 
     left: 0;
-
     right: 0;
 
     overflow-y: auto;
@@ -166,7 +152,6 @@ body {
         18px 14px 25px;
 
 }
-
 
 .message {
 
@@ -187,7 +172,6 @@ body {
 
 }
 
-
 .message.mine {
 
     margin-left: auto;
@@ -199,7 +183,6 @@ body {
     border-bottom-right-radius: 5px;
 
 }
-
 
 .message.other {
 
@@ -213,7 +196,6 @@ body {
 
 }
 
-
 .sender-name {
 
     font-size: 14px;
@@ -226,13 +208,11 @@ body {
 
 }
 
-
 .mine .sender-name {
 
     color: #b00000;
 
 }
-
 
 .message-text {
 
@@ -243,7 +223,6 @@ body {
     white-space: pre-wrap;
 
 }
-
 
 .message-time {
 
@@ -256,7 +235,6 @@ body {
     color: #777;
 
 }
-
 
 .mine .message-time {
 
@@ -281,6 +259,16 @@ body {
 
 }
 
+.login-message {
+
+    text-align: center;
+
+    padding: 40px 20px;
+
+    font-size: 19px;
+
+}
+
 
 /* =========================
    INPUT
@@ -293,7 +281,6 @@ body {
     bottom: 0;
 
     left: 0;
-
     right: 0;
 
     height: 75px;
@@ -316,7 +303,6 @@ body {
 
 }
 
-
 .message-input {
 
     flex: 1;
@@ -337,14 +323,12 @@ body {
 
 }
 
-
 .message-input:focus {
 
     border-color:
         #087f73;
 
 }
-
 
 .send-button {
 
@@ -368,25 +352,9 @@ body {
 
 }
 
-
 .send-button:disabled {
 
     opacity: .6;
-
-}
-
-
-/* =========================
-   LOGIN
-========================= */
-
-.login-message {
-
-    text-align: center;
-
-    padding: 40px 20px;
-
-    font-size: 19px;
 
 }
 
@@ -403,15 +371,12 @@ body {
 
     }
 
-
     .chat-area {
 
         top: 72px;
-
         bottom: 70px;
 
     }
-
 
     .chat-input-area {
 
@@ -419,13 +384,11 @@ body {
 
     }
 
-
     .message {
 
         max-width: 84%;
 
     }
-
 
     .message-text {
 
@@ -433,13 +396,11 @@ body {
 
     }
 
-
     .header-title {
 
         font-size: 19px;
 
     }
-
 
     .send-button {
 
@@ -464,7 +425,6 @@ body {
 ========================= -->
 
 <div class="chat-header">
-
 
     <button
         class="back-button"
@@ -494,7 +454,7 @@ body {
             id="chatSubtitle"
         >
 
-            সবার সাথে কথা বলুন
+            মেসেজ লোড হচ্ছে...
 
         </div>
 
@@ -529,7 +489,6 @@ body {
 
 <div
     class="chat-input-area"
-    id="inputArea"
 >
 
     <input
@@ -595,15 +554,6 @@ from
 
 
 // ==========================================
-// PUBLIC CHAT PATH
-// ==========================================
-
-const PUBLIC_CHAT_PATH =
-    "publicChat/messages";
-
-
-
-// ==========================================
 // ELEMENTS
 // ==========================================
 
@@ -645,10 +595,62 @@ const backButton =
 
 
 // ==========================================
+// GET REQUEST ID
+// ==========================================
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const requestId =
+    params.get("requestId");
+
+
+
+// ==========================================
 // CURRENT USER
 // ==========================================
 
 let currentUser = null;
+
+let messagesLoaded = false;
+
+
+
+// ==========================================
+// REQUEST ID CHECK
+// ==========================================
+
+if (!requestId) {
+
+    chatTitle.innerText =
+        "❌ আবেদন পাওয়া যায়নি";
+
+    chatSubtitle.innerText =
+        "Request ID নেই";
+
+    chatArea.innerHTML = `
+
+        <div class="login-message">
+
+            ❌ এই চ্যাটের Request ID পাওয়া যায়নি।
+
+            <br><br>
+
+            আবেদন তালিকা থেকে আবার
+            "মেসেজ করুন" চাপুন।
+
+        </div>
+
+    `;
+
+    sendButton.disabled = true;
+
+    messageInput.disabled = true;
+
+}
 
 
 
@@ -690,7 +692,7 @@ function escapeHtml(value) {
 
 
 // ==========================================
-// TIME FORMAT
+// TIME
 // ==========================================
 
 function formatTime(timestamp) {
@@ -725,13 +727,39 @@ function formatTime(timestamp) {
 
         {
 
-            hour:
-                "numeric",
+            hour: "numeric",
 
-            minute:
-                "2-digit"
+            minute: "2-digit"
 
         }
+
+    );
+
+}
+
+
+
+// ==========================================
+// CHAT PATH
+// ==========================================
+//
+// প্রতিটি Request-এর জন্য
+// আলাদা আলাদা chat হবে.
+//
+// publicChats/
+//    requestId/
+//       messages/
+//
+
+function getChatPath() {
+
+    return (
+
+        "publicChats/" +
+
+        requestId +
+
+        "/messages"
 
     );
 
@@ -754,6 +782,11 @@ onAuthStateChanged(
             user;
 
 
+
+        // ==================================
+        // LOGIN নেই
+        // ==================================
+
         if (!user) {
 
 
@@ -774,12 +807,9 @@ onAuthStateChanged(
             `;
 
 
-            sendButton.disabled =
-                true;
+            sendButton.disabled = true;
 
-
-            messageInput.disabled =
-                true;
+            messageInput.disabled = true;
 
 
             chatSubtitle.innerText =
@@ -793,23 +823,32 @@ onAuthStateChanged(
 
 
         // ==================================
+        // REQUEST ID নেই
+        // ==================================
+
+        if (!requestId) {
+
+            return;
+
+        }
+
+
+
+        // ==================================
         // LOGIN OK
         // ==================================
 
-        sendButton.disabled =
-            false;
+        sendButton.disabled = false;
 
-
-        messageInput.disabled =
-            false;
+        messageInput.disabled = false;
 
 
         chatTitle.innerText =
-            "💬 পাবলিক চ্যাট";
+            "💬 আবেদন চ্যাট";
 
 
         chatSubtitle.innerText =
-            "সবাই সবার সাথে কথা বলতে পারবেন";
+            "এই আবেদনের জন্য পাবলিক চ্যাট";
 
 
         loadMessages();
@@ -821,18 +860,34 @@ onAuthStateChanged(
 
 
 // ==========================================
-// LOAD PUBLIC MESSAGES
+// LOAD MESSAGES
 // ==========================================
 
 function loadMessages() {
 
 
-    onValue(
+    if (
+        !currentUser ||
+        !requestId
+    ) {
 
+        return;
+
+    }
+
+
+
+    const messagesRef =
         ref(
             db,
-            PUBLIC_CHAT_PATH
-        ),
+            getChatPath()
+        );
+
+
+
+    onValue(
+
+        messagesRef,
 
         function(snapshot) {
 
@@ -841,7 +896,13 @@ function loadMessages() {
                 snapshot.val();
 
 
+
+            // ==================================
+            // NO MESSAGE
+            // ==================================
+
             if (!data) {
+
 
                 chatArea.innerHTML = `
 
@@ -851,11 +912,15 @@ function loadMessages() {
 
                         <br><br>
 
-                        প্রথম মেসেজটি আপনিই পাঠান।
+                        এই আবেদনের প্রথম মেসেজটি
+                        আপনিই পাঠান।
 
                     </div>
 
                 `;
+
+
+                messagesLoaded = true;
 
                 return;
 
@@ -864,7 +929,7 @@ function loadMessages() {
 
 
             // ==================================
-            // OBJECT → ARRAY
+            // ARRAY
             // ==================================
 
             const messages =
@@ -905,7 +970,7 @@ function loadMessages() {
 
 
             // ==================================
-            // SHOW MESSAGES
+            // DISPLAY
             // ==================================
 
             messages.forEach(
@@ -956,7 +1021,9 @@ function loadMessages() {
                     const messageText =
                         escapeHtml(
 
-                            message.text
+                            message.text ||
+
+                            ""
 
                         );
 
@@ -1022,6 +1089,9 @@ function loadMessages() {
             chatArea.scrollTop =
                 chatArea.scrollHeight;
 
+
+            messagesLoaded = true;
+
         },
 
 
@@ -1029,11 +1099,8 @@ function loadMessages() {
 
 
             console.error(
-
-                "Public Chat Error:",
-
+                "Chat Load Error:",
                 error
-
             );
 
 
@@ -1045,7 +1112,7 @@ function loadMessages() {
 
                     <br><br>
 
-                    Firebase Rules পরীক্ষা করুন।
+                    Firebase Database Rules পরীক্ষা করুন।
 
                 </div>
 
@@ -1070,6 +1137,18 @@ async function sendMessage() {
 
         alert(
             "⚠️ আগে Login করুন।"
+        );
+
+        return;
+
+    }
+
+
+
+    if (!requestId) {
+
+        alert(
+            "❌ Request ID পাওয়া যায়নি।"
         );
 
         return;
@@ -1104,7 +1183,7 @@ async function sendMessage() {
 
 
         // ==================================
-        // PUBLIC MESSAGE PATH
+        // CURRENT REQUEST CHAT
         // ==================================
 
         const messagesRef =
@@ -1112,14 +1191,14 @@ async function sendMessage() {
 
                 db,
 
-                PUBLIC_CHAT_PATH
+                getChatPath()
 
             );
 
 
 
         // ==================================
-        // NEW MESSAGE
+        // NEW MESSAGE ID
         // ==================================
 
         const messageRef =
@@ -1150,27 +1229,18 @@ async function sendMessage() {
         const messageData = {
 
             uid:
-
                 currentUser.uid,
 
-
             senderName:
-
                 senderName,
 
-
             senderEmail:
-
                 currentUser.email || "",
 
-
             text:
-
                 text,
 
-
             createdAt:
-
                 Date.now()
 
         };
@@ -1192,10 +1262,11 @@ async function sendMessage() {
 
 
         // ==================================
-        // CLEAR INPUT
+        // CLEAR
         // ==================================
 
         messageInput.value = "";
+
 
 
     }
@@ -1204,11 +1275,8 @@ async function sendMessage() {
 
 
         console.error(
-
             "Send Message Error:",
-
             error
-
         );
 
 
@@ -1216,7 +1284,10 @@ async function sendMessage() {
 
             "❌ মেসেজ পাঠানো যায়নি।\n\n" +
 
-            "Firebase Database Rules অথবা Internet সংযোগ পরীক্ষা করুন।"
+            (
+                error.message ||
+                "Firebase Rules পরীক্ষা করুন।"
+            )
 
         );
 
@@ -1257,7 +1328,7 @@ sendButton.addEventListener(
 
 
 // ==========================================
-// ENTER TO SEND
+// ENTER
 // ==========================================
 
 messageInput.addEventListener(
@@ -1271,9 +1342,7 @@ messageInput.addEventListener(
             event.key === "Enter"
         ) {
 
-
             event.preventDefault();
-
 
             sendMessage();
 
@@ -1300,7 +1369,6 @@ backButton.addEventListener(
     }
 
 );
-
 
 </script>
 
