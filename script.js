@@ -9,9 +9,11 @@ import {
     db
 } from "./firebase-config.js";
 
+
 import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 
 import {
     ref,
@@ -21,14 +23,19 @@ import {
 
 
 // ==========================================
-// ELEMENTS
+// FORM
 // ==========================================
 
 const form =
-    document.getElementById("bloodRequestForm");
+    document.getElementById(
+        "bloodRequestForm"
+    );
+
 
 const submitButton =
-    document.getElementById("submitButton");
+    document.getElementById(
+        "submitButton"
+    );
 
 
 // ==========================================
@@ -36,22 +43,6 @@ const submitButton =
 // ==========================================
 
 let currentUser = null;
-
-let authChecked = false;
-
-
-// ==========================================
-// INITIAL BUTTON STATE
-// ==========================================
-//
-// Firebase Login status যাচাই না হওয়া পর্যন্ত
-// শুধু অপেক্ষা করবে।
-//
-
-submitButton.disabled = true;
-
-submitButton.innerText =
-    "⏳ Login যাচাই হচ্ছে...";
 
 
 // ==========================================
@@ -64,41 +55,20 @@ onAuthStateChanged(
 
         currentUser = user;
 
-        authChecked = true;
-
-
-        // ==================================
-        // USER LOGIN করা আছে
-        // ==================================
-
         if (user) {
 
-            submitButton.disabled = false;
-
-            submitButton.innerText =
-                "🩸 রিকুয়েস্ট পাঠান";
-
             console.log(
-                "LOGIN OK:",
+                "Firebase Login OK:",
                 user.uid
             );
 
-            return;
+        } else {
+
+            console.log(
+                "Firebase User নেই"
+            );
+
         }
-
-
-        // ==================================
-        // LOGIN করা নেই
-        // ==================================
-
-        submitButton.disabled = true;
-
-        submitButton.innerText =
-            "Login প্রয়োজন";
-
-        console.log(
-            "NO USER LOGIN"
-        );
 
     }
 );
@@ -116,30 +86,17 @@ form.addEventListener(
 
 
         // ==================================
-        // AUTH CHECK এখনো শেষ হয়নি
-        // ==================================
-
-        if (!authChecked) {
-
-            alert(
-                "⏳ Login তথ্য যাচাই হচ্ছে। কয়েক সেকেন্ড পরে আবার চেষ্টা করুন।"
-            );
-
-            return;
-        }
-
-
-        // ==================================
         // LOGIN CHECK
         // ==================================
 
         if (!currentUser) {
 
             alert(
-                "⚠️ রিকুয়েস্ট পাঠানোর আগে Login করুন।"
+                "⚠️ আপনার Login session পাওয়া যাচ্ছে না।\n\nআবার Login করে রক্তের আবেদন পেজে আসুন।"
             );
 
             return;
+
         }
 
 
@@ -231,12 +188,8 @@ form.addEventListener(
                     "⚠️ আপনার নাম লিখুন।"
                 );
 
-                submitButton.disabled = false;
-
-                submitButton.innerText =
-                    "🩸 রিকুয়েস্ট পাঠান";
-
                 return;
+
             }
 
 
@@ -246,12 +199,8 @@ form.addEventListener(
                     "⚠️ রোগীর সমস্যা লিখুন।"
                 );
 
-                submitButton.disabled = false;
-
-                submitButton.innerText =
-                    "🩸 রিকুয়েস্ট পাঠান";
-
                 return;
+
             }
 
 
@@ -261,12 +210,8 @@ form.addEventListener(
                     "⚠️ রক্তের গ্রুপ নির্বাচন করুন।"
                 );
 
-                submitButton.disabled = false;
-
-                submitButton.innerText =
-                    "🩸 রিকুয়েস্ট পাঠান";
-
                 return;
+
             }
 
 
@@ -276,12 +221,8 @@ form.addEventListener(
                     "⚠️ হিমোগ্লোবিন লিখুন।"
                 );
 
-                submitButton.disabled = false;
-
-                submitButton.innerText =
-                    "🩸 রিকুয়েস্ট পাঠান";
-
                 return;
+
             }
 
 
@@ -291,12 +232,8 @@ form.addEventListener(
                     "⚠️ রক্তদানের তারিখ নির্বাচন করুন।"
                 );
 
-                submitButton.disabled = false;
-
-                submitButton.innerText =
-                    "🩸 রিকুয়েস্ট পাঠান";
-
                 return;
+
             }
 
 
@@ -306,12 +243,8 @@ form.addEventListener(
                     "⚠️ রক্তদানের সময় লিখুন।"
                 );
 
-                submitButton.disabled = false;
-
-                submitButton.innerText =
-                    "🩸 রিকুয়েস্ট পাঠান";
-
                 return;
+
             }
 
 
@@ -321,34 +254,28 @@ form.addEventListener(
                     "⚠️ হাসপাতালের নাম লিখুন।"
                 );
 
-                submitButton.disabled = false;
-
-                submitButton.innerText =
-                    "🩸 রিকুয়েস্ট পাঠান";
-
                 return;
+
             }
 
 
             if (
-                !/^01[3-9][0-9]{8}$/.test(mobile)
+                !/^01[3-9][0-9]{8}$/.test(
+                    mobile
+                )
             ) {
 
                 alert(
                     "⚠️ সঠিক ১১ সংখ্যার বাংলাদেশি মোবাইল নম্বর দিন।"
                 );
 
-                submitButton.disabled = false;
-
-                submitButton.innerText =
-                    "🩸 রিকুয়েস্ট পাঠান";
-
                 return;
+
             }
 
 
             // ==================================
-            // CREATE REQUEST
+            // CREATE NEW REQUEST
             // ==================================
 
             const requestRef =
@@ -373,51 +300,68 @@ form.addEventListener(
                 requestId:
                     requestId,
 
+
                 uid:
                     currentUser.uid,
+
 
                 requesterName:
                     currentUser.displayName ||
                     reference,
 
+
                 requesterEmail:
-                    currentUser.email || "",
+                    currentUser.email ||
+                    "",
+
 
                 reference:
                     reference,
 
+
                 problem:
                     problem,
+
 
                 bloodGroup:
                     bloodGroup,
 
+
                 hemoglobin:
                     hemoglobin,
+
 
                 date:
                     date,
 
+
                 time:
                     time,
+
 
                 hospital:
                     hospital,
 
+
                 mobile:
                     mobile,
+
 
                 note:
                     note,
 
+
                 status:
                     "No Update",
+
 
                 createdAt:
                     Date.now(),
 
+
                 updatedAt:
                     Date.now(),
+
 
                 updatedBy:
                     currentUser.uid
@@ -439,26 +383,24 @@ form.addEventListener(
             // SUCCESS
             // ==================================
 
+            console.log(
+                "Blood Request Created:",
+                requestId
+            );
+
+
             alert(
                 "✅ রক্তের রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে।"
             );
 
 
-            // Form পরিষ্কার
+            // FORM RESET
+
             form.reset();
 
 
-            // ==================================
-            // REQUEST ID SAVE
-            // ==================================
-
-            console.log(
-                "Request Created:",
-                requestId
-            );
-
-
         }
+
 
         catch(error) {
 
@@ -481,18 +423,10 @@ form.addEventListener(
 
         finally {
 
-            // ==================================
-            // RESTORE BUTTON
-            // ==================================
+            submitButton.disabled = false;
 
-            if (currentUser) {
-
-                submitButton.disabled = false;
-
-                submitButton.innerText =
-                    "🩸 রিকুয়েস্ট পাঠান";
-
-            }
+            submitButton.innerText =
+                "🩸 রিকুয়েস্ট পাঠান";
 
         }
 
