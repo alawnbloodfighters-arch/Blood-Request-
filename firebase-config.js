@@ -25,7 +25,7 @@ import {
 const firebaseConfig = {
 
     apiKey:
-        "AIzaSyAR3uyMlvGNWZaG_w1zs6IKQ2lXB_Y_9M0",
+        "AIzaSyAR3uyMlvGNwZaG_w1zs6IKQ2lXB_Y_9M0",
 
     authDomain:
         "al-awn-blood-fighters.firebaseapp.com",
