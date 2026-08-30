@@ -530,9 +530,7 @@ body {
         id="backButton"
         type="button"
     >
-
         ‹
-
     </button>
 
 
@@ -542,9 +540,7 @@ body {
             class="header-title"
             id="chatTitle"
         >
-
             💬 আবেদন চ্যাট
-
         </div>
 
 
@@ -552,9 +548,7 @@ body {
             class="header-subtitle"
             id="chatSubtitle"
         >
-
             শুধু Login করা user মেসেজ করতে পারবেন
-
         </div>
 
     </div>
@@ -578,9 +572,7 @@ body {
 
 
 
-<div
-    class="chat-input-area"
->
+<div class="chat-input-area">
 
     <input
         type="text"
@@ -597,9 +589,7 @@ body {
         id="sendButton"
         type="button"
     >
-
         Send
-
     </button>
 
 </div>
@@ -717,40 +707,27 @@ let messagesListenerStarted = false;
 
 let isSending = false;
 
+let latestMessageTime = 0;
+
 
 
 // ==========================================
-// ESCAPE HTML
+// ESCAPE
 // ==========================================
 
 function escapeHtml(value) {
 
     return String(value ?? "")
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
+        .replace(/&/g, "&amp;")
 
-        .replace(
-            /</g,
-            "&lt;"
-        )
+        .replace(/</g, "&lt;")
 
-        .replace(
-            />/g,
-            "&gt;"
-        )
+        .replace(/>/g, "&gt;")
 
-        .replace(
-            /"/g,
-            "&quot;"
-        )
+        .replace(/"/g, "&quot;")
 
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+        .replace(/'/g, "&#039;");
 
 }
 
@@ -839,33 +816,24 @@ function formatTime(timestamp) {
 
 
 // ==========================================
-// CHAT PATH
+// PATH
 // ==========================================
 
 function getChatRootPath() {
 
     return (
-
         "publicChats/" +
         requestId
-
     );
 
 }
 
-
-
-// ==========================================
-// MESSAGES PATH
-// ==========================================
 
 function getMessagesPath() {
 
     return (
-
         getChatRootPath() +
         "/messages"
-
     );
 
 }
@@ -873,12 +841,10 @@ function getMessagesPath() {
 
 
 // ==========================================
-// MARK AS READ
+// MARK READ
 // ==========================================
 
-async function markMessagesAsRead(
-    lastMessageTime = 0
-) {
+async function markMessagesAsRead(lastMessageTime) {
 
     if (
         !currentUser ||
@@ -890,20 +856,25 @@ async function markMessagesAsRead(
     }
 
 
+    const safeTime =
+        Number(lastMessageTime || 0);
+
+
+    // ==================================
+    // কোনো message-এর সময় না থাকলে
+    // readState update করা হবে না।
+    //
+    // Date.now() ব্যবহার করা হচ্ছে না।
+    // ==================================
+
+    if (safeTime <= 0) {
+
+        return;
+
+    }
+
+
     try {
-
-        const readTime =
-
-            Number(lastMessageTime || 0) > 0
-
-            ?
-
-            Number(lastMessageTime)
-
-            :
-
-            Date.now();
-
 
         await set(
 
@@ -920,7 +891,7 @@ async function markMessagesAsRead(
             {
 
                 lastReadAt:
-                    readTime
+                    safeTime
 
             }
 
@@ -931,11 +902,8 @@ async function markMessagesAsRead(
     catch(error) {
 
         console.error(
-
             "Read State Error:",
-
             error
-
         );
 
     }
@@ -1064,12 +1032,9 @@ function loadRequestInfo() {
 
     const requestRef =
         ref(
-
             db,
-
             "bloodRequests/" +
             requestId
-
         );
 
 
@@ -1116,7 +1081,6 @@ function loadRequestInfo() {
 
 
             applicantUid =
-
                 String(
                     request.uid || ""
                 );
@@ -1212,11 +1176,8 @@ function loadMessages() {
 
     const messagesRef =
         ref(
-
             db,
-
             getMessagesPath()
-
         );
 
 
@@ -1230,7 +1191,15 @@ function loadMessages() {
                 snapshot.val();
 
 
+            // ==================================
+            // NO MESSAGE
+            // ==================================
+
             if (!data) {
+
+                latestMessageTime =
+                    0;
+
 
                 chatArea.innerHTML = `
 
@@ -1247,21 +1216,37 @@ function loadMessages() {
 
                 `;
 
-
-                /*
-                 * Message না থাকলে
-                 * বর্তমান সময় Read State-এ
-                 * রাখা হচ্ছে না।
-                 */
+                // কোনো message নেই,
+                // তাই readState-এ Date.now()
+                // লেখা হবে না।
 
                 return;
 
             }
 
 
-            const messages =
-                Object.values(data);
+            // ==================================
+            // ARRAY
+            // ==================================
 
+            const messages =
+                Object.values(data)
+
+                    .filter(function(message) {
+
+                        return (
+                            message &&
+                            Number(
+                                message.createdAt || 0
+                            ) > 0
+                        );
+
+                    });
+
+
+            // ==================================
+            // OLD → NEW
+            // ==================================
 
             messages.sort(
 
@@ -1290,24 +1275,19 @@ function loadMessages() {
                 "";
 
 
+            // ==================================
+            // DISPLAY
+            // ==================================
+
             messages.forEach(
 
                 function(message) {
-
 
                     const messageUid =
                         String(
                             message.uid || ""
                         );
 
-
-                    /*
-                     * Applicant UID পাওয়া গেলে
-                     * applicant-এর message = mine।
-                     *
-                     * Applicant UID না পাওয়া গেলে
-                     * current user's UID দিয়ে fallback।
-                     */
 
                     const isApplicant =
 
@@ -1317,26 +1297,6 @@ function loadMessages() {
 
                         messageUid ===
                         applicantUid;
-
-
-                    const isMine =
-
-                        isApplicant
-
-                        ||
-
-                        (
-
-                            applicantUid === ""
-
-                            &&
-
-                            messageUid ===
-                            String(
-                                currentUser?.uid || ""
-                            )
-
-                        );
 
 
                     const messageDiv =
@@ -1350,7 +1310,7 @@ function loadMessages() {
                         "message " +
 
                         (
-                            isMine
+                            isApplicant
                             ?
                             "mine"
                             :
@@ -1360,7 +1320,7 @@ function loadMessages() {
 
                     const senderName =
 
-                        isMine
+                        isApplicant
 
                         ?
 
@@ -1451,6 +1411,31 @@ function loadMessages() {
 
 
             // ==================================
+            // LATEST MESSAGE TIME
+            // ==================================
+
+            const lastMessage =
+                messages[
+                    messages.length - 1
+                ];
+
+
+            latestMessageTime =
+
+                lastMessage
+
+                ?
+
+                Number(
+                    lastMessage.createdAt || 0
+                )
+
+                :
+
+                0;
+
+
+            // ==================================
             // AUTO SCROLL
             // ==================================
 
@@ -1459,35 +1444,19 @@ function loadMessages() {
 
 
             // ==================================
-            // MARK CURRENT CHAT AS READ
+            // OPEN CHAT = READ
             // ==================================
-
-            /*
-             * Chat page খোলা থাকা অবস্থায়
-             * সর্বশেষ message পর্যন্ত Read হবে।
-             */
-
-            const lastMessage =
-
-                messages[
-                    messages.length - 1
-                ];
-
 
             if (
 
                 currentUser &&
 
-                lastMessage
+                latestMessageTime > 0
 
             ) {
 
                 markMessagesAsRead(
-
-                    Number(
-                        lastMessage.createdAt || 0
-                    )
-
+                    latestMessageTime
                 );
 
             }
@@ -1530,7 +1499,6 @@ function loadMessages() {
 // ==========================================
 
 async function sendMessage() {
-
 
     if (isSending) {
 
@@ -1599,14 +1567,10 @@ async function sendMessage() {
 
     try {
 
-
         const messagesRef =
             ref(
-
                 db,
-
                 getMessagesPath()
-
             );
 
 
@@ -1663,11 +1627,14 @@ async function sendMessage() {
             "";
 
 
-        /*
-         * নিজের পাঠানো message-ও
-         * current user's readState-এ
-         * Read থাকবে।
-         */
+        // ==================================
+        // নিজের message পাঠানোর পর
+        // নিজের জন্য readState update
+        // ==================================
+
+        latestMessageTime =
+            createdAt;
+
 
         await markMessagesAsRead(
             createdAt
@@ -1772,13 +1739,6 @@ backButton.addEventListener(
 
     function() {
 
-        /*
-         * history.back() ব্যবহার করা হচ্ছে,
-         * তাই আগের আবেদন তালিকার page
-         * bfcache থেকে ফিরে এলে
-         * pageshow event badge refresh করবে।
-         */
-
         history.back();
 
     }
@@ -1826,29 +1786,25 @@ onAuthStateChanged(
         }
 
 
-        /*
-         * Login হওয়ার পর chat already loaded থাকলে
-         * সর্বশেষ message Read করা হবে।
-         */
+        // ==================================
+        // Login হওয়ার সময় যদি message list
+        // ইতিমধ্যে load হয়ে থাকে, তাহলে
+        // প্রকৃত সর্বশেষ message-এর সময়
+        // দিয়েই Seen করা হবে।
+        // ==================================
 
         if (
 
             user &&
 
-            messagesListenerStarted
+            messagesListenerStarted &&
+
+            latestMessageTime > 0
 
         ) {
 
-            setTimeout(
-
-                function() {
-
-                    markMessagesAsRead();
-
-                },
-
-                100
-
+            markMessagesAsRead(
+                latestMessageTime
             );
 
         }
@@ -1868,7 +1824,6 @@ if (requestId) {
     loadRequestInfo();
 
 }
-
 
 </script>
 
