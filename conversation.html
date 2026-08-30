@@ -16,7 +16,6 @@
 <title>পাবলিক চ্যাট</title>
 
 
-<!-- বাংলা Font -->
 <link
     href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
     rel="stylesheet"
@@ -194,7 +193,6 @@ body {
 
 /* =========================
    APPLICANT
-   RIGHT + RED
 ========================= */
 
 .message.mine {
@@ -214,7 +212,6 @@ body {
 
 /* =========================
    OTHER USER
-   LEFT + WHITE
 ========================= */
 
 .message.other {
@@ -253,10 +250,6 @@ body {
 
     line-height: 1.4;
 
-    direction: ltr;
-
-    unicode-bidi: isolate;
-
 }
 
 .mine .sender-name {
@@ -290,10 +283,6 @@ body {
     overflow-wrap: break-word;
 
     text-align: left;
-
-    direction: ltr;
-
-    unicode-bidi: isolate;
 
 }
 
@@ -338,11 +327,6 @@ body {
 
     color: #777;
 
-    font-family:
-        "Noto Sans Bengali",
-        Arial,
-        sans-serif;
-
     font-size: 18px;
 
     line-height: 1.6;
@@ -356,11 +340,6 @@ body {
     text-align: center;
 
     padding: 40px 20px;
-
-    font-family:
-        "Noto Sans Bengali",
-        Arial,
-        sans-serif;
 
     font-size: 19px;
 
@@ -504,19 +483,11 @@ body {
 
         font-size: 18px;
 
-        line-height: 1.55;
-
     }
 
     .header-title {
 
         font-size: 19px;
-
-    }
-
-    .header-subtitle {
-
-        font-size: 14px;
 
     }
 
@@ -537,10 +508,6 @@ body {
 
 <body>
 
-
-<!-- =========================
-     HEADER
-========================= -->
 
 <div class="chat-header">
 
@@ -582,10 +549,6 @@ body {
 
 
 
-<!-- =========================
-     CHAT
-========================= -->
-
 <div
     class="chat-area"
     id="chatArea"
@@ -600,10 +563,6 @@ body {
 </div>
 
 
-
-<!-- =========================
-     INPUT
-========================= -->
 
 <div
     class="chat-input-area"
@@ -676,51 +635,33 @@ from
 // ==========================================
 
 const chatArea =
-    document.getElementById(
-        "chatArea"
-    );
-
+    document.getElementById("chatArea");
 
 const chatTitle =
-    document.getElementById(
-        "chatTitle"
-    );
-
+    document.getElementById("chatTitle");
 
 const chatSubtitle =
-    document.getElementById(
-        "chatSubtitle"
-    );
-
+    document.getElementById("chatSubtitle");
 
 const messageInput =
-    document.getElementById(
-        "messageInput"
-    );
-
+    document.getElementById("messageInput");
 
 const sendButton =
-    document.getElementById(
-        "sendButton"
-    );
-
+    document.getElementById("sendButton");
 
 const backButton =
-    document.getElementById(
-        "backButton"
-    );
+    document.getElementById("backButton");
 
 
 
 // ==========================================
-// GET REQUEST ID
+// REQUEST ID
 // ==========================================
 
 const params =
     new URLSearchParams(
         window.location.search
     );
-
 
 const requestId =
     params.get("requestId");
@@ -738,9 +679,8 @@ let applicantUid = null;
 let applicantName =
     "আবেদনকারী";
 
-let messagesLoaded = false;
-
-let messagesListenerStarted = false;
+let messagesListenerStarted =
+    false;
 
 
 
@@ -752,37 +692,18 @@ function escapeHtml(value) {
 
     return String(value ?? "")
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
 }
 
 
 
 // ==========================================
-// CLEAN MESSAGE TEXT
+// CLEAN TEXT
 // ==========================================
 
 function cleanMessageText(value) {
@@ -795,17 +716,13 @@ function cleanMessageText(value) {
 
         .split("\n")
 
-        .map(function(line) {
+        .map(
+            line => line.trim()
+        )
 
-            return line.trim();
-
-        })
-
-        .filter(function(line) {
-
-            return line.length > 0;
-
-        })
+        .filter(
+            line => line.length > 0
+        )
 
         .join("\n")
 
@@ -872,12 +789,63 @@ function getChatPath() {
     return (
 
         "publicChats/" +
-
-        requestId +
-
-        "/messages"
+        requestId
 
     );
+
+}
+
+
+
+// ==========================================
+// MARK AS READ
+// ==========================================
+
+async function markMessagesAsRead() {
+
+    if (
+        !currentUser ||
+        !requestId
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        await set(
+
+            ref(
+
+                db,
+
+                getChatPath() +
+                "/readState/" +
+                currentUser.uid
+
+            ),
+
+            {
+
+                lastReadAt:
+                    Date.now()
+
+            }
+
+        );
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Read State Error:",
+            error
+        );
+
+    }
 
 }
 
@@ -892,10 +860,8 @@ if (!requestId) {
     chatTitle.innerText =
         "❌ আবেদন পাওয়া যায়নি";
 
-
     chatSubtitle.innerText =
         "Request ID নেই";
-
 
     chatArea.innerHTML = `
 
@@ -903,19 +869,12 @@ if (!requestId) {
 
             ❌ এই চ্যাটের Request ID পাওয়া যায়নি।
 
-            <br><br>
-
-            আবেদন তালিকা থেকে আবার
-            "মেসেজ করুন" চাপুন।
-
         </div>
 
     `;
 
-
     sendButton.disabled =
         true;
-
 
     messageInput.disabled =
         true;
@@ -938,10 +897,14 @@ function loadRequestInfo() {
 
 
     const requestRef =
+
         ref(
+
             db,
+
             "bloodRequests/" +
             requestId
+
         );
 
 
@@ -960,29 +923,14 @@ function loadRequestInfo() {
                 chatTitle.innerText =
                     "❌ আবেদন পাওয়া যায়নি";
 
-
                 chatSubtitle.innerText =
                     "এই আবেদনটি পাওয়া যাচ্ছে না";
-
-
-                chatArea.innerHTML = `
-
-                    <div class="login-message">
-
-                        ❌ এই আবেদনটি পাওয়া যাচ্ছে না।
-
-                    </div>
-
-                `;
-
 
                 sendButton.disabled =
                     true;
 
-
                 messageInput.disabled =
                     true;
-
 
                 return;
 
@@ -998,10 +946,6 @@ function loadRequestInfo() {
             applicantName =
                 request.requesterName ||
                 "আবেদনকারী";
-
-
-            chatTitle.innerText =
-                "💬 আবেদন চ্যাট";
 
 
             if (!currentUser) {
@@ -1033,39 +977,6 @@ function loadRequestInfo() {
 
             loadMessages();
 
-        },
-
-
-        function(error) {
-
-            console.error(
-                "Request Load Error:",
-                error
-            );
-
-
-            chatArea.innerHTML = `
-
-                <div class="login-message">
-
-                    ❌ আবেদন তথ্য লোড করা যাচ্ছে না।
-
-                    <br><br>
-
-                    Firebase Database Rules পরীক্ষা করুন।
-
-                </div>
-
-            `;
-
-
-            sendButton.disabled =
-                true;
-
-
-            messageInput.disabled =
-                true;
-
         }
 
     );
@@ -1082,15 +993,9 @@ function loadMessages() {
 
     if (
         !requestId ||
-        !applicantUid
+        !applicantUid ||
+        messagesListenerStarted
     ) {
-
-        return;
-
-    }
-
-
-    if (messagesListenerStarted) {
 
         return;
 
@@ -1102,9 +1007,14 @@ function loadMessages() {
 
 
     const messagesRef =
+
         ref(
+
             db,
-            getChatPath()
+
+            getChatPath() +
+            "/messages"
+
         );
 
 
@@ -1128,17 +1038,14 @@ function loadMessages() {
 
                         <br><br>
 
-                        এই আবেদনের প্রথম মেসেজটি
-                        পাঠান।
+                        এই আবেদনের প্রথম মেসেজটি পাঠান।
 
                     </div>
 
                 `;
 
 
-                messagesLoaded =
-                    true;
-
+                markMessagesAsRead();
 
                 return;
 
@@ -1146,6 +1053,7 @@ function loadMessages() {
 
 
             const messages =
+
                 Object.values(data);
 
 
@@ -1185,7 +1093,9 @@ function loadMessages() {
 
                         String(
                             message.uid || ""
-                        ) ===
+                        )
+
+                        ===
 
                         String(
                             applicantUid
@@ -1193,6 +1103,7 @@ function loadMessages() {
 
 
                     const messageDiv =
+
                         document.createElement(
                             "div"
                         );
@@ -1227,25 +1138,15 @@ function loadMessages() {
                         );
 
 
-                    const safeSenderName =
-                        escapeHtml(
-                            senderName
-                        );
-
-
                     const cleanText =
+
                         cleanMessageText(
                             message.text
                         );
 
 
-                    const messageText =
-                        escapeHtml(
-                            cleanText
-                        );
-
-
                     const time =
+
                         formatTime(
                             message.createdAt
                         );
@@ -1255,17 +1156,15 @@ function loadMessages() {
 
                         <div class="sender-name">
 
-                            ${safeSenderName}
+                            ${escapeHtml(senderName)}
 
                         </div>
-
 
                         <div class="message-text">
 
-                            ${messageText}
+                            ${escapeHtml(cleanText)}
 
                         </div>
-
 
                         <div class="message-time">
 
@@ -1289,33 +1188,11 @@ function loadMessages() {
                 chatArea.scrollHeight;
 
 
-            messagesLoaded =
-                true;
+            // ==============================
+            // CHAT OPEN = READ
+            // ==============================
 
-        },
-
-
-        function(error) {
-
-            console.error(
-                "Chat Load Error:",
-                error
-            );
-
-
-            chatArea.innerHTML = `
-
-                <div class="login-message">
-
-                    ❌ মেসেজ লোড করা যাচ্ছে না।
-
-                    <br><br>
-
-                    Firebase Database Rules পরীক্ষা করুন।
-
-                </div>
-
-            `;
+            markMessagesAsRead();
 
         }
 
@@ -1388,9 +1265,14 @@ async function sendMessage() {
 
 
         const messagesRef =
+
             ref(
+
                 db,
-                getChatPath()
+
+                getChatPath() +
+                "/messages"
+
             );
 
 
@@ -1413,34 +1295,37 @@ async function sendMessage() {
             "ব্যবহারকারী";
 
 
-        const messageData = {
-
-            uid:
-                senderUid,
-
-            senderName:
-                senderName,
-
-            text:
-                text,
-
-            createdAt:
-                Date.now()
-
-        };
-
-
         await set(
 
             messageRef,
 
-            messageData
+            {
+
+                uid:
+                    senderUid,
+
+                senderName:
+                    senderName,
+
+                text:
+                    text,
+
+                createdAt:
+                    Date.now()
+
+            }
 
         );
 
 
         messageInput.value =
             "";
+
+
+        // নিজের মেসেজ পাঠানোর পর
+        // নিজের জন্য read mark
+
+        markMessagesAsRead();
 
     }
 
@@ -1454,14 +1339,7 @@ async function sendMessage() {
 
 
         alert(
-
-            "❌ মেসেজ পাঠানো যায়নি।\n\n" +
-
-            (
-                error.message ||
-                "Firebase Rules পরীক্ষা করুন।"
-            )
-
+            "❌ মেসেজ পাঠানো যায়নি।"
         );
 
     }
@@ -1472,10 +1350,8 @@ async function sendMessage() {
         sendButton.disabled =
             false;
 
-
         sendButton.innerText =
             "Send";
-
 
         messageInput.focus();
 
@@ -1544,7 +1420,7 @@ backButton.addEventListener(
 
 
 // ==========================================
-// AUTH STATE
+// AUTH
 // ==========================================
 
 onAuthStateChanged(
@@ -1557,60 +1433,4 @@ onAuthStateChanged(
             user;
 
 
-        if (!requestId) {
-
-            return;
-
-        }
-
-
-        if (!user) {
-
-            sendButton.disabled =
-                true;
-
-            messageInput.disabled =
-                true;
-
-            chatSubtitle.innerText =
-                "মেসেজ করতে Login করুন";
-
-            return;
-
-        }
-
-
-        sendButton.disabled =
-            false;
-
-        messageInput.disabled =
-            false;
-
-        chatSubtitle.innerText =
-            "শুধু Login করা user মেসেজ করতে পারবেন";
-
-
-        loadRequestInfo();
-
-    }
-
-);
-
-
-
-// ==========================================
-// START
-// ==========================================
-
-if (requestId) {
-
-    loadRequestInfo();
-
-}
-
-</script>
-
-
-</body>
-
-</html>
+       
