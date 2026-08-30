@@ -249,6 +249,10 @@ body {
 
     line-height: 1.4;
 
+    direction: auto;
+
+    unicode-bidi: plaintext;
+
 }
 
 .mine .sender-name {
@@ -275,11 +279,20 @@ body {
 
     line-height: 1.55;
 
+    /*
+       বাংলা + English mixed text
+       সঠিকভাবে দেখানোর জন্য
+    */
+
+    direction: auto;
+
+    unicode-bidi: plaintext;
+
     white-space: pre-wrap;
 
     word-break: normal;
 
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
 
     text-align: left;
 
@@ -415,6 +428,10 @@ body {
 
     outline: none;
 
+    direction: auto;
+
+    unicode-bidi: plaintext;
+
 }
 
 .message-input:focus {
@@ -493,6 +510,10 @@ body {
         font-size: 18px;
 
         line-height: 1.55;
+
+        direction: auto;
+
+        unicode-bidi: plaintext;
 
     }
 
@@ -772,23 +793,15 @@ function escapeHtml(value) {
 // ==========================================
 // CLEAN MESSAGE TEXT
 // ==========================================
-//
-// অতিরিক্ত space / ফাঁকা line
-// পরিষ্কার করা হবে।
-//
 
 function cleanMessageText(value) {
 
     return String(value ?? "")
 
-        // Windows line break ঠিক করা
         .replace(/\r\n/g, "\n")
 
-        // একাধিক space/tab → একটি space
         .replace(/[ \t]+/g, " ")
 
-        // প্রতিটি লাইনের শুরু/শেষের
-        // অপ্রয়োজনীয় space বাদ
         .split("\n")
 
         .map(function(line) {
@@ -797,14 +810,12 @@ function cleanMessageText(value) {
 
         })
 
-        // একাধিক খালি line বাদ
         .filter(function(line) {
 
             return line.length > 0;
 
         })
 
-        // আবার normal line break
         .join("\n")
 
         .trim();
@@ -1302,7 +1313,10 @@ function loadMessages() {
                         </div>
 
 
-                        <div class="message-text">
+                        <div
+                            class="message-text"
+                            dir="auto"
+                        >
 
                             ${messageText}
 
