@@ -914,11 +914,197 @@ function loadUnreadCount(
 
             }
 
+        },
+
+        function(error) {
+
+            console.error(
+                "Unread Count Error:",
+                error
+            );
+
         }
 
     );
 
 }
+
+
+
+// ==========================================
+// REFRESH BADGES AFTER BACK / BFCACHE
+// ==========================================
+
+function refreshUnreadBadges() {
+
+    if (!currentUser) {
+
+        return;
+
+    }
+
+
+    const messageButtons =
+
+        document.querySelectorAll(
+            ".message-button"
+        );
+
+
+    messageButtons.forEach(
+
+        function(messageButton) {
+
+
+            const href =
+                messageButton.getAttribute(
+                    "href"
+                );
+
+
+            if (!href) {
+
+                return;
+
+            }
+
+
+            let actualRequestId = "";
+
+
+            try {
+
+                const url =
+                    new URL(
+                        href,
+                        window.location.href
+                    );
+
+
+                actualRequestId =
+
+                    url.searchParams.get(
+                        "requestId"
+                    ) || "";
+
+            }
+
+            catch(error) {
+
+                console.error(
+                    "Badge URL Error:",
+                    error
+                );
+
+                return;
+
+            }
+
+
+            if (!actualRequestId) {
+
+                return;
+
+            }
+
+
+            const badgeElement =
+
+                messageButton.querySelector(
+                    ".unread-badge"
+                );
+
+
+            if (!badgeElement) {
+
+                return;
+
+            }
+
+
+            loadUnreadCount(
+
+                actualRequestId,
+
+                currentUser.uid,
+
+                badgeElement
+
+            );
+
+        }
+
+    );
+
+}
+
+
+
+// ==========================================
+// PAGE SHOW
+// ==========================================
+
+window.addEventListener(
+
+    "pageshow",
+
+    function() {
+
+        // Browser Back/Forward cache থেকে
+        // page ফিরে এলে badge আবার
+        // Firebase-এর বর্তমান readState
+        // অনুযায়ী হিসাব হবে।
+
+        setTimeout(
+
+            function() {
+
+                refreshUnreadBadges();
+
+            },
+
+            50
+
+        );
+
+    }
+
+);
+
+
+
+// ==========================================
+// VISIBILITY CHANGE
+// ==========================================
+
+document.addEventListener(
+
+    "visibilitychange",
+
+    function() {
+
+        if (
+            document.visibilityState ===
+            "visible"
+        ) {
+
+            setTimeout(
+
+                function() {
+
+                    refreshUnreadBadges();
+
+                },
+
+                50
+
+            );
+
+        }
+
+    }
+
+);
 
 
 
@@ -1785,6 +1971,27 @@ function loadRequests() {
                     );
 
                 }
+
+            );
+
+
+            // ==================================
+            // FINAL BADGE REFRESH
+            // ==================================
+
+            // সব card তৈরি হওয়ার পরে আবার
+            // বর্তমান readState অনুযায়ী badge
+            // হিসাব করা হবে।
+
+            setTimeout(
+
+                function() {
+
+                    refreshUnreadBadges();
+
+                },
+
+                0
 
             );
 
