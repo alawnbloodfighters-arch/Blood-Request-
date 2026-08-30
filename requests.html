@@ -621,11 +621,6 @@ let authReady = false;
 let requestsListenerStarted = false;
 
 
-// এই object-এ প্রতিটি chat-এর
-// Firebase listener রাখা হবে
-const unreadListeners = {};
-
-
 
 // ==========================================
 // ESCAPE HTML
@@ -750,7 +745,6 @@ function loadUnreadCount(
 
 ) {
 
-
     if (
 
         !requestId ||
@@ -778,195 +772,133 @@ function loadUnreadCount(
         );
 
 
-    /*
-     * একই request-এর জন্য একই listener
-     * বারবার তৈরি করা হবে না।
-     */
+    onValue(
 
-    const listenerKey =
+        chatRef,
 
-        String(requestId) +
-        "_" +
-        String(currentUserId);
+        function(snapshot) {
 
+            const chatData =
+                snapshot.val();
 
-    if (unreadListeners[listenerKey]) {
 
-        return;
+            if (!chatData) {
 
-    }
+                badgeElement.style.display =
+                    "none";
 
-
-    const listener =
-
-        onValue(
-
-            chatRef,
-
-            function(snapshot) {
-
-
-                const chatData =
-                    snapshot.val();
-
-
-                if (!chatData) {
-
-                    badgeElement.style.display =
-                        "none";
-
-                    badgeElement.innerText =
-                        "0";
-
-                    return;
-
-                }
-
-
-                const messages =
-
-                    chatData.messages ||
-                    {};
-
-
-                const readState =
-
-                    chatData.readState ||
-                    {};
-
-
-                const userReadData =
-
-                    readState[
-                        currentUserId
-                    ] ||
-                    {};
-
-
-                const lastReadAt =
-
-                    Number(
-
-                        userReadData.lastReadAt ||
-                        0
-
-                    );
-
-
-                let unreadCount =
-                    0;
-
-
-                Object.values(messages)
-
-                    .forEach(
-
-                        function(message) {
-
-
-                            const messageTime =
-
-                                Number(
-
-                                    message.createdAt ||
-                                    0
-
-                                );
-
-
-                            const senderUid =
-
-                                String(
-
-                                    message.uid ||
-                                    ""
-
-                                );
-
-
-                            /*
-                             * নিজের পাঠানো message
-                             * কখনো unread হবে না।
-                             */
-
-                            if (
-
-                                senderUid !==
-                                String(
-                                    currentUserId
-                                )
-
-                                &&
-
-                                messageTime >
-                                lastReadAt
-
-                            ) {
-
-                                unreadCount++;
-
-                            }
-
-                        }
-
-                    );
-
-
-                if (
-
-                    unreadCount > 0
-
-                ) {
-
-
-                    badgeElement.style.display =
-                        "flex";
-
-
-                    badgeElement.innerText =
-
-                        unreadCount > 99
-
-                        ?
-
-                        "99+"
-
-                        :
-
-                        String(unreadCount);
-
-                }
-
-                else {
-
-                    badgeElement.style.display =
-                        "none";
-
-                    badgeElement.innerText =
-                        "0";
-
-                }
-
-            },
-
-
-            function(error) {
-
-                console.error(
-
-                    "Unread Count Error:",
-
-                    error
-
-                );
+                return;
 
             }
 
-        );
+
+            const messages =
+                chatData.messages || {};
 
 
-    unreadListeners[listenerKey] =
-        listener;
+            const readState =
+                chatData.readState || {};
+
+
+            const userReadData =
+                readState[currentUserId] || {};
+
+
+            const lastReadAt =
+                Number(
+                    userReadData.lastReadAt || 0
+                );
+
+
+            let unreadCount = 0;
+
+
+            Object.values(messages).forEach(
+
+                function(message) {
+
+                    if (!message) {
+
+                        return;
+
+                    }
+
+
+                    const messageTime =
+                        Number(
+                            message.createdAt || 0
+                        );
+
+
+                    const senderUid =
+                        String(
+                            message.uid || ""
+                        );
+
+
+                    // ==================================
+                    // শুধুমাত্র অন্য user-এর
+                    // lastReadAt-এর পরের message
+                    // unread হবে
+                    // ==================================
+
+                    if (
+
+                        senderUid !==
+                        String(currentUserId)
+
+                        &&
+
+                        messageTime >
+                        lastReadAt
+
+                    ) {
+
+                        unreadCount++;
+
+                    }
+
+                }
+
+            );
+
+
+            if (unreadCount > 0) {
+
+                badgeElement.style.display =
+                    "flex";
+
+                badgeElement.innerText =
+                    unreadCount > 99
+                    ?
+                    "99+"
+                    :
+                    String(unreadCount);
+
+            }
+
+            else {
+
+                badgeElement.style.display =
+                    "none";
+
+                badgeElement.innerText =
+                    "0";
+
+            }
+
+        },
+
+        function(error) {
+
+            console.error(
+                "Unread Count Error:",
+                error
+            );
+
+        }
+
+    );
 
 }
 
@@ -995,7 +927,6 @@ function refreshUnreadBadges() {
     messageButtons.forEach(
 
         function(messageButton) {
-
 
             const href =
                 messageButton.getAttribute(
@@ -1154,7 +1085,6 @@ onAuthStateChanged(
 
     async function(user) {
 
-
         currentUser =
             user;
 
@@ -1171,16 +1101,11 @@ onAuthStateChanged(
 
             try {
 
-
                 const userRef =
-
                     ref(
-
                         db,
-
                         "users/" +
                         user.uid
-
                     );
 
 
@@ -1190,7 +1115,6 @@ onAuthStateChanged(
 
                         function(resolve, reject) {
 
-
                             onValue(
 
                                 userRef,
@@ -1198,10 +1122,8 @@ onAuthStateChanged(
                                 resolve,
 
                                 {
-
                                     onlyOnce:
                                         true
-
                                 }
 
                             );
@@ -1234,11 +1156,8 @@ onAuthStateChanged(
             catch(error) {
 
                 console.error(
-
                     "Admin check error:",
-
                     error
-
                 );
 
             }
@@ -1260,7 +1179,6 @@ onAuthStateChanged(
 
 function loadRequests() {
 
-
     if (!authReady) {
 
         return;
@@ -1280,13 +1198,9 @@ function loadRequests() {
 
 
     const requestsRef =
-
         ref(
-
             db,
-
             "bloodRequests"
-
         );
 
 
@@ -1296,13 +1210,11 @@ function loadRequests() {
 
         function(snapshot) {
 
-
             const value =
                 snapshot.val();
 
 
             if (!value) {
-
 
                 requestList.innerHTML = `
 
@@ -1314,23 +1226,18 @@ function loadRequests() {
 
                 `;
 
-
                 return;
 
             }
 
 
             const requests =
-
-                Object.entries(
-                    value
-                );
+                Object.entries(value);
 
 
             requests.sort(
 
                 function(a, b) {
-
 
                     const itemA =
                         a[1] || {};
@@ -1343,19 +1250,13 @@ function loadRequests() {
                     return (
 
                         Number(
-
-                            itemB.createdAt ||
-                            0
-
+                            itemB.createdAt || 0
                         )
 
                         -
 
                         Number(
-
-                            itemA.createdAt ||
-                            0
-
+                            itemA.createdAt || 0
                         )
 
                     );
@@ -1373,7 +1274,6 @@ function loadRequests() {
 
                 function(entry) {
 
-
                     const databaseRequestId =
                         entry[0];
 
@@ -1383,85 +1283,67 @@ function loadRequests() {
 
 
                     const actualRequestId =
-
                         String(
                             databaseRequestId
                         );
 
 
                     const bloodGroup =
-
                         escapeHtml(
                             item.bloodGroup
                         );
 
 
                     const reference =
-
                         escapeHtml(
                             item.reference
                         );
 
 
                     const problem =
-
                         escapeHtml(
                             item.problem
                         );
 
 
                     const hemoglobin =
-
                         escapeHtml(
                             item.hemoglobin
                         );
 
 
                     const date =
-
                         escapeHtml(
-
-                            formatDate(
-                                item.date
-                            )
-
+                            formatDate(item.date)
                         );
 
 
                     const time =
-
                         escapeHtml(
                             item.time
                         );
 
 
                     const hospital =
-
                         escapeHtml(
                             item.hospital
                         );
 
 
                     const mobile =
-
                         escapeHtml(
                             item.mobile
                         );
 
 
                     const status =
-
                         String(
-
                             item.status ||
-
                             "No Update"
-
                         );
 
 
                     const updateClass =
-
                         getUpdateClass(
                             status
                         );
@@ -1482,7 +1364,6 @@ function loadRequests() {
 
 
                     const card =
-
                         document.createElement(
                             "div"
                         );
@@ -1615,7 +1496,6 @@ function loadRequests() {
 
                                     <option
                                         value="No Update"
-
                                         ${
                                             status ===
                                             "No Update"
@@ -1625,15 +1505,12 @@ function loadRequests() {
                                             ""
                                         }
                                     >
-
                                         🔵 No Update
-
                                     </option>
 
 
                                     <option
                                         value="Pending"
-
                                         ${
                                             status ===
                                             "Pending"
@@ -1643,15 +1520,12 @@ function loadRequests() {
                                             ""
                                         }
                                     >
-
                                         🟡 Pending
-
                                     </option>
 
 
                                     <option
                                         value="Managed"
-
                                         ${
                                             status ===
                                             "Managed"
@@ -1661,15 +1535,12 @@ function loadRequests() {
                                             ""
                                         }
                                     >
-
                                         🟢 Managed
-
                                     </option>
 
 
                                     <option
                                         value="Request Cancelled"
-
                                         ${
                                             status ===
                                             "Request Cancelled"
@@ -1679,9 +1550,7 @@ function loadRequests() {
                                             ""
                                         }
                                     >
-
                                         🔴 Request Cancelled
-
                                     </option>
 
                                 </select>
@@ -1691,9 +1560,7 @@ function loadRequests() {
                                     class="status-save"
                                     type="button"
                                 >
-
                                     Update Status
-
                                 </button>
 
                             </div>
@@ -1713,9 +1580,7 @@ function loadRequests() {
                                 class="call-button"
                                 href="tel:${mobile}"
                             >
-
                                 📞 কল করুন
-
                             </a>
 
 
@@ -1728,14 +1593,11 @@ function loadRequests() {
 
                                 💬 মেসেজ করুন
 
-
                                 <span
                                     class="unread-badge"
                                     style="display:none"
                                 >
-
                                     0
-
                                 </span>
 
                             </a>
@@ -1752,7 +1614,6 @@ function loadRequests() {
                     if (currentUser) {
 
                         const unreadBadge =
-
                             card.querySelector(
                                 ".unread-badge"
                             );
@@ -1772,11 +1633,10 @@ function loadRequests() {
 
 
                     // ==================================
-                    // STATUS BUTTON
+                    // STATUS
                     // ==================================
 
                     const statusButton =
-
                         card.querySelector(
                             ".status-save"
                         );
@@ -1784,20 +1644,16 @@ function loadRequests() {
 
                     if (statusButton) {
 
-
                         statusButton.addEventListener(
 
                             "click",
 
                             async function() {
 
-
                                 if (!currentUser) {
 
                                     alert(
-
                                         "⚠️ Status পরিবর্তন করতে আগে Login করুন।"
-
                                     );
 
                                     return;
@@ -1806,7 +1662,6 @@ function loadRequests() {
 
 
                                 const select =
-
                                     card.querySelector(
                                         ".status-select"
                                     );
@@ -1833,16 +1688,12 @@ function loadRequests() {
 
                                 try {
 
-
                                     await update(
 
                                         ref(
-
                                             db,
-
                                             "bloodRequests/" +
                                             actualRequestId
-
                                         ),
 
                                         {
@@ -1862,22 +1713,16 @@ function loadRequests() {
 
 
                                     alert(
-
                                         "✅ Status আপডেট হয়েছে।"
-
                                     );
 
                                 }
 
                                 catch(error) {
 
-
                                     console.error(
-
                                         "Status Update Error:",
-
                                         error
-
                                     );
 
 
@@ -1886,18 +1731,12 @@ function loadRequests() {
                                         "❌ Status আপডেট করা যায়নি।\n\n" +
 
                                         (
-
                                             error &&
                                             error.message
-
                                             ?
-
                                             error.message
-
                                             :
-
                                             "Firebase Error"
-
                                         )
 
                                     );
@@ -1906,10 +1745,8 @@ function loadRequests() {
 
                                 finally {
 
-
                                     statusButton.disabled =
                                         false;
-
 
                                     statusButton.innerText =
                                         "Update Status";
@@ -1949,13 +1786,9 @@ function loadRequests() {
 
         function(error) {
 
-
             console.error(
-
                 "Firebase Database Error:",
-
                 error
-
             );
 
 
@@ -2003,7 +1836,6 @@ function loadRequests() {
                         ${escapeHtml(errorCode)}
 
                         <br><br>
-
 
                         <strong>
                             Error Message:
