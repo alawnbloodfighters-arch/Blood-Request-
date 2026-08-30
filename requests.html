@@ -269,12 +269,55 @@ body {
 .message-button {
 
     background: #087f73;
+
+    position: relative;
 }
 
 .call-button:active,
 .message-button:active {
 
     transform: scale(0.98);
+}
+
+
+/* =========================
+   UNREAD BADGE
+========================= */
+
+.unread-badge {
+
+    position: absolute;
+
+    top: -8px;
+
+    right: -5px;
+
+    min-width: 23px;
+
+    height: 23px;
+
+    padding: 0 6px;
+
+    border-radius: 50px;
+
+    background: #d00000;
+
+    color: white;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: 2px solid white;
+
+    line-height: 1;
+
 }
 
 
@@ -422,6 +465,7 @@ body {
     }
 }
 
+
 @media (max-width: 380px) {
 
     .title {
@@ -463,6 +507,7 @@ body {
         padding: 8px 3px;
     }
 }
+
 
 ::-webkit-scrollbar {
 
@@ -558,7 +603,9 @@ from
 // ==========================================
 
 const requestList =
-    document.getElementById("requestList");
+    document.getElementById(
+        "requestList"
+    );
 
 
 
@@ -593,6 +640,7 @@ function escapeHtml(value) {
         .replace(/"/g, "&quot;")
 
         .replace(/'/g, "&#039;");
+
 }
 
 
@@ -608,26 +656,34 @@ function formatDate(value) {
         return "";
     }
 
+
     const dateString =
         String(value).trim();
+
 
     const match =
         dateString.match(
             /^(\d{4})-(\d{2})-(\d{2})/
         );
 
+
     if (match) {
 
         return (
+
             match[3] +
             "/" +
             match[2] +
             "/" +
             match[1]
+
         );
+
     }
 
+
     return dateString;
+
 }
 
 
@@ -639,26 +695,229 @@ function formatDate(value) {
 function getUpdateClass(status) {
 
     const text =
-        String(status || "")
+
+        String(
+            status || ""
+        )
+
         .trim()
+
         .toLowerCase();
+
 
     if (text === "managed") {
 
         return "green";
+
     }
+
 
     if (text === "pending") {
 
         return "yellow";
+
     }
+
 
     if (text === "request cancelled") {
 
         return "red";
+
     }
 
+
     return "blue";
+
+}
+
+
+
+// ==========================================
+// UNREAD MESSAGE COUNT
+// ==========================================
+
+function loadUnreadCount(
+
+    requestId,
+
+    currentUserId,
+
+    badgeElement
+
+) {
+
+
+    if (
+
+        !requestId ||
+
+        !currentUserId ||
+
+        !badgeElement
+
+    ) {
+
+        return;
+
+    }
+
+
+    const chatRef =
+
+        ref(
+
+            db,
+
+            "publicChats/" +
+            requestId
+
+        );
+
+
+    onValue(
+
+        chatRef,
+
+        function(snapshot) {
+
+
+            const chatData =
+                snapshot.val();
+
+
+            if (!chatData) {
+
+                badgeElement.style.display =
+                    "none";
+
+                return;
+
+            }
+
+
+            const messages =
+
+                chatData.messages ||
+                {};
+
+
+            const readState =
+
+                chatData.readState ||
+                {};
+
+
+            const userReadData =
+
+                readState[
+                    currentUserId
+                ] ||
+                {};
+
+
+            const lastReadAt =
+
+                Number(
+
+                    userReadData.lastReadAt ||
+                    0
+
+                );
+
+
+            let unreadCount =
+                0;
+
+
+            Object.values(messages)
+
+                .forEach(
+
+                    function(message) {
+
+
+                        const messageTime =
+
+                            Number(
+
+                                message.createdAt ||
+                                0
+
+                            );
+
+
+                        const senderUid =
+
+                            String(
+
+                                message.uid ||
+                                ""
+
+                            );
+
+
+                        // নিজের পাঠানো মেসেজ
+                        // unread হবে না
+
+                        if (
+
+                            senderUid !==
+                            String(
+                                currentUserId
+                            )
+
+                            &&
+
+                            messageTime >
+                            lastReadAt
+
+                        ) {
+
+                            unreadCount++;
+
+                        }
+
+                    }
+
+                );
+
+
+            if (
+
+                unreadCount > 0
+
+            ) {
+
+
+                badgeElement.style.display =
+                    "flex";
+
+
+                badgeElement.innerText =
+
+                    unreadCount > 99
+
+                    ?
+
+                    "99+"
+
+                    :
+
+                    unreadCount;
+
+            }
+
+            else {
+
+                badgeElement.style.display =
+                    "none";
+
+            }
+
+        }
+
+    );
+
 }
 
 
@@ -673,11 +932,17 @@ onAuthStateChanged(
 
     async function(user) {
 
-        currentUser = user;
 
-        isAdmin = false;
+        currentUser =
+            user;
 
-        authReady = true;
+
+        isAdmin =
+            false;
+
+
+        authReady =
+            true;
 
 
         // ==================================
@@ -688,16 +953,25 @@ onAuthStateChanged(
 
             try {
 
+
                 const userRef =
+
                     ref(
+
                         db,
-                        "users/" + user.uid
+
+                        "users/" +
+                        user.uid
+
                     );
 
 
                 const userSnapshot =
+
                     await new Promise(
+
                         function(resolve, reject) {
+
 
                             onValue(
 
@@ -706,12 +980,16 @@ onAuthStateChanged(
                                 resolve,
 
                                 {
-                                    onlyOnce: true
+
+                                    onlyOnce:
+                                        true
+
                                 }
 
                             );
 
                         }
+
                     );
 
 
@@ -720,11 +998,17 @@ onAuthStateChanged(
 
 
                 if (
+
                     userData &&
-                    userData.role === "admin"
+
+                    userData.role ===
+                    "admin"
+
                 ) {
 
-                    isAdmin = true;
+                    isAdmin =
+                        true;
+
                 }
 
             }
@@ -732,8 +1016,11 @@ onAuthStateChanged(
             catch(error) {
 
                 console.error(
+
                     "Admin check error:",
+
                     error
+
                 );
 
             }
@@ -759,25 +1046,33 @@ onAuthStateChanged(
 
 function loadRequests() {
 
+
     if (!authReady) {
 
         return;
+
     }
 
 
     if (requestsListenerStarted) {
 
         return;
+
     }
 
 
-    requestsListenerStarted = true;
+    requestsListenerStarted =
+        true;
 
 
     const requestsRef =
+
         ref(
+
             db,
+
             "bloodRequests"
+
         );
 
 
@@ -786,6 +1081,7 @@ function loadRequests() {
         requestsRef,
 
         function(snapshot) {
+
 
             const value =
                 snapshot.val();
@@ -797,6 +1093,7 @@ function loadRequests() {
 
             if (!value) {
 
+
                 requestList.innerHTML = `
 
                     <div class="empty">
@@ -807,23 +1104,21 @@ function loadRequests() {
 
                 `;
 
+
                 return;
+
             }
 
 
             // ==================================
-            // IMPORTANT
-            //
-            // Firebase object-এর KEY
-            // এবং data-এর requestId
-            // আলাদা হতে পারে।
-            //
-            // তাই Object.entries()
-            // ব্যবহার করা হচ্ছে।
+            // OBJECT ENTRIES
             // ==================================
 
             const requests =
-                Object.entries(value);
+
+                Object.entries(
+                    value
+                );
 
 
             // ==================================
@@ -834,21 +1129,31 @@ function loadRequests() {
 
                 function(a, b) {
 
-                    const itemA = a[1] || {};
 
-                    const itemB = b[1] || {};
+                    const itemA =
+                        a[1] || {};
+
+
+                    const itemB =
+                        b[1] || {};
 
 
                     return (
 
                         Number(
-                            itemB.createdAt || 0
+
+                            itemB.createdAt ||
+                            0
+
                         )
 
                         -
 
                         Number(
-                            itemA.createdAt || 0
+
+                            itemA.createdAt ||
+                            0
+
                         )
 
                     );
@@ -858,7 +1163,8 @@ function loadRequests() {
             );
 
 
-            requestList.innerHTML = "";
+            requestList.innerHTML =
+                "";
 
 
             // ==================================
@@ -869,80 +1175,102 @@ function loadRequests() {
 
                 function(entry) {
 
+
                     const databaseRequestId =
                         entry[0];
+
 
                     const item =
                         entry[1] || {};
 
 
                     // ==================================
-                    // ACTUAL REQUEST ID
+                    // REQUEST ID
                     // ==================================
 
                     const actualRequestId =
+
                         String(
                             databaseRequestId
                         );
 
 
                     const bloodGroup =
+
                         escapeHtml(
                             item.bloodGroup
                         );
 
 
                     const reference =
+
                         escapeHtml(
                             item.reference
                         );
 
 
                     const problem =
+
                         escapeHtml(
                             item.problem
                         );
 
 
                     const hemoglobin =
+
                         escapeHtml(
                             item.hemoglobin
                         );
 
 
                     const date =
+
                         escapeHtml(
-                            formatDate(item.date)
+
+                            formatDate(
+                                item.date
+                            )
+
                         );
 
 
                     const time =
+
                         escapeHtml(
                             item.time
                         );
 
 
                     const hospital =
+
                         escapeHtml(
                             item.hospital
                         );
 
 
                     const mobile =
+
                         escapeHtml(
                             item.mobile
                         );
 
 
                     const status =
+
                         String(
+
                             item.status ||
+
                             "No Update"
+
                         );
 
 
                     const updateClass =
-                        getUpdateClass(status);
+
+                        getUpdateClass(
+                            status
+                        );
 
 
                     // ==================================
@@ -968,6 +1296,7 @@ function loadRequests() {
                     // ==================================
 
                     const card =
+
                         document.createElement(
                             "div"
                         );
@@ -991,7 +1320,9 @@ function loadRequests() {
                             👤
 
                             <strong>
+
                                 রেফারেন্স:
+
                             </strong>
 
                             ${reference}
@@ -1004,7 +1335,9 @@ function loadRequests() {
                             🩺
 
                             <strong>
+
                                 রোগীর সমস্যা:
+
                             </strong>
 
                             ${problem}
@@ -1017,7 +1350,9 @@ function loadRequests() {
                             🧪
 
                             <strong>
+
                                 হিমোগ্লোবিন:
+
                             </strong>
 
                             ${hemoglobin}
@@ -1030,7 +1365,9 @@ function loadRequests() {
                             📅
 
                             <strong>
+
                                 রক্তদানের তারিখ:
+
                             </strong>
 
                             ${date}
@@ -1043,7 +1380,9 @@ function loadRequests() {
                             🕒
 
                             <strong>
+
                                 রক্তদানের সময়:
+
                             </strong>
 
                             ${time}
@@ -1056,7 +1395,9 @@ function loadRequests() {
                             🏥
 
                             <strong>
+
                                 হাসপাতাল:
+
                             </strong>
 
                             ${hospital}
@@ -1069,7 +1410,9 @@ function loadRequests() {
                             📱
 
                             <strong>
+
                                 যোগাযোগ:
+
                             </strong>
 
                             ${mobile}
@@ -1089,6 +1432,7 @@ function loadRequests() {
                         ${
                             canChangeStatus
                             ?
+
                             `
 
                             <div class="status-control">
@@ -1099,61 +1443,93 @@ function loadRequests() {
 
                                     <option
                                         value="No Update"
+
                                         ${
                                             status ===
                                             "No Update"
+
                                             ?
+
                                             "selected"
+
                                             :
+
                                             ""
                                         }
+
                                     >
+
                                         🔵 No Update
+
                                     </option>
 
 
                                     <option
                                         value="Pending"
+
                                         ${
                                             status ===
                                             "Pending"
+
                                             ?
+
                                             "selected"
+
                                             :
+
                                             ""
                                         }
+
                                     >
+
                                         🟡 Pending
+
                                     </option>
 
 
                                     <option
                                         value="Managed"
+
                                         ${
                                             status ===
                                             "Managed"
+
                                             ?
+
                                             "selected"
+
                                             :
+
                                             ""
                                         }
+
                                     >
+
                                         🟢 Managed
+
                                     </option>
 
 
                                     <option
                                         value="Request Cancelled"
+
                                         ${
                                             status ===
                                             "Request Cancelled"
+
                                             ?
+
                                             "selected"
+
                                             :
+
                                             ""
                                         }
+
                                     >
+
                                         🔴 Request Cancelled
+
                                     </option>
 
                                 </select>
@@ -1171,12 +1547,16 @@ function loadRequests() {
                             </div>
 
                             `
+
                             :
+
                             ""
+
                         }
 
 
                         <div class="button-row">
+
 
                             <a
                                 class="call-button"
@@ -1197,7 +1577,18 @@ function loadRequests() {
 
                                 💬 মেসেজ করুন
 
+
+                                <span
+                                    class="unread-badge"
+                                    style="display:none"
+                                >
+
+                                    0
+
+                                </span>
+
                             </a>
+
 
                         </div>
 
@@ -1205,10 +1596,38 @@ function loadRequests() {
 
 
                     // ==================================
+                    // UNREAD MESSAGE BADGE
+                    // ==================================
+
+                    if (currentUser) {
+
+
+                        const unreadBadge =
+
+                            card.querySelector(
+                                ".unread-badge"
+                            );
+
+
+                        loadUnreadCount(
+
+                            actualRequestId,
+
+                            currentUser.uid,
+
+                            unreadBadge
+
+                        );
+
+                    }
+
+
+                    // ==================================
                     // STATUS BUTTON
                     // ==================================
 
                     const statusButton =
+
                         card.querySelector(
                             ".status-save"
                         );
@@ -1216,31 +1635,40 @@ function loadRequests() {
 
                     if (statusButton) {
 
+
                         statusButton.addEventListener(
 
                             "click",
 
                             async function() {
 
+
                                 if (!currentUser) {
 
                                     alert(
+
                                         "⚠️ Status পরিবর্তন করতে আগে Login করুন।"
+
                                     );
 
                                     return;
+
                                 }
 
 
                                 const select =
+
                                     card.querySelector(
+
                                         ".status-select"
+
                                     );
 
 
                                 if (!select) {
 
                                     return;
+
                                 }
 
 
@@ -1258,12 +1686,16 @@ function loadRequests() {
 
                                 try {
 
+
                                     await update(
 
                                         ref(
+
                                             db,
+
                                             "bloodRequests/" +
                                             actualRequestId
+
                                         ),
 
                                         {
@@ -1283,16 +1715,22 @@ function loadRequests() {
 
 
                                     alert(
+
                                         "✅ Status আপডেট হয়েছে।"
+
                                     );
 
                                 }
 
                                 catch(error) {
 
+
                                     console.error(
+
                                         "Status Update Error:",
+
                                         error
+
                                     );
 
 
@@ -1301,12 +1739,18 @@ function loadRequests() {
                                         "❌ Status আপডেট করা যায়নি।\n\n" +
 
                                         (
+
                                             error &&
                                             error.message
+
                                             ?
+
                                             error.message
+
                                             :
+
                                             "Firebase Error"
+
                                         )
 
                                     );
@@ -1315,8 +1759,10 @@ function loadRequests() {
 
                                 finally {
 
+
                                     statusButton.disabled =
                                         false;
+
 
                                     statusButton.innerText =
                                         "Update Status";
@@ -1334,7 +1780,9 @@ function loadRequests() {
                     // ADD CARD
                     // ==================================
 
-                    requestList.appendChild(card);
+                    requestList.appendChild(
+                        card
+                    );
 
                 }
 
@@ -1349,39 +1797,41 @@ function loadRequests() {
 
         function(error) {
 
+
             console.error(
+
                 "Firebase Database Error:",
+
                 error
-            );
 
-
-            console.error(
-                "Error Code:",
-                error && error.code
-            );
-
-
-            console.error(
-                "Error Message:",
-                error && error.message
             );
 
 
             const errorCode =
+
                 error &&
                 error.code
+
                 ?
+
                 error.code
+
                 :
+
                 "unknown";
 
 
             const errorMessage =
+
                 error &&
                 error.message
+
                 ?
+
                 error.message
+
                 :
+
                 "Unknown Firebase Error";
 
 
@@ -1394,14 +1844,19 @@ function loadRequests() {
                     <br><br>
 
                     <strong>
+
                         Firebase Database Error
+
                     </strong>
 
 
                     <div class="error-details">
 
+
                         <strong>
+
                             Error Code:
+
                         </strong>
 
                         <br>
@@ -1412,7 +1867,9 @@ function loadRequests() {
 
 
                         <strong>
+
                             Error Message:
+
                         </strong>
 
                         <br>
@@ -1432,7 +1889,6 @@ function loadRequests() {
 }
 
 </script>
-
 
 </body>
 
