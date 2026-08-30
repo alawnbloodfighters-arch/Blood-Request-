@@ -100,11 +100,15 @@ body {
 
     cursor: pointer;
 
+    flex-shrink: 0;
+
 }
 
 .header-info {
 
     overflow: hidden;
+
+    min-width: 0;
 
 }
 
@@ -167,6 +171,13 @@ body {
 
 .message {
 
+    /*
+       Message-এর width স্বাভাবিক রাখা হয়েছে।
+       অপ্রয়োজনীয় বড় blank space হবে না।
+    */
+
+    width: fit-content;
+
     max-width: 78%;
 
     margin-bottom: 12px;
@@ -182,7 +193,16 @@ body {
 
     word-wrap: break-word;
 
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
+
+    /*
+       Message-এর ভেতরের content
+       যেন আলাদা হয়ে না যায়।
+    */
+
+    display: block;
+
+    position: relative;
 
 }
 
@@ -240,11 +260,22 @@ body {
 
     font-weight: 700;
 
-    margin-bottom: 5px;
+    margin: 0 0 5px 0;
 
     color: #087f73;
 
     line-height: 1.4;
+
+    /*
+       Sender name যেন message-এর
+       স্বাভাবিক জায়গায় থাকে।
+    */
+
+    display: block;
+
+    width: 100%;
+
+    overflow-wrap: anywhere;
 
 }
 
@@ -272,13 +303,34 @@ body {
 
     line-height: 1.55;
 
+    /*
+       সবচেয়ে গুরুত্বপূর্ণ অংশ:
+       Message-এর লেখা একই block-এর মধ্যে
+       স্বাভাবিকভাবে থাকবে।
+    */
+
+    display: block;
+
+    width: 100%;
+
+    max-width: 100%;
+
     white-space: pre-wrap;
 
-    word-break: normal;
+    word-break: break-word;
 
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
 
-    text-align: left;
+    text-align: left !important;
+
+    /*
+       Browser যেন text-এর মাঝে
+       অস্বাভাবিক spacing না দেয়।
+    */
+
+    letter-spacing: normal;
+
+    word-spacing: normal;
 
 }
 
@@ -288,6 +340,10 @@ body {
 ========================= */
 
 .message-time {
+
+    display: block;
+
+    width: 100%;
 
     text-align: right;
 
@@ -303,6 +359,8 @@ body {
     color: #777;
 
     line-height: 1.3;
+
+    white-space: nowrap;
 
 }
 
@@ -445,6 +503,8 @@ body {
 
     cursor: pointer;
 
+    flex-shrink: 0;
+
 }
 
 .send-button:disabled {
@@ -471,17 +531,28 @@ body {
         top: 72px;
         bottom: 70px;
 
+        padding:
+            16px 14px 22px;
+
     }
 
     .chat-input-area {
 
         height: 70px;
 
+        padding:
+            7px 12px;
+
     }
 
     .message {
 
         max-width: 84%;
+
+        padding:
+            11px 13px 9px;
+
+        border-radius: 17px;
 
     }
 
@@ -490,6 +561,22 @@ body {
         font-size: 18px;
 
         line-height: 1.55;
+
+    }
+
+    .sender-name {
+
+        font-size: 14px;
+
+        margin-bottom: 4px;
+
+    }
+
+    .message-time {
+
+        font-size: 12px;
+
+        margin-top: 5px;
 
     }
 
@@ -512,6 +599,29 @@ body {
         font-size: 17px;
 
     }
+
+}
+
+
+/* =========================
+   EXTRA MESSAGE SAFETY
+========================= */
+
+/*
+   কোনো message-এর ভেতরে
+   accidental HTML/flex/grid styling
+   যেন layout নষ্ট না করে।
+*/
+
+.message > div {
+
+    box-sizing: border-box;
+
+}
+
+.message-text br {
+
+    line-height: 1.55;
 
 }
 
@@ -859,13 +969,6 @@ async function markMessagesAsRead(lastMessageTime) {
     const safeTime =
         Number(lastMessageTime || 0);
 
-
-    // ==================================
-    // কোনো message-এর সময় না থাকলে
-    // readState update করা হবে না।
-    //
-    // Date.now() ব্যবহার করা হচ্ছে না।
-    // ==================================
 
     if (safeTime <= 0) {
 
@@ -1215,10 +1318,6 @@ function loadMessages() {
                     </div>
 
                 `;
-
-                // কোনো message নেই,
-                // তাই readState-এ Date.now()
-                // লেখা হবে না।
 
                 return;
 
@@ -1627,11 +1726,6 @@ async function sendMessage() {
             "";
 
 
-        // ==================================
-        // নিজের message পাঠানোর পর
-        // নিজের জন্য readState update
-        // ==================================
-
         latestMessageTime =
             createdAt;
 
@@ -1785,13 +1879,6 @@ onAuthStateChanged(
 
         }
 
-
-        // ==================================
-        // Login হওয়ার সময় যদি message list
-        // ইতিমধ্যে load হয়ে থাকে, তাহলে
-        // প্রকৃত সর্বশেষ message-এর সময়
-        // দিয়েই Seen করা হবে।
-        // ==================================
 
         if (
 
