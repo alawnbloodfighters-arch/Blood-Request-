@@ -306,7 +306,7 @@ body {
 .message-input {
 
     flex: 1;
-    
+
     min-width: 0;
 
     height: 55px;
@@ -615,6 +615,8 @@ const requestId =
 // GLOBAL
 // ==========================================
 
+let currentUser = null;
+
 let applicantUid = null;
 
 let applicantName = "আবেদনকারী";
@@ -623,62 +625,7 @@ let messagesLoaded = false;
 
 let messagesListenerStarted = false;
 
-
-
-// ==========================================
-// GUEST ID
-// ==========================================
-
-function getGuestId() {
-
-    let guestId =
-        localStorage.getItem(
-            "publicChatGuestId"
-        );
-
-
-    if (!guestId) {
-
-        if (
-            window.crypto &&
-            typeof window.crypto.randomUUID ===
-            "function"
-        ) {
-
-            guestId =
-                "guest_" +
-                window.crypto.randomUUID();
-
-        }
-
-        else {
-
-            guestId =
-                "guest_" +
-                Date.now() +
-                "_" +
-                Math.random()
-                    .toString(36)
-                    .substring(2);
-
-        }
-
-
-        localStorage.setItem(
-            "publicChatGuestId",
-            guestId
-        );
-
-    }
-
-
-    return guestId;
-
-}
-
-
-const guestId =
-    getGuestId();
+let requestListenerStarted = false;
 
 
 
@@ -841,6 +788,17 @@ function loadRequestInfo() {
     }
 
 
+    if (requestListenerStarted) {
+
+        return;
+
+    }
+
+
+    requestListenerStarted =
+        true;
+
+
     const requestRef =
         ref(
             db,
@@ -921,15 +879,38 @@ function loadRequestInfo() {
 
 
             chatSubtitle.innerText =
-                "সবাই এখানে মেসেজ করতে পারবেন";
+                "শুধু Login করা user মেসেজ করতে পারবেন";
 
 
-            sendButton.disabled =
-                false;
+            // ==================================
+            // AUTH অনুযায়ী INPUT
+            // ==================================
 
+            if (currentUser) {
 
-            messageInput.disabled =
-                false;
+                sendButton.disabled =
+                    false;
+
+                messageInput.disabled =
+                    false;
+
+                messageInput.placeholder =
+                    "মেসেজ লিখুন...";
+
+            }
+
+            else {
+
+                sendButton.disabled =
+                    true;
+
+                messageInput.disabled =
+                    true;
+
+                messageInput.placeholder =
+                    "মেসেজ করতে Login করুন";
+
+            }
 
 
             loadMessages();
@@ -1033,8 +1014,8 @@ function loadMessages() {
 
                         <br><br>
 
-                        এই আবেদনের প্রথম মেসেজটি
-                        আপনিই পাঠান।
+                        Login করে এই আবেদনের প্রথম মেসেজটি
+                        পাঠান।
 
                     </div>
 
@@ -1263,6 +1244,25 @@ function loadMessages() {
 async function sendMessage() {
 
 
+    // ==================================
+    // LOGIN CHECK
+    // ==================================
+
+    if (!currentUser) {
+
+        alert(
+            "⚠️ মেসেজ পাঠাতে আগে Login করুন।"
+        );
+
+        return;
+
+    }
+
+
+    // ==================================
+    // REQUEST ID CHECK
+    // ==================================
+
     if (!requestId) {
 
         alert(
@@ -1274,6 +1274,10 @@ async function sendMessage() {
     }
 
 
+    // ==================================
+    // APPLICANT CHECK
+    // ==================================
+
     if (!applicantUid) {
 
         alert(
@@ -1284,6 +1288,10 @@ async function sendMessage() {
 
     }
 
+
+    // ==================================
+    // TEXT
+    // ==================================
 
     const text =
         messageInput.value.trim();
@@ -1333,16 +1341,7 @@ async function sendMessage() {
         // ==================================
 
         const senderUid =
-
-            auth.currentUser
-
-            ?
-
-            auth.currentUser.uid
-
-            :
-
-            guestId;
+            currentUser.uid;
 
 
         // ==================================
@@ -1351,17 +1350,9 @@ async function sendMessage() {
 
         const senderName =
 
-            auth.currentUser
+            currentUser.displayName ||
 
-            ?
-
-            (
-                auth.currentUser.displayName ||
-                auth.currentUser.email ||
-                "ব্যবহারকারী"
-            )
-
-            :
+            currentUser.email ||
 
             "ব্যবহারকারী";
 
@@ -1435,14 +1426,18 @@ async function sendMessage() {
     finally {
 
         sendButton.disabled =
-            false;
+            !currentUser;
 
 
         sendButton.innerText =
             "Send";
 
 
-        messageInput.focus();
+        if (currentUser) {
+
+            messageInput.focus();
+
+        }
 
     }
 
@@ -1511,10 +1506,6 @@ backButton.addEventListener(
 // ==========================================
 // AUTH STATE
 // ==========================================
-//
-// Login থাকলেও বা না থাকলেও
-// Public Chat ব্যবহার করা যাবে।
-//
 
 onAuthStateChanged(
 
@@ -1522,9 +1513,53 @@ onAuthStateChanged(
 
     function(user) {
 
+        currentUser =
+            user;
+
+
         if (!requestId) {
 
             return;
+
+        }
+
+
+        // ==================================
+        // LOGIN USER
+        // ==================================
+
+        if (user) {
+
+            if (applicantUid) {
+
+                sendButton.disabled =
+                    false;
+
+                messageInput.disabled =
+                    false;
+
+                messageInput.placeholder =
+                    "মেসেজ লিখুন...";
+
+            }
+
+        }
+
+
+        // ==================================
+        // NOT LOGIN
+        // ==================================
+
+        else {
+
+            sendButton.disabled =
+                true;
+
+            messageInput.disabled =
+                true;
+
+            messageInput.placeholder =
+                "মেসেজ করতে Login করুন";
 
         }
 
