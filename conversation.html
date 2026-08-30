@@ -1432,5 +1432,79 @@ onAuthStateChanged(
         currentUser =
             user;
 
+        onAuthStateChanged(
+
+    auth,
+
+    function(user) {
+
+        currentUser =
+            user;
+
+
+        if (!requestId) {
+
+            return;
+
+        }
+
+
+        if (!user) {
+
+            sendButton.disabled =
+                true;
+
+
+            messageInput.disabled =
+                true;
+
+
+            chatSubtitle.innerText =
+                "মেসেজ করতে Login করুন";
+
+
+            loadRequestInfo();
+
+            return;
+
+        }
+
+
+        sendButton.disabled =
+            false;
+
+
+        messageInput.disabled =
+            false;
+
+
+        chatSubtitle.innerText =
+            "শুধু Login করা user মেসেজ করতে পারবেন";
+
+
+        loadRequestInfo();
+
+    }
+
+);
+
+
+
+// ==========================================
+// START
+// ==========================================
+
+if (requestId) {
+
+    loadRequestInfo();
+
+}
+
+</script>
+
+
+</body>
+
+</html>
 
        
