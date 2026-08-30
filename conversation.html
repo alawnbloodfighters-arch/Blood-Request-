@@ -189,7 +189,7 @@ body {
 
 
 /* =========================
-   APPLICANT MESSAGE
+   APPLICANT
    RIGHT + RED
 ========================= */
 
@@ -280,6 +280,8 @@ body {
     word-break: normal;
 
     overflow-wrap: break-word;
+
+    text-align: left;
 
 }
 
@@ -768,6 +770,50 @@ function escapeHtml(value) {
 
 
 // ==========================================
+// CLEAN MESSAGE TEXT
+// ==========================================
+//
+// অতিরিক্ত space / ফাঁকা line
+// পরিষ্কার করা হবে।
+//
+
+function cleanMessageText(value) {
+
+    return String(value ?? "")
+
+        // Windows line break ঠিক করা
+        .replace(/\r\n/g, "\n")
+
+        // একাধিক space/tab → একটি space
+        .replace(/[ \t]+/g, " ")
+
+        // প্রতিটি লাইনের শুরু/শেষের
+        // অপ্রয়োজনীয় space বাদ
+        .split("\n")
+
+        .map(function(line) {
+
+            return line.trim();
+
+        })
+
+        // একাধিক খালি line বাদ
+        .filter(function(line) {
+
+            return line.length > 0;
+
+        })
+
+        // আবার normal line break
+        .join("\n")
+
+        .trim();
+
+}
+
+
+
+// ==========================================
 // TIME
 // ==========================================
 
@@ -967,14 +1013,6 @@ function loadRequestInfo() {
             chatTitle.innerText =
                 "💬 আবেদন চ্যাট";
 
-
-            chatSubtitle.innerText =
-                "শুধু Login করা user মেসেজ করতে পারবেন";
-
-
-            // ==================================
-            // MESSAGE AREA
-            // ==================================
 
             if (!currentUser) {
 
@@ -1230,12 +1268,18 @@ function loadMessages() {
 
 
                     // ==================================
-                    // TEXT
+                    // CLEAN TEXT
                     // ==================================
+
+                    const cleanText =
+                        cleanMessageText(
+                            message.text
+                        );
+
 
                     const messageText =
                         escapeHtml(
-                            message.text || ""
+                            cleanText
                         );
 
 
