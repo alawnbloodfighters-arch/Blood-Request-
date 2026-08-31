@@ -264,6 +264,8 @@ body {
 .call-button {
 
     background: #168a3b;
+
+    cursor: pointer;
 }
 
 .message-button {
@@ -626,33 +628,38 @@ let requestsListenerStarted = false;
 // CALL NUMBER TO APP INVENTOR
 // ==========================================
 
-window.callNumber = function(number) {
+function callNumber(number) {
 
-    alert("CALL_NUMBER:" + number);
+    const cleanNumber =
+        String(number ?? "")
+            .trim();
+
+
+    if (!cleanNumber) {
+
+        return;
+
+    }
+
 
     if (
+
         window.AppInventor &&
+
         typeof window.AppInventor.setWebViewString ===
         "function"
+
     ) {
 
         window.AppInventor.setWebViewString(
 
-            "CALL_NUMBER:" + number
+            "CALL_NUMBER:" + cleanNumber
 
         );
 
     }
 
-    else {
-
-        alert(
-            "App Inventor connection পাওয়া যাচ্ছে না।"
-        );
-
-    }
-
-};
+}
 
 
 
@@ -1604,13 +1611,12 @@ function loadRequests() {
 
                         <div class="button-row">
 
-                            <a
+                            <button
                                 class="call-button"
-                                href="javascript:void(0)"
-                                onclick="callNumber('${mobile}'); return false;"
+                                type="button"
                             >
                                 📞 কল করুন
-                            </a>
+                            </button>
 
 
                             <a
@@ -1634,6 +1640,36 @@ function loadRequests() {
                         </div>
 
                     `;
+
+
+                    // ==================================
+                    // CALL BUTTON
+                    // ==================================
+
+                    const callButton =
+                        card.querySelector(
+                            ".call-button"
+                        );
+
+
+                    if (callButton) {
+
+                        callButton.addEventListener(
+
+                            "click",
+
+                            function() {
+
+                                callNumber(
+                                    item.mobile
+                                );
+
+                            }
+
+                        );
+
+                    }
+
 
 
                     // ==================================
