@@ -626,17 +626,20 @@ let requestsListenerStarted = false;
 // CALL NUMBER TO APP INVENTOR
 // ==========================================
 
-    function callNumber(number) {
+function callNumber(number) {
 
     alert("CALL_NUMBER:" + number);
 
     if (
         window.AppInventor &&
-        typeof window.AppInventor.setWebViewString === "function"
+        typeof window.AppInventor.setWebViewString ===
+        "function"
     ) {
 
         window.AppInventor.setWebViewString(
+
             "CALL_NUMBER:" + number
+
         );
 
     }
@@ -650,8 +653,6 @@ let requestsListenerStarted = false;
     }
 
 }
-
-   
 
 
 
@@ -1603,13 +1604,13 @@ function loadRequests() {
 
                         <div class="button-row">
 
-                            <button
+                            <a
                                 class="call-button"
-                                type="button"
-                                onclick="callNumber('${mobile}')"
+                                href="javascript:void(0)"
+                                onclick="callNumber('${mobile}'); return false;"
                             >
                                 📞 কল করুন
-                            </button>
+                            </a>
 
 
                             <a
