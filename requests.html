@@ -623,6 +623,41 @@ let requestsListenerStarted = false;
 
 
 // ==========================================
+// CALL NUMBER TO APP INVENTOR
+// ==========================================
+
+function callNumber(number) {
+
+    if (
+
+        window.AppInventor &&
+
+        typeof window.AppInventor.setWebViewString ===
+        "function"
+
+    ) {
+
+        window.AppInventor.setWebViewString(
+
+            "CALL_NUMBER:" + number
+
+        );
+
+    }
+
+    else {
+
+        alert(
+            "App Inventor connection পাওয়া যাচ্ছে না।"
+        );
+
+    }
+
+}
+
+
+
+// ==========================================
 // ESCAPE HTML
 // ==========================================
 
@@ -835,12 +870,6 @@ function loadUnreadCount(
                             message.uid || ""
                         );
 
-
-                    // ==================================
-                    // শুধুমাত্র অন্য user-এর
-                    // lastReadAt-এর পরের message
-                    // unread হবে
-                    // ==================================
 
                     if (
 
@@ -1576,12 +1605,13 @@ function loadRequests() {
 
                         <div class="button-row">
 
-                            <a
+                            <button
                                 class="call-button"
-                                href="tel:${mobile}"
+                                type="button"
+                                onclick="callNumber('${mobile}')"
                             >
                                 📞 কল করুন
-                            </a>
+                            </button>
 
 
                             <a
