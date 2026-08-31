@@ -626,21 +626,17 @@ let requestsListenerStarted = false;
 // CALL NUMBER TO APP INVENTOR
 // ==========================================
 
-function callNumber(number) {
+    function callNumber(number) {
+
+    alert("CALL_NUMBER:" + number);
 
     if (
-
         window.AppInventor &&
-
-        typeof window.AppInventor.setWebViewString ===
-        "function"
-
+        typeof window.AppInventor.setWebViewString === "function"
     ) {
 
         window.AppInventor.setWebViewString(
-
             "CALL_NUMBER:" + number
-
         );
 
     }
@@ -654,6 +650,8 @@ function callNumber(number) {
     }
 
 }
+
+   
 
 
 
