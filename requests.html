@@ -851,14 +851,28 @@ function loadUnreadCount(
                 );
 
 
-            let unreadCount = 0;
+            /*
+             * একটি card-এ কতটি unread message আছে
+             * সেটা count করা হবে না।
+             *
+             * অন্তত ১টি unread message থাকলেই
+             * এই card-কে ১টি unread card ধরা হবে।
+             */
+
+            let hasUnread = false;
 
 
             Object.values(messages).forEach(
 
                 function(message) {
 
-                    if (!message) {
+                    if (
+
+                        !message ||
+
+                        hasUnread
+
+                    ) {
 
                         return;
 
@@ -889,7 +903,7 @@ function loadUnreadCount(
 
                     ) {
 
-                        unreadCount++;
+                        hasUnread = true;
 
                     }
 
@@ -898,17 +912,20 @@ function loadUnreadCount(
             );
 
 
-            if (unreadCount > 0) {
+            /*
+             * Unread থাকলে badge = 1
+             *
+             * ১টি message হলেও 1
+             * ১০টি message হলেও 1
+             */
+
+            if (hasUnread) {
 
                 badgeElement.style.display =
                     "flex";
 
                 badgeElement.innerText =
-                    unreadCount > 99
-                    ?
-                    "99+"
-                    :
-                    String(unreadCount);
+                    "1";
 
             }
 
